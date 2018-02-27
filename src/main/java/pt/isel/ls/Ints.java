@@ -8,6 +8,14 @@ public class Ints {
 
     public static int indexOfBinary(int[] a, int fromIndex, int toIndex, int n) {
 
+        if (toIndex >= a.length) {
+            throw new IllegalArgumentException("to(" + toIndex + ") > array.length="+(a.length-1));
+        }
+
+        if (fromIndex < 0) {
+            throw new IllegalArgumentException("from(" + fromIndex + ") > 0");
+        }
+
         if (fromIndex > toIndex) {
             throw new IllegalArgumentException("from(" + fromIndex + ") > to(" + toIndex + ")");
         }
