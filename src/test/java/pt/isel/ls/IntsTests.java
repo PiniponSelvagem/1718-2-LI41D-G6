@@ -20,25 +20,29 @@ public class IntsTests {
 
     @Test
     public void indexOfBinary_returns_negative_if_not_found(){
-        // Arrange
         int[] v = {1,2,3};
-
-        // Act
-        int ix = Ints.indexOfBinary(v,0,3,4);
-
-        // Assert
+        int ix = Ints.indexOfBinary(v,0,2,4);
         assertTrue(ix < 0);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void indexOfBinary_throws_IllegalArgumentException_if_indexes_are_not_valid(){
-        // Arrange
         int[] v = {1,2,3};
-
-        // Act
         int ix = Ints.indexOfBinary(v, 2, 1, 4);
+        assertTrue(ix < 0);
+    }
 
-        // Assert
+    @Test(expected=IllegalArgumentException.class)
+    public void indexOfBinary_throws_IllegalArgumentException_if_indexes_are_out_of_bounds_above(){
+        int[] v = {1,2,3};
+        int ix = Ints.indexOfBinary(v, 0, 3, 2);
+        assertTrue(ix < 0);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void indexOfBinary_throws_IllegalArgumentException_if_indexes_are_out_of_bounds_below(){
+        int[] v = {1,2,3};
+        int ix = Ints.indexOfBinary(v, -1, 2, 2);
         assertTrue(ix < 0);
     }
 
