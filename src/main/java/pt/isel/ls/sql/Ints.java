@@ -1,4 +1,4 @@
-package pt.isel.ls;
+package pt.isel.ls.phase0;
 
 public class Ints {
 
