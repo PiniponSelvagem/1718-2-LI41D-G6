@@ -1,5 +1,6 @@
 package pt.isel.ls;
 import org.junit.Test;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

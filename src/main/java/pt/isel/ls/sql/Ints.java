@@ -1,4 +1,4 @@
-package pt.isel.ls.phase0;
+package pt.isel.ls.sql;
 
 public class Ints {
 

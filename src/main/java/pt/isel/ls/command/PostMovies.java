@@ -1,4 +1,11 @@
 package pt.isel.ls.command;
 
-public class PostMovies {
+import java.sql.Connection;
+
+public class PostMovies implements Command {
+
+    @Override
+    public String execute(Connection con) {
+        return "Command: PostMovies";
+    }
 }

@@ -1,6 +1,8 @@
 package pt.isel.ls;
 
 import org.junit.Test;
+import pt.isel.ls.sql.Ints;
+
 import static org.junit.Assert.*;
 
 public class IntsTests {
