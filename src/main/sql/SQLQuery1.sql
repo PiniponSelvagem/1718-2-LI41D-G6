@@ -1,0 +1,41 @@
+IF db_id('LS2') IS NULL CREATE DATABASE LS2;
+
+GO
+USE LS2
+
+IF object_id('MOVIE') IS NOT NULL DROP TABLE MOVIE
+CREATE TABLE MOVIE (
+	Title VARCHAR(25) NOT NULL,
+	Release_Year INT NOT NULL,
+	Duration INT NOT NULL,
+	PRIMARY KEY (Title, Release_Year)
+);
+
+IF object_id('CINEMA') IS NOT NULL DROP TABLE CINEMA
+CREATE TABLE CINEMA (
+	Cinema_Name VARCHAR(25) NOT NULL,
+	City VARCHAR(25) NOT NULL,
+	PRIMARY KEY (Cinema_Name)
+);
+
+
+CREATE TABLE THEATER (
+	nSeats INT NOT NULL,
+	nRows INT NOT NULL,
+	SeatsPerRow INT NOT NULL,
+	Theater_Name VARCHAR(25) NOT NULL,
+	Cinema_Name VARCHAR(25) REFERENCES CINEMA(Cinema_Name),
+	PRIMARY KEY (Theater_Name, Cinema_Name)
+);
+
+IF object_id('SESSION') IS NOT NULL DROP TABLE CINEMA_SESSION
+CREATE TABLE CINEMA_SESSION(
+	Time_Of_Day TIME NOT NULL,
+	Theater_Name VARCHAR(25),
+	Cinema_Name VARCHAR(25),
+	Movie_Title VARCHAR(25),
+	Release_Year INT,
+	FOREIGN KEY (Movie_Title, Release_Year) REFERENCES MOVIE(Title, Release_Year),
+	FOREIGN KEY (Theater_Name, Cinema_Name) REFERENCES THEATER(Theater_Name, Cinema_Name),
+	PRIMARY KEY (Time_Of_Day,Theater_Name)
+);
