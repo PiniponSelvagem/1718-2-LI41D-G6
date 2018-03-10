@@ -1,8 +1,8 @@
 package pt.isel.ls.command;
 
-import java.sql.Connection;
+import pt.isel.ls.command.utils.CommandBuilder;
 
 public interface Command {
     
-    String execute(Connection con);
+    String execute(CommandBuilder cmdBuilder);
 }

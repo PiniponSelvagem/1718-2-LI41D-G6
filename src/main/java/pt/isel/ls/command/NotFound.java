@@ -1,11 +1,11 @@
 package pt.isel.ls.command;
 
-import java.sql.Connection;
+import pt.isel.ls.command.utils.CommandBuilder;
 
 public class NotFound implements Command {
 
     @Override
-    public String execute(Connection con) {
+    public String execute(CommandBuilder cmdBuilder) {
         return null;
     }
 }

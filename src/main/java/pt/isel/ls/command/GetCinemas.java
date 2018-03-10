@@ -1,11 +1,11 @@
 package pt.isel.ls.command;
 
-import java.sql.Connection;
+import pt.isel.ls.command.utils.CommandBuilder;
 
 public class GetCinemas implements Command {
 
     @Override
-    public String execute(Connection con) {
-        return "Command: GetCinemas";
+    public String execute(CommandBuilder cmdBuilder) {
+        return "SELECT Cinema_Name, City FROM CINEMA";
     }
 }
