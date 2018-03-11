@@ -13,26 +13,26 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String result = executeCommand(args[0]+" "+args[1]);    //TODO: add support for args[2]
+            String result = executeCommand(args[0]+" "+args[1], args[2]);    //TODO: add support for args[2]
             System.out.println(result);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private static String executeCommand(String str) throws SQLException {
+    private static String executeCommand(String str, String params) throws SQLException {
         Connection con = null;
         String result;
         try {
             con = Sql.CreateConnetion();
-            CommandBuilder cmdBuilder = new CommandBuilder(str, cmdUtils);
-            Command com = cmdUtils.getCmdTree().search(cmdBuilder);
+            CommandBuilder cmdBuilder = new CommandBuilder(str, params, cmdUtils);
+            Command cmd = cmdUtils.getCmdTree().search(cmdBuilder);
 
             //TODO: [Exception] Command not found.
             //if (com instanceof NotFound)
             //    System.out.println("NOT FOUND");
 
-            result = com.execute(cmdBuilder);
+            result = cmd.execute(cmdBuilder);
         }
         finally {
             if (con != null) {

@@ -6,7 +6,15 @@ public class PostCinemaIDTheaters implements Command {
 
     @Override
     public String execute(CommandBuilder cmdBuilder) {
-        //return "INSERT INTO THEATER VALUES ("+(params[0]*params[1])+","+params[0]+","+params[1]+","+params[2]+","+arguments[0]+");";
-        return null;
+        int seats = Integer.parseInt(cmdBuilder.getParameters("rows")) *
+                Integer.parseInt(cmdBuilder.getParameters("seats_row"));
+        //TODO: exception if cant parseInt
+
+        return "INSERT INTO THEATER VALUES ("+
+                seats+","+
+                cmdBuilder.getParameters("seats_row")+","+
+                cmdBuilder.getParameters("rows")+","+
+                cmdBuilder.getParameters("name")+","+
+                cmdBuilder.getParameters("cid")+");";
     }
 }

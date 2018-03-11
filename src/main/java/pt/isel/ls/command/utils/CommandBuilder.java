@@ -3,13 +3,15 @@ package pt.isel.ls.command.utils;
 import pt.isel.ls.command.Command;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class CommandBuilder {
     private String method;
     private LinkedList<String> path = new LinkedList<>();
-    private String params;
+    private HashMap<String, String> params;
     private Command cmd;
+    private CommandUtils cmdUtils;
 
     private LinkedList<Integer> ids;
 
@@ -19,9 +21,11 @@ public class CommandBuilder {
         this.cmd = cmd;
     }
 
-    public CommandBuilder(String command, CommandUtils cmdUtils) {
+    public CommandBuilder(String command, String params, CommandUtils cmdUtils) {
+        this.cmdUtils = cmdUtils;
         stringToList(command);
-        findIdsAndReplace(cmdUtils);
+        findIdsAndReplace(this.cmdUtils);
+        findParams(params);
     }
 
     private void stringToList(String command){
@@ -44,6 +48,19 @@ public class CommandBuilder {
         }
     }
 
+    private void findParams(String params) {
+        this.params = new HashMap<>();
+        String[] paramsSplit = params.split("&");
+
+        for (String aParamsSplit : paramsSplit) {
+            String[] aux = aParamsSplit.split("=");
+            this.params.put(aux[0], aux[1].replace("+", " "));
+        }
+
+        //System.out.println(this.params.keySet() +" "+ this.params.values());
+        //TODO: [Exception] if param is incomplete
+    }
+
 
     public String getMethod() {
         return method;
@@ -53,9 +70,13 @@ public class CommandBuilder {
         return path;
     }
 
-    //TODO: parameters
-    public String getParameters() {
-        return "TO_BE_IMPLEMENTED";
+    public String getParameters(String param) {
+        if (cmdUtils.validParam(param))
+            return params.get(param);
+
+        //TODO: throw new InvalidParam();
+
+        return null;
     }
 
     public Command getCommand() {

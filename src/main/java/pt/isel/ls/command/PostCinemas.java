@@ -6,7 +6,8 @@ public class PostCinemas implements Command {
 
     @Override
     public String execute(CommandBuilder cmdBuilder) {
-        //return "INSERT INTO CINEMA VALUES ('"+info[0]+"','"+info[1]+"');";
-        return null;
+        return "INSERT INTO CINEMA VALUES ('"+
+                cmdBuilder.getParameters("name")+"','"+
+                cmdBuilder.getParameters("city")+"');";
     }
 }
