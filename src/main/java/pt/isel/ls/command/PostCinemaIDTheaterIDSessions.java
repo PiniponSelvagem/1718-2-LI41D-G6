@@ -1,14 +1,19 @@
 package pt.isel.ls.command;
 
+import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
+
+import static pt.isel.ls.command.strings.CommandEnum.DATE;
+import static pt.isel.ls.command.strings.CommandEnum.MOVIES_ID;
+import static pt.isel.ls.command.strings.CommandEnum.THEATERS_ID;
 
 public class PostCinemaIDTheaterIDSessions implements Command {
 
     @Override
-    public String execute(CommandBuilder cmdBuilder) {
+    public String execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException {
         return "INSERT INTO CINEMA_SESSIONS VALUES ("+
-                cmdBuilder.getParameters("date")+","+
-                cmdBuilder.getParameters("mid")+","+
-                cmdBuilder.getParameters("tid")+");";
+                cmdBuilder.getParameters(String.valueOf(DATE))+","+
+                cmdBuilder.getParameters(String.valueOf(MOVIES_ID))+","+
+                cmdBuilder.getParameters(String.valueOf(THEATERS_ID))+");";
     }
 }

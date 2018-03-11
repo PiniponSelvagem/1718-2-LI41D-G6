@@ -1,6 +1,8 @@
 package pt.isel.ls;
 
 import pt.isel.ls.command.Command;
+import pt.isel.ls.command.exceptions.CommandNotFoundException;
+import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
 import pt.isel.ls.command.utils.CommandUtils;
 import pt.isel.ls.sql.Sql;
@@ -13,14 +15,22 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String result = executeCommand(args[0]+" "+args[1], args[2]);    //TODO: add support for args[2]
-            System.out.println(result);
+            String result;
+            if (args.length == 2)
+                result = executeCommand(args[0]+" "+args[1], null);
+            else if (args.length == 3)
+                result = executeCommand(args[0]+" "+args[1], args[2]);
+            else
+                throw new CommandNotFoundException();
+            System.out.println("RESULT COMMAND -> "+result);
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (CommandNotFoundException | InvalidCommandParametersException e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    private static String executeCommand(String str, String params) throws SQLException {
+    private static String executeCommand(String str, String params) throws SQLException, CommandNotFoundException, InvalidCommandParametersException {
         Connection con = null;
         String result;
         try {
@@ -28,13 +38,11 @@ public class Main {
             CommandBuilder cmdBuilder = new CommandBuilder(str, params, cmdUtils);
             Command cmd = cmdUtils.getCmdTree().search(cmdBuilder);
 
-            //TODO: [Exception] Command not found.
-            //if (com instanceof NotFound)
-            //    System.out.println("NOT FOUND");
+            if (cmd == null)
+                throw new CommandNotFoundException();
 
             result = cmd.execute(cmdBuilder);
-        }
-        finally {
+        } finally {
             if (con != null) {
                 con.close();
             }

@@ -1,6 +1,7 @@
 package pt.isel.ls.command.utils;
 
 import pt.isel.ls.command.Command;
+import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class CommandBuilder {
         this.cmd = cmd;
     }
 
-    public CommandBuilder(String command, String params, CommandUtils cmdUtils) {
+    public CommandBuilder(String command, String params, CommandUtils cmdUtils) throws InvalidCommandParametersException {
         this.cmdUtils = cmdUtils;
         stringToList(command);
         findIdsAndReplace(this.cmdUtils);
@@ -44,21 +45,21 @@ public class CommandBuilder {
                 path.set(i, cmdUtils.getDirID(currDir));
             }
             currDir = path.get(i);
-            //if (currDir==null) //TODO: [Exception] saying that "maybe you forgot to update initializeDirID hashmap"
         }
     }
 
-    private void findParams(String params) {
+    private void findParams(String params) throws InvalidCommandParametersException {
+        if (params == null) throw new InvalidCommandParametersException();
+
         this.params = new HashMap<>();
         String[] paramsSplit = params.split("&");
 
         for (String aParamsSplit : paramsSplit) {
             String[] aux = aParamsSplit.split("=");
+            if (aux.length != 2)
+                throw new InvalidCommandParametersException();
             this.params.put(aux[0], aux[1].replace("+", " "));
         }
-
-        //System.out.println(this.params.keySet() +" "+ this.params.values());
-        //TODO: [Exception] if param is incomplete
     }
 
 
@@ -70,13 +71,10 @@ public class CommandBuilder {
         return path;
     }
 
-    public String getParameters(String param) {
-        if (cmdUtils.validParam(param))
-            return params.get(param);
-
-        //TODO: throw new InvalidParam();
-
-        return null;
+    public String getParameters(String param) throws InvalidCommandParametersException {
+        if (!params.containsKey(param) || !cmdUtils.validParam(param))
+            throw new InvalidCommandParametersException();
+        return params.get(param);
     }
 
     public Command getCommand() {

@@ -17,7 +17,6 @@ public class CommandUtils {
         initializeTree();
         initializeDirID();
         initializeParamsCheck();
-        System.out.println(ROOT_DIR);
     }
 
 
