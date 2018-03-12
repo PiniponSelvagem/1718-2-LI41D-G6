@@ -12,8 +12,8 @@ public class PostMovies implements Command {
     @Override
     public String execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException {
         return "INSERT INTO MOVIE VALUES ('"+
-                cmdBuilder.getParameters(String.valueOf(TITLE))+"',"+
-                cmdBuilder.getParameters(String.valueOf(YEAR))+","+
-                cmdBuilder.getParameters(String.valueOf(DURATION))+");";
+                cmdBuilder.getParameter(String.valueOf(TITLE))+"',"+
+                cmdBuilder.getParameter(String.valueOf(YEAR))+","+
+                cmdBuilder.getParameter(String.valueOf(DURATION))+");";
     }
 }

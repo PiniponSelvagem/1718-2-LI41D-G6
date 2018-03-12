@@ -11,7 +11,7 @@ public class PostCinemas implements Command {
     @Override
     public String execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException {
         return "INSERT INTO CINEMA VALUES ('"+
-                cmdBuilder.getParameters(String.valueOf(NAME))+"','"+
-                cmdBuilder.getParameters(String.valueOf(CITY))+"');";
+                cmdBuilder.getParameter(String.valueOf(NAME))+"','"+
+                cmdBuilder.getParameter(String.valueOf(CITY))+"');";
     }
 }

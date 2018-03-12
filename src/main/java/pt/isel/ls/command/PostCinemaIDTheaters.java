@@ -9,14 +9,14 @@ public class PostCinemaIDTheaters implements Command {
 
     @Override
     public String execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException {
-        int seats = Integer.parseInt(cmdBuilder.getParameters(String.valueOf(ROWS))) *
-                    Integer.parseInt(cmdBuilder.getParameters(String.valueOf(SEATS_ROW)));
+        int seats = Integer.parseInt(cmdBuilder.getParameter(String.valueOf(ROWS))) *
+                    Integer.parseInt(cmdBuilder.getParameter(String.valueOf(SEATS_ROW)));
 
         return "INSERT INTO THEATER VALUES ("+
                 seats+","+
-                cmdBuilder.getParameters(String.valueOf(SEATS_ROW))+","+
-                cmdBuilder.getParameters(String.valueOf(ROWS))+","+
-                cmdBuilder.getParameters(String.valueOf(NAME))+","+
-                cmdBuilder.getParameters(String.valueOf(CINEMAS_ID))+");";
+                cmdBuilder.getParameter(String.valueOf(SEATS_ROW))+","+
+                cmdBuilder.getParameter(String.valueOf(ROWS))+","+
+                cmdBuilder.getParameter(String.valueOf(NAME))+","+
+                cmdBuilder.getParameter(String.valueOf(CINEMAS_ID))+");";
     }
 }

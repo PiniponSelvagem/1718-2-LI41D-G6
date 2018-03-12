@@ -12,8 +12,8 @@ public class PostCinemaIDTheaterIDSessions implements Command {
     @Override
     public String execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException {
         return "INSERT INTO CINEMA_SESSIONS VALUES ("+
-                cmdBuilder.getParameters(String.valueOf(DATE))+","+
-                cmdBuilder.getParameters(String.valueOf(MOVIES_ID))+","+
-                cmdBuilder.getParameters(String.valueOf(THEATERS_ID))+");";
+                cmdBuilder.getParameter(String.valueOf(DATE))+","+
+                cmdBuilder.getParameter(String.valueOf(MOVIES_ID))+","+
+                cmdBuilder.getParameter(String.valueOf(THEATERS_ID))+");";
     }
 }
