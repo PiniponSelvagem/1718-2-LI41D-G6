@@ -60,25 +60,22 @@ public class Main {
         Connection con = null;
         try {
             con = Sql.CreateConnetion();
+            con.setAutoCommit(false);
             Command cmd = cmdUtils.getCmdTree().search(cmdBuilder);
             if (cmd == null)
                 throw new CommandNotFoundException();
 
-            //TODO: ATM ITS NOT QUERYING THE SQL SERVER
-            //TODO: Update this method comment when that gets fixed.
             cmd.execute(cmdBuilder, con);
 
-
-
-        } catch (SQLServerException e) {
+        }catch(SQLException e){
             System.out.println(e.getMessage());
-        } catch (SQLException e) {
-            try {
-                con.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
             }
-            e.printStackTrace();
         } finally {
             if (con != null) {
                 try {

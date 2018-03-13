@@ -1,4 +1,4 @@
-package pt.isel.ls;
+package pt.isel.ls.Phase0;
 import org.junit.Test;
 import pt.isel.ls.sql.Sql;
 

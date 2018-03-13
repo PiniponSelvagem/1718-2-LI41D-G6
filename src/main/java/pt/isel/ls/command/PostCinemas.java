@@ -22,6 +22,15 @@ public class PostCinemas implements Command {
                 */
     }
 
+    /**
+     * Insert a new Cinema
+     *
+     * @param cmdBuilder
+     * @param connection SQL Connection
+     * @throws InvalidCommandParametersException
+     * @throws CommandNotFoundException
+     * @throws SQLException
+     */
     @Override
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
 

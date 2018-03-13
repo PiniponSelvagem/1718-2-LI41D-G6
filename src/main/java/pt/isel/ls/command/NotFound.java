@@ -15,6 +15,6 @@ public class NotFound implements Command {
 
     @Override
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException {
-
+        throw new CommandNotFoundException();
     }
 }

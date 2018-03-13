@@ -10,13 +10,21 @@ import java.sql.SQLException;
 public interface Command {
 
     /**
-     * Builds the SQL query string and returns it.
-     *
      * @param cmdBuilder Command builder, aka contex
      * @throws InvalidCommandParametersException
      * @throws CommandNotFoundException
      */
     void execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException, CommandNotFoundException;
+
+    /**
+     * Accesses the Database and executes the SQL queries
+     *
+     * @param cmdBuilder
+     * @param connection
+     * @throws InvalidCommandParametersException
+     * @throws CommandNotFoundException
+     * @throws SQLException
+     */
     void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException;
 
 }

@@ -16,6 +16,15 @@ public class GetCinemas implements Command {
         //return  null;
     }
 
+    /**
+     * Get all the Cinemas
+     *
+     * @param cmdBuilder
+     * @param connection
+     * @throws InvalidCommandParametersException
+     * @throws CommandNotFoundException
+     * @throws SQLException
+     */
     @Override
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
 
