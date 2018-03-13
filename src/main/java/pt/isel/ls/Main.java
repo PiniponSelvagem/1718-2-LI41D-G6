@@ -9,6 +9,8 @@ import pt.isel.ls.command.utils.CommandUtils;
 import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Main {
@@ -16,18 +18,14 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String result;
             if (args.length == 2)
-                result = executeBuildedCommand(prepareUserInput(args[0]+" "+args[1]));
+                executeBuildedCommand(prepareUserInput(args[0] + " " + args[1]));
             else if (args.length == 3)
-                result = executeBuildedCommand(prepareUserInput(args[0]+" "+args[1], args[2]));
+                executeBuildedCommand(prepareUserInput(args[0] + " " + args[1], args[2]));
             else
                 throw new CommandNotFoundException();
-            System.out.println("RESULT COMMAND -> "+result);
         } catch (CommandNotFoundException | InvalidCommandParametersException e) {
             System.out.println(e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -58,9 +56,8 @@ public class Main {
      * @throws CommandNotFoundException
      * @throws InvalidCommandParametersException
      */
-    private static String executeBuildedCommand(CommandBuilder cmdBuilder) throws SQLException, CommandNotFoundException, InvalidCommandParametersException {
+    private static void executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandNotFoundException, InvalidCommandParametersException {
         Connection con = null;
-        String result;
         try {
             con = Sql.CreateConnetion();
             Command cmd = cmdUtils.getCmdTree().search(cmdBuilder);
@@ -69,13 +66,27 @@ public class Main {
 
             //TODO: ATM ITS NOT QUERYING THE SQL SERVER
             //TODO: Update this method comment when that gets fixed.
-            result = cmd.execute(cmdBuilder);
+            cmd.execute(cmdBuilder, con);
 
+
+
+        } catch (SQLServerException e) {
+            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
         } finally {
             if (con != null) {
-                con.close();
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        return result;
     }
 }

@@ -1,15 +1,18 @@
 package pt.isel.ls.command;
 
+import pt.isel.ls.command.exceptions.CommandNotFoundException;
 import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
+
+import java.sql.Connection;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
 public class PostCinemaIDTheaters implements Command {
 
     @Override
-    public String execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException {
-        int seats = Integer.parseInt(cmdBuilder.getParameter(String.valueOf(ROWS))) *
+    public void execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException {
+        /*int seats = Integer.parseInt(cmdBuilder.getParameter(String.valueOf(ROWS))) *
                     Integer.parseInt(cmdBuilder.getParameter(String.valueOf(SEATS_ROW)));
 
         return "INSERT INTO THEATER VALUES ("+
@@ -18,5 +21,11 @@ public class PostCinemaIDTheaters implements Command {
                 cmdBuilder.getParameter(String.valueOf(ROWS))+","+
                 cmdBuilder.getParameter(String.valueOf(NAME))+","+
                 cmdBuilder.getParameter(String.valueOf(CINEMAS_ID))+");";
+                */
+    }
+
+    @Override
+    public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException {
+
     }
 }
