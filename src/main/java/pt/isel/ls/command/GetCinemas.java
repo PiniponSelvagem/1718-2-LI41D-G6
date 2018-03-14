@@ -25,10 +25,10 @@ public class GetCinemas implements Command {
      * @throws CommandNotFoundException
      * @throws SQLException
      */
-    @Override
+    @Override //Comando a trabalhar faz get da lista de cinemas existentes e emite mensagem
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
 
-        PreparedStatement stmt = connection.prepareStatement("SELECT * from Cinema");
+        PreparedStatement stmt = connection.prepareStatement("SELECT cid from CINEMA");
         ResultSet rs = stmt.executeQuery();
         while(rs.next()){
             System.out.println("Cinema id: "+rs.getInt(1));

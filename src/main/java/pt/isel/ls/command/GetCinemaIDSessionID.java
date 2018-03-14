@@ -4,18 +4,28 @@ import pt.isel.ls.command.exceptions.CommandNotFoundException;
 import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
 
-import java.sql.Connection;
+import java.sql.*;
 
 public class GetCinemaIDSessionID implements Command {
 
     @Override
     public void execute(CommandBuilder cmdBuilder) {
-        //return "SELECT * FROM CINEMA_SESSIONS AS s INNER JOIN CINEMA AS c WHERE c.cid="+
-          //      cmdBuilder.popId()+" AND s.sid="+cmdBuilder.popId();
+        /*return "SELECT * FROM CINEMA_SESSIONS AS s INNER JOIN THEATER AS t WHERE t.cid="+
+                cmdBuilder.popId()+"AND s.tid=t.tid AND s.sid="+cmdBuilder.popId();*/
     }
 
-    @Override
-    public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException {
-
+    @Override //not tested, impossible to do so without working post command
+    public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA_SESSIONS AS s INNER JOIN THEATER AS t " +
+                "WHERE t.cid=? AND s.tid=t.tid AND s.sid=?");
+        stmt.setInt(1, cmdBuilder.popId());
+        stmt.setInt(2, cmdBuilder.popId());
+        ResultSet rs = stmt.executeQuery();
+        ResultSetMetaData metadata = rs.getMetaData();
+        while(rs.next()){ //this while now iterates through every entry of the resultset as this command has to give all the info
+            System.out.print("Session info: "+ rs.getString(1));
+            for(int i =2; i<= metadata.getColumnCount();i++)
+                System.out.print(", "+rs.getInt(i));
+        }
     }
 }

@@ -31,7 +31,7 @@ public class PostCinemas implements Command {
      * @throws CommandNotFoundException
      * @throws SQLException
      */
-    @Override
+    @Override //Comando a trabalhar faz post e emite mensagem
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
 
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO CINEMA VALUES (?, ?)");
