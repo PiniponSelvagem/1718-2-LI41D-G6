@@ -1,21 +1,16 @@
 package pt.isel.ls.command;
 
-import pt.isel.ls.command.exceptions.CommandNotFoundException;
-import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
 
 import java.sql.*;
 
+
 public class GetCinemaIDSessionID implements Command {
 
     @Override
-    public void execute(CommandBuilder cmdBuilder) {
-        /*return "SELECT * FROM CINEMA_SESSIONS AS s INNER JOIN THEATER AS t WHERE t.cid="+
-                cmdBuilder.popId()+"AND s.tid=t.tid AND s.sid="+cmdBuilder.popId();*/
-    }
-
-    @Override //not tested, impossible to do so without working post command
-    public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
+    public void execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
+        /*
+        //TODO: TEST THIS!
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA_SESSIONS AS s INNER JOIN THEATER AS t " +
                 "WHERE t.cid=? AND s.tid=t.tid AND s.sid=?");
         stmt.setInt(1, cmdBuilder.popId());
@@ -27,5 +22,6 @@ public class GetCinemaIDSessionID implements Command {
             for(int i =2; i<= metadata.getColumnCount();i++)
                 System.out.print(", "+rs.getInt(i));
         }
+        */
     }
 }

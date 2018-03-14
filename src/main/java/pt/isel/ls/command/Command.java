@@ -9,12 +9,13 @@ import java.sql.SQLException;
 
 public interface Command {
 
+    /* !!! DISABLED ATM SINCE ITS NOT BEING USED !!!
     /**
-     * @param cmdBuilder Command builder, aka contex
+     * @param cmdBuilder Command builder, aka context
      * @throws InvalidCommandParametersException
      * @throws CommandNotFoundException
      */
-    void execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException, CommandNotFoundException;
+    //void execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException, CommandNotFoundException;
 
     /**
      * Accesses the Database and executes the SQL queries
@@ -25,6 +26,7 @@ public interface Command {
      * @throws CommandNotFoundException
      * @throws SQLException
      */
-    void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException;
+    void execute(CommandBuilder cmdBuilder, Connection connection)
+            throws InvalidCommandParametersException, CommandNotFoundException, SQLException;
 
 }

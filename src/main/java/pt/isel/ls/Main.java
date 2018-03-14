@@ -1,6 +1,5 @@
 package pt.isel.ls;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import pt.isel.ls.command.Command;
 import pt.isel.ls.command.exceptions.CommandNotFoundException;
 import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
@@ -9,8 +8,6 @@ import pt.isel.ls.command.utils.CommandUtils;
 import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Main {

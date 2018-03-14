@@ -1,7 +1,5 @@
 package pt.isel.ls.command;
 
-import pt.isel.ls.command.exceptions.CommandNotFoundException;
-import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
 
 import java.sql.*;
@@ -9,13 +7,7 @@ import java.sql.*;
 public class GetCinemaID implements Command {
 
     @Override
-    public void execute(CommandBuilder cmdBuilder) {
-        //return "SELECT * FROM CINEMA WHERE mid="+cmdBuilder.popId();
-    }
-
-    @Override //Comando a funcionar
-    public void execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
-
+    public void execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA WHERE cid = ?");
         stmt.setInt(1, cmdBuilder.popId());
         ResultSet rs = stmt.executeQuery();
@@ -26,6 +18,4 @@ public class GetCinemaID implements Command {
                 System.out.print(", "+rs.getString(i));
         }
     }
-
-
 }
