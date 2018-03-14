@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static pt.isel.ls.command.strings.CommandEnum.*;
+
 public class GetCinemaIDTheaterIDSessionsToday implements Command {
 
     @Override
@@ -19,8 +21,8 @@ public class GetCinemaIDTheaterIDSessionsToday implements Command {
 
         PreparedStatement stmt = connection.prepareStatement("SELECT s.sid FROM CINEMA_SESSION AS s INNER JOIN THEATER AS t " +
                 "WHERE t.cid=? AND s.tid=t.tid AND t.tid=? AND (SELECT CONVERT (s.Date, GETDATE()))=?");
-        stmt.setInt(1, cmdBuilder.popId());
-        stmt.setInt(2, cmdBuilder.popId());
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+        stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
         stmt.setString(3, date);
         ResultSet rs = stmt.executeQuery();
         while(rs.next()){

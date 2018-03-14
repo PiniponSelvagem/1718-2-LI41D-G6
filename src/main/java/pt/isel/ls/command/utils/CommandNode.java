@@ -51,7 +51,7 @@ public class CommandNode {
     /**
      * Search for this command in this directory, not found? go to the next directory aka child.
      * @param cmdBuilder Search for this command.
-     * @return If found return it, if not return {@link pt.isel.ls.command.NotFound#execute(CommandBuilder)}
+     * @return If found return it, if not return {@link pt.isel.ls.command.NotFound}
      */
     public Command search(CommandBuilder cmdBuilder) {
         if ( cmdBuilder.getPath().isEmpty() ) {
