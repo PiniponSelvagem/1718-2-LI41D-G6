@@ -40,7 +40,11 @@ public class CommandUtils {
         );
         //"GET /movies/{mid}"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX,
+=======
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+ MOVIE_ID +ID_SUFFIX,
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 new GetMovieID())
         );
 
@@ -58,7 +62,11 @@ public class CommandUtils {
         );
         //"GET /cinemas/{cid}"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX,
+=======
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX,
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 new GetCinemaID())
         );
 
@@ -66,20 +74,33 @@ public class CommandUtils {
         /* Commands related to CINEMAS->THEATERS */
         //"POST /cinemas/{cid}/theaters"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+=======
+                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 +DIR_SEPARATOR+THEATERS,
                 new PostCinemaIDTheaters())
         );
         //"GET /cinemas/{cid}/theaters"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+=======
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 +DIR_SEPARATOR+THEATERS,
                 new GetCinemaIDTheaters())
         );
         //"GET /cinemas/{cid}/theaters/{tid}"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX,
+=======
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+ THEATER_ID +ID_SUFFIX,
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 new GetCinemaIDTheatersID())
         );
 
@@ -87,20 +108,35 @@ public class CommandUtils {
         /* Commands related to CINEMAS->THEATERS->SESSIONS */
         //"POST /cinemas/{cid}/theaters/{tid}/sessions"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
+=======
+                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+ THEATER_ID +ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 new PostCinemaIDTheaterIDSessions())
         );
         //"GET /cinemas/{cid}/theaters/{tid}/sessions"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
+=======
+                GET+ ARGS_SEPARATOR +DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+ THEATER_ID +ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 new GetCinemaIDTheaterIDSessions())
         );
         //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS
+=======
+                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+ THEATER_ID +ID_SUFFIX+DIR_SEPARATOR+SESSIONS
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 +DIR_SEPARATOR+TODAY,
                 new GetCinemaIDTheaterIDSessionsToday())
         );
@@ -109,19 +145,32 @@ public class CommandUtils {
         /* Commands related to CINEMAS->SESSIONS */
         //"GET /cinemas/{cid}/sessions"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+=======
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 +DIR_SEPARATOR+SESSIONS,
                 new GetCinemaIDSessions())
         );
         //"GET /cinemas/{cid}/sessions/{sid}"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX,
+=======
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+                +SESSIONS+DIR_SEPARATOR+ID_PREFIX+ SESSION_ID +ID_SUFFIX,
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 new GetCinemaIDSessionID())
         );
         //"GET /cinemas/{cid}/sessions/today"
         cmdTree.add(new CommandBuilder(""+
+<<<<<<< HEAD
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+=======
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+ CINEMA_ID +ID_SUFFIX
+>>>>>>> 33cab4841b5d324f719906ec0b26870e8a134ea4
                 +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+TODAY,
                 new GetCinemaIDSessionsToday())
         );
