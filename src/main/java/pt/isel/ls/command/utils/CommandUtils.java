@@ -40,7 +40,7 @@ public class CommandUtils {
         );
         //"GET /movies/{mid}"
         cmdTree.add(new CommandBuilder(""+
-                GET+ARGS_SEPARATOR+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIES_ID+ID_SUFFIX,
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX,
                 new GetMovieID())
         );
 
@@ -58,7 +58,7 @@ public class CommandUtils {
         );
         //"GET /cinemas/{cid}"
         cmdTree.add(new CommandBuilder(""+
-                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX,
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX,
                 new GetCinemaID())
         );
 
@@ -66,20 +66,20 @@ public class CommandUtils {
         /* Commands related to CINEMAS->THEATERS */
         //"POST /cinemas/{cid}/theaters"
         cmdTree.add(new CommandBuilder(""+
-                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
+                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+THEATERS,
                 new PostCinemaIDTheaters())
         );
         //"GET /cinemas/{cid}/theaters"
         cmdTree.add(new CommandBuilder(""+
-                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+THEATERS,
                 new GetCinemaIDTheaters())
         );
         //"GET /cinemas/{cid}/theaters/{tid}"
         cmdTree.add(new CommandBuilder(""+
-                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
-                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATERS_ID+ID_SUFFIX,
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX,
                 new GetCinemaIDTheatersID())
         );
 
@@ -87,20 +87,20 @@ public class CommandUtils {
         /* Commands related to CINEMAS->THEATERS->SESSIONS */
         //"POST /cinemas/{cid}/theaters/{tid}/sessions"
         cmdTree.add(new CommandBuilder(""+
-                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
-                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATERS_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
+                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
                 new PostCinemaIDTheaterIDSessions())
         );
         //"GET /cinemas/{cid}/theaters/{tid}/sessions"
         cmdTree.add(new CommandBuilder(""+
-                GET+ ARGS_SEPARATOR +DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
-                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATERS_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
                 new GetCinemaIDTheaterIDSessions())
         );
         //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
         cmdTree.add(new CommandBuilder(""+
-                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
-                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATERS_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS
+                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS
                 +DIR_SEPARATOR+TODAY,
                 new GetCinemaIDTheaterIDSessionsToday())
         );
@@ -109,19 +109,19 @@ public class CommandUtils {
         /* Commands related to CINEMAS->SESSIONS */
         //"GET /cinemas/{cid}/sessions"
         cmdTree.add(new CommandBuilder(""+
-                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+SESSIONS,
                 new GetCinemaIDSessions())
         );
         //"GET /cinemas/{cid}/sessions/{sid}"
         cmdTree.add(new CommandBuilder(""+
-                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
-                +SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSIONS_ID+ID_SUFFIX,
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX,
                 new GetCinemaIDSessionID())
         );
         //"GET /cinemas/{cid}/sessions/today"
         cmdTree.add(new CommandBuilder(""+
-                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMAS_ID+ID_SUFFIX
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+TODAY,
                 new GetCinemaIDSessionsToday())
         );
@@ -134,10 +134,10 @@ public class CommandUtils {
      * continue its way in the directories.
      */
     private void initializeDirID() {
-        dirID.put(String.valueOf(CINEMAS),  String.valueOf(ID_PREFIX)+String.valueOf(CINEMAS_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(MOVIES),   String.valueOf(ID_PREFIX)+String.valueOf(MOVIES_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(THEATERS), String.valueOf(ID_PREFIX)+String.valueOf(THEATERS_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(SESSIONS), String.valueOf(ID_PREFIX)+String.valueOf(SESSIONS_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(String.valueOf(CINEMAS),  String.valueOf(ID_PREFIX)+String.valueOf(CINEMA_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(String.valueOf(MOVIES),   String.valueOf(ID_PREFIX)+String.valueOf(MOVIE_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(String.valueOf(THEATERS), String.valueOf(ID_PREFIX)+String.valueOf(THEATER_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(String.valueOf(SESSIONS), String.valueOf(ID_PREFIX)+String.valueOf(SESSION_ID)+String.valueOf(ID_SUFFIX));
     }
 
     /**
@@ -145,20 +145,20 @@ public class CommandUtils {
      * This way, when we can check if its a valid parameter with {@link #validParam(String param)}.
      */
     private void initializeParamsCheck() {
-        putParamsCheck(String.valueOf(CINEMAS_ID));
+        putParamsCheck(String.valueOf(CINEMA_ID));
         putParamsCheck(String.valueOf(NAME));
         putParamsCheck(String.valueOf(CITY));
 
-        putParamsCheck(String.valueOf(MOVIES_ID));
+        putParamsCheck(String.valueOf(MOVIE_ID));
         putParamsCheck(String.valueOf(TITLE));
         putParamsCheck(String.valueOf(YEAR));
         putParamsCheck(String.valueOf(DURATION));
 
-        putParamsCheck(String.valueOf(THEATERS_ID));
+        putParamsCheck(String.valueOf(THEATER_ID));
         putParamsCheck(String.valueOf(ROWS));
         putParamsCheck(String.valueOf(SEATS_ROW));
 
-        putParamsCheck(String.valueOf(SESSIONS_ID));
+        putParamsCheck(String.valueOf(SESSION_ID));
         putParamsCheck(String.valueOf(DATE));
     }
 
@@ -186,7 +186,7 @@ public class CommandUtils {
     }
 
     /**
-     * Returns the directory ID, useful specially to replace the INT value found in user command path
+     * Returns the directory ID, useful specially to replace the ID value found in user command path
      * so it can be replaced with a useful name to keep searching for the command in  the command Tree.
      * @param dir Directory that you want to get the corresponding string ID.
      * @return Returns corresponding directory ID.

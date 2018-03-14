@@ -15,7 +15,7 @@ public class CommandBuilder {
     private HashMap<String, String> params;
     private Command cmd;
     private CommandUtils cmdUtils;
-    private LinkedList<Integer> ids;
+    private HashMap<String, String> ids;
 
 
     /**
@@ -70,11 +70,11 @@ public class CommandBuilder {
      * @param cmdUtils
      */
     private void findIdsAndReplace(CommandUtils cmdUtils) {
-        this.ids = new LinkedList<>();
+        this.ids = new HashMap<>();
         String currDir = cmdUtils.getRootName();
         for (int i=0; i<path.size(); ++i) {
             if (Character.isDigit(path.get(i).charAt(0))) {
-                ids.add(Integer.parseInt(path.get(i)));
+                ids.put(cmdUtils.getDirID(currDir), path.get(i));
                 path.set(i, cmdUtils.getDirID(currDir));
             }
             currDir = path.get(i);
@@ -136,7 +136,7 @@ public class CommandBuilder {
     }
 
     //TODO: https://github.com/isel-leic-ls/1718-1-LI41D-G6/issues/4
-    public int popId() {
-        return ids.pop();
+    public String getId(String id) {
+        return ids.get(ID_PREFIX+id+ID_SUFFIX);
     }
 }

@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static pt.isel.ls.command.strings.CommandEnum.*;
+
 public class GetCinemaIDTheaters implements Command {
 
     @Override
@@ -15,7 +17,7 @@ public class GetCinemaIDTheaters implements Command {
         //TODO: TEST THIS!
         PreparedStatement stmt = connection.prepareStatement("SELECT t.tid FROM THEATER AS t " +
                 "WHERE t.cid=?");
-        stmt.setInt(1, cmdBuilder.popId());
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         ResultSet rs = stmt.executeQuery();
         while(rs.next()){
             System.out.println("Theater id: "+rs.getInt(1));

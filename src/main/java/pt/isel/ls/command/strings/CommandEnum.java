@@ -17,10 +17,10 @@ public enum CommandEnum {
     GET("GET"),
 
     //Directories
-    MOVIES("movies"),           MOVIES_ID("mid"),
-    CINEMAS("cinemas"),         CINEMAS_ID("cid"),
-    THEATERS("theaters"),       THEATERS_ID("tid"),
-    SESSIONS("sessions"),       SESSIONS_ID("sid"),
+    MOVIES("movies"),           MOVIE_ID("mid"),
+    CINEMAS("cinemas"),         CINEMA_ID("cid"),
+    THEATERS("theaters"),       THEATER_ID("tid"),
+    SESSIONS("sessions"),       SESSION_ID("sid"),
     TODAY("today"),
 
     //Parameters
