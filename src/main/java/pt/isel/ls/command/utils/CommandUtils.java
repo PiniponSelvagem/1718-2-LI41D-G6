@@ -115,7 +115,7 @@ public class CommandUtils {
         //"GET /cinemas/{cid}/sessions/{sid}"
         cmdTree.add(new CommandBuilder(""+
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                +SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX,
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX,
                 new GetCinemaIDSessionID())
         );
         //"GET /cinemas/{cid}/sessions/today"

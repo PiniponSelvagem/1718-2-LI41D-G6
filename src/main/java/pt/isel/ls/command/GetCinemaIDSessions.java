@@ -13,15 +13,12 @@ public class GetCinemaIDSessions implements Command {
 
     @Override
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        /*
-        //TODO: TEST THIS!
-        PreparedStatement stmt = connection.prepareStatement("SELECT s.sid FROM CINEMA_SESSION AS s INNER JOIN THEATER AS t" +
-                " WHERE t.cid=? AND t.tid=s.tid");
+        PreparedStatement stmt = connection.prepareStatement("SELECT s.sid FROM CINEMA_SESSION AS s INNER JOIN THEATER AS t ON t.tid=s.tid" +
+                " WHERE t.cid=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         ResultSet rs = stmt.executeQuery();
         while(rs.next()){
             System.out.println("Session id: "+rs.getInt(1));
         }
-        */
     }
 }

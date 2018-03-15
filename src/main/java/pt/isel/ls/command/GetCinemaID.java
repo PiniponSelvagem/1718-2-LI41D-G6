@@ -15,9 +15,9 @@ public class GetCinemaID implements Command {
         ResultSet rs = stmt.executeQuery();
         ResultSetMetaData metadata = rs.getMetaData();
         while(rs.next()){ //this while now iterates through every entry of the resultset as this command has to give all the info
-            System.out.print("Cinema info: "+ rs.getString(1));
-            for(int i =2; i<= metadata.getColumnCount();i++)
-                System.out.print(", "+rs.getString(i));
+            System.out.println("Cinema info: ");
+            for(int i =1; i<= metadata.getColumnCount();i++)
+                System.out.println(metadata.getColumnName(i)+": "+rs.getString(i));
         }
     }
 }

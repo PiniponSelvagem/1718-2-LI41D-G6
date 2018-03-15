@@ -13,8 +13,6 @@ public class GetCinemaIDTheaters implements Command {
 
     @Override
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        /*
-        //TODO: TEST THIS!
         PreparedStatement stmt = connection.prepareStatement("SELECT t.tid FROM THEATER AS t " +
                 "WHERE t.cid=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
@@ -22,6 +20,5 @@ public class GetCinemaIDTheaters implements Command {
         while(rs.next()){
             System.out.println("Theater id: "+rs.getInt(1));
         }
-        */
     }
 }

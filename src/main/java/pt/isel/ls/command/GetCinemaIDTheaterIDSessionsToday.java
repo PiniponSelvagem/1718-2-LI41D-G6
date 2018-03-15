@@ -19,8 +19,8 @@ public class GetCinemaIDTheaterIDSessionsToday implements Command {
         LocalDate localDate = LocalDate.now();
         String date= dtf.format(localDate);
 
-        PreparedStatement stmt = connection.prepareStatement("SELECT s.sid FROM CINEMA_SESSION AS s INNER JOIN THEATER AS t " +
-                "WHERE t.cid=? AND s.tid=t.tid AND t.tid=? AND (SELECT CONVERT (s.Date, GETDATE()))=?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT s.sid FROM CINEMA_SESSION AS s INNER JOIN THEATER AS t ON s.tid=t.tid " +
+                "WHERE t.cid=? AND t.tid=? AND s.Date=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
         stmt.setString(3, date);

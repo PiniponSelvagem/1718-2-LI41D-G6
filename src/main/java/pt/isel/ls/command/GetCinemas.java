@@ -11,13 +11,11 @@ public class GetCinemas implements Command {
 
     @Override
     public void execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        /*
-        //TODO: TEST THIS!
+
         PreparedStatement stmt = connection.prepareStatement("SELECT cid from CINEMA");
         ResultSet rs = stmt.executeQuery();
         while(rs.next()){
             System.out.println("Cinema id: "+rs.getInt(1));
         }
-        */
     }
 }
