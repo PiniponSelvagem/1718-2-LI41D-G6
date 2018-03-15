@@ -1,6 +1,5 @@
 package pt.isel.ls;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import org.junit.Test;
 import pt.isel.ls.sql.Sql;
 
@@ -10,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 public class SqlGetTests {
@@ -36,9 +34,11 @@ public class SqlGetTests {
                 assertEquals("testName", name);
                 assertEquals("testCity", city);
             }
-        }finally {
-            con.rollback();
-            con.close();
+        } finally {
+            if (con != null) {
+                con.rollback();
+                con.close();
+            }
         }
 
     }

@@ -20,10 +20,11 @@ public class CommandBuilder {
 
     /**
      * Build new command.
-     * @param command Command string syntax.
+     * @param str Command string syntax.
      * @param cmd Command {@link pt.isel.ls.command.Command}
      */
-    public CommandBuilder(String command, Command cmd) {
+    public CommandBuilder(String str, Command cmd) {
+        String[] command = str.split(String.valueOf(ARGS_SEPARATOR));
         stringToList(command);
         this.cmd = cmd;
     }
@@ -31,35 +32,23 @@ public class CommandBuilder {
 
     /**
      * Build new command from user input.
-     * @param command Command string input.
-     * @param params Parameters.
+     * @param args Command string input.
      * @param cmdUtils
      * @throws InvalidCommandParametersException
      */
-    public CommandBuilder(String command, String params, CommandUtils cmdUtils) throws InvalidCommandParametersException {
+    public CommandBuilder(String[] args, CommandUtils cmdUtils) throws InvalidCommandParametersException {
         this.cmdUtils = cmdUtils;
-        stringToList(command);
+        stringToList(args);
         findIdsAndReplace(this.cmdUtils);
-        findParams(params);
-    }
-
-    /**
-     * Build new command from user input, without parameters.
-     * @param command Command string input.
-     * @param cmdUtils
-     */
-    public CommandBuilder(String command, CommandUtils cmdUtils) {
-        this.cmdUtils = cmdUtils;
-        stringToList(command);
-        findIdsAndReplace(this.cmdUtils);
+        if (args.length == 3)
+            findParams(args[2]);
     }
 
     /**
      * Organizes the input command so it can be used.
      * @param command Input command.
      */
-    private void stringToList(String command){
-        String[] cmdList = command.split(String.valueOf(ARGS_SEPARATOR));
+    private void stringToList(String[] cmdList){
         this.method = cmdList[0];
         if (cmdList.length >= 2)
             this.path.addAll(Arrays.asList(cmdList[1].substring(1).split(String.valueOf(DIR_SEPARATOR))));
@@ -79,6 +68,13 @@ public class CommandBuilder {
             }
             currDir = path.get(i);
         }
+    }
+
+    /**
+     * @return Returns this CommandUtils
+     */
+    public CommandUtils getCmdUtils() {
+        return cmdUtils;
     }
 
     /**

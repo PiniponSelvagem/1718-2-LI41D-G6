@@ -11,37 +11,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Main {
-    private static CommandUtils cmdUtils = new CommandUtils();
 
     public static void main(String[] args) {
         try {
-            if (args.length == 2)
-                executeBuildedCommand(prepareUserInput(args[0] + " " + args[1]));
-            else if (args.length == 3)
-                executeBuildedCommand(prepareUserInput(args[0] + " " + args[1], args[2]));
+            if (args.length >= 1 && args.length <= 3)
+                executeBuildedCommand(new CommandBuilder(args, new CommandUtils()));
             else
                 throw new CommandNotFoundException();
         } catch (CommandNotFoundException | InvalidCommandParametersException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    /**
-     * Command to execute does NOT have parameters.
-     * @param str Command, user input.
-     * @return Returns result string.
-     */
-    private static CommandBuilder prepareUserInput(String str) {
-        return new CommandBuilder(str, cmdUtils);
-    }
-
-    /**
-     * Command to execute has parameters.
-     * @param str Command, user input.
-     * @return Returns result string.
-     */
-    private static CommandBuilder prepareUserInput(String str, String params) throws InvalidCommandParametersException {
-        return new CommandBuilder(str, params, cmdUtils);
     }
 
     /**
@@ -58,7 +37,7 @@ public class Main {
         try {
             con = Sql.CreateConnetion();
             con.setAutoCommit(false);
-            Command cmd = cmdUtils.getCmdTree().search(cmdBuilder);
+            Command cmd = cmdBuilder.getCmdUtils().getCmdTree().search(cmdBuilder);
             if (cmd == null)
                 throw new CommandNotFoundException();
 
