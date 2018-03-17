@@ -6,6 +6,7 @@ import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
 import pt.isel.ls.command.utils.CommandUtils;
 import pt.isel.ls.sql.Sql;
+import pt.isel.ls.view.command.CommandView;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             if (args.length >= 1 && args.length <= 3)
-                executeBuildedCommand(new CommandBuilder(args, new CommandUtils()));
+                executeBuildedCommand(new CommandBuilder(args, new CommandUtils())).printAllInfo();
             else
                 throw new CommandNotFoundException();
         } catch (CommandNotFoundException | InvalidCommandParametersException e) {
@@ -32,8 +33,9 @@ public class Main {
      * @throws CommandNotFoundException
      * @throws InvalidCommandParametersException
      */
-    private static void executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandNotFoundException, InvalidCommandParametersException {
+    private static CommandView executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandNotFoundException, InvalidCommandParametersException {
         Connection con = null;
+        CommandView cmdView = null;
         try {
             con = Sql.CreateConnetion();
             con.setAutoCommit(false);
@@ -41,10 +43,11 @@ public class Main {
             if (cmd == null)
                 throw new CommandNotFoundException();
 
-            cmd.execute(cmdBuilder, con);
+            cmdView = cmd.execute(cmdBuilder, con);
+            con.commit();
 
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
+        } catch(SQLException e) {
+            e.printStackTrace();
             if (con != null) {
                 try {
                     con.rollback();
@@ -61,5 +64,7 @@ public class Main {
                 }
             }
         }
+
+        return cmdView;
     }
 }

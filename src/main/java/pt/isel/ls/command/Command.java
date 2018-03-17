@@ -3,6 +3,7 @@ package pt.isel.ls.command;
 import pt.isel.ls.command.exceptions.CommandNotFoundException;
 import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
+import pt.isel.ls.view.command.CommandView;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public interface Command {
      * @throws CommandNotFoundException
      * @throws SQLException
      */
-    void execute(CommandBuilder cmdBuilder, Connection connection)
+    CommandView execute(CommandBuilder cmdBuilder, Connection connection)
             throws InvalidCommandParametersException, CommandNotFoundException, SQLException;
 
 }
