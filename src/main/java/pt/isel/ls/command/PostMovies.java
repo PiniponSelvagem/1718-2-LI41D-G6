@@ -5,9 +5,7 @@ import pt.isel.ls.command.utils.CommandBuilder;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.PostView;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
@@ -15,12 +13,16 @@ public class PostMovies implements Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, SQLException {
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO MOVIE VALUES (?, ?, ?)");
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO MOVIE VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, cmdBuilder.getParameter((String.valueOf(TITLE))));
-        stmt.setString(2, cmdBuilder.getParameter((String.valueOf(YEAR))));
-        stmt.setString(3, cmdBuilder.getParameter((String.valueOf(DURATION))));
-        stmt.execute();
+        stmt.setInt(2, Integer.parseInt(cmdBuilder.getParameter((String.valueOf(YEAR)))));
+        stmt.setInt(3, Integer.parseInt(cmdBuilder.getParameter((String.valueOf(DURATION)))));
+        stmt.executeUpdate();
 
-        return new PostView();
+        int id = 0;
+        ResultSet rs = stmt.getGeneratedKeys();
+        if(rs.next()) id = rs.getInt(1);
+
+        return new PostView("Movie ID = ", id);
     }
 }

@@ -26,7 +26,7 @@ public class CommandUtils {
     /**
      * Fills the Tree with all the possible commands available.
      */
-    private void initializeTree() {
+    public void initializeTree() {
         /* Commands related to MOVIES */
         //"POST /movies"
         cmdTree.add(new CommandBuilder(""+

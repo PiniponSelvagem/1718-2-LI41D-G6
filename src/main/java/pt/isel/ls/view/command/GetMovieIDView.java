@@ -21,4 +21,8 @@ public class GetMovieIDView extends CommandView {
     public Object getSingle() {
         return movie;
     }
+
+    public Movie getMovie() {
+        return movie;
+    }
 }
