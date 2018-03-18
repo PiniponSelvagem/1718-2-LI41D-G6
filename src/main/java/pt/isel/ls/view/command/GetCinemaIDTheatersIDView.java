@@ -19,7 +19,7 @@ public class GetCinemaIDTheatersIDView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
+    public Theater getSingle() {
         return theater;
     }
 }

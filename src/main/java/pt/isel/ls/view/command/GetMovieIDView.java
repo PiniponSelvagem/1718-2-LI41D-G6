@@ -18,11 +18,7 @@ public class GetMovieIDView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
-        return movie;
-    }
-
-    public Movie getMovie() {
+    public Movie getSingle() {
         return movie;
     }
 }

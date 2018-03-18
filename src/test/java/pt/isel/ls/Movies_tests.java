@@ -34,7 +34,7 @@ public class Movies_tests {
         }
     }
 
-        @Test
+    @Test
     public void insert_movies() {
         LinkedList<Movie> movies = new LinkedList<>();
         try {
@@ -114,7 +114,7 @@ public class Movies_tests {
 
             int id = movies.getFirst().getId();
             GetMovieIDView movieIDView = (GetMovieIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()));
-            assertEquals(id, movieIDView.getMovie().getId());
+            assertEquals(id, movieIDView.getSingle().getId());
 
         } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();

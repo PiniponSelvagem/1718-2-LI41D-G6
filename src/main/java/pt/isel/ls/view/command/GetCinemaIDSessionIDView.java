@@ -21,7 +21,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
+    public Session getSingle() {
         return session;
     }
 }

@@ -38,7 +38,7 @@ public class GetCinemaIDSessionsView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
+    public Session getSingle() {
         return sessions.getFirst();
     }
 }

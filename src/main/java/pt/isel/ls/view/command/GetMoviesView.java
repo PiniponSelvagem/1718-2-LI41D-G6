@@ -31,7 +31,7 @@ public class GetMoviesView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
+    public Movie getSingle() {
         return movies.getFirst();
     }
 }

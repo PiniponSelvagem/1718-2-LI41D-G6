@@ -25,7 +25,7 @@ public abstract class CommandView {
     /**
      * Example usage: (
      *      CommandView cmdView = cmd.execute(...);
-     *      Cinema c = (Cinema) cmdView.getSingle();
+     *      Cinema c = cmdView.getSingle();
      *      System.out.println(c.getName());
      *
      * @return Returns this view, better explanation:

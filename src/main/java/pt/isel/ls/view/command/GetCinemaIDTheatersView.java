@@ -37,7 +37,7 @@ public class GetCinemaIDTheatersView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
+    public Theater getSingle() {
         return theaters.getFirst();
     }
 }

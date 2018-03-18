@@ -17,7 +17,7 @@ public class GetCinemaIDView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
+    public Cinema getSingle() {
         return cinema;
     }
 }

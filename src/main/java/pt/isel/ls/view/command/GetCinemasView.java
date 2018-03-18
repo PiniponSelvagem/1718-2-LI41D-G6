@@ -30,7 +30,7 @@ public class GetCinemasView extends CommandView {
     }
 
     @Override
-    public Object getSingle() {
+    public Cinema getSingle() {
         return cinemas.getFirst();
     }
 }
