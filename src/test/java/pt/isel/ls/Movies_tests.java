@@ -27,7 +27,7 @@ public class Movies_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&year=2000&duration=90"}, new CommandUtils()));
+                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()));
             }
         } catch (CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
@@ -38,7 +38,7 @@ public class Movies_tests {
     public void insert_movies() {
         LinkedList<Movie> movies = new LinkedList<>();
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             createMovie(con);
@@ -71,7 +71,7 @@ public class Movies_tests {
     @Test
     public void get_movies() {
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             createMovie(con);
@@ -101,7 +101,7 @@ public class Movies_tests {
     @Test
     public void get_movie_by_id(){
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
             LinkedList<Movie> movies = new LinkedList<>();
 

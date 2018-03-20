@@ -17,7 +17,7 @@ public class SqlTest {
     public void insert_students() throws SQLException {
         Connection con = null;
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
             int number = 10;
             String name = "NomeTeste";
@@ -45,7 +45,7 @@ public class SqlTest {
     public void update_students() throws SQLException{
         Connection con = null;
         try{
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
             int number = 10;
             String name = "NomeTeste";
@@ -75,7 +75,7 @@ public class SqlTest {
     public void delete_student() throws SQLException {
         Connection con = null;
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
             int number = 10;
             String name = "NomeTeste";
