@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
-public class PostCinemaIDTheaterIDSessions implements Command {
+public class PostCinemaIDTheaterIDSessions extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, SQLException {

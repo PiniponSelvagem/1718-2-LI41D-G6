@@ -11,7 +11,7 @@ import java.sql.*;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
-public class GetCinemaIDSessions implements Command {
+public class GetCinemaIDSessions extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {

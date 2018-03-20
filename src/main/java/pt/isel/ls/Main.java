@@ -1,6 +1,5 @@
 package pt.isel.ls;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import pt.isel.ls.command.Command;
 import pt.isel.ls.command.exceptions.CommandNotFoundException;
 import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
@@ -17,7 +16,10 @@ public class Main {
     public static void main(String[] args) {
         Connection con = null;
         try {
-            if (args.length >= 1 && args.length <= 3) {
+            if (args.length <= 1) {
+                executeBuildedCommand(new CommandBuilder(args, new CommandUtils())).printAllInfo();
+            }
+            else if (args.length <= 3) {
                 con = Sql.CreateConnetion();
                 con.setAutoCommit(false);
                 executeBuildedCommand(con, new CommandBuilder(args, new CommandUtils())).printAllInfo();
@@ -41,10 +43,22 @@ public class Main {
     }
 
     /**
+     * Executes and validates the user command, ONLY INTERNAL COMMANDS.
+     * @param cmdBuilder
+     * @return Returns the view for that command.
+     */
+    private static CommandView executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandNotFoundException, InvalidCommandParametersException {
+        Command cmd = cmdBuilder.getCmdUtils().getCmdTree().search(cmdBuilder);
+        if (cmd == null)
+            throw new CommandNotFoundException();
+        return cmd.execute(cmdBuilder);
+    }
+
+    /**
      * Executes and validates the user command.
      *
      * @param cmdBuilder Builded command ready to be searched.
-     * @return Returns the SQL string that should be queried to the SQL server.
+     * @return Returns the view for that command.
      * @throws SQLException
      * @throws CommandNotFoundException
      * @throws InvalidCommandParametersException

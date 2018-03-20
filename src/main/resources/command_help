@@ -1,0 +1,65 @@
+--------------------------------------------------------------------------------------------
+   .aMMMb  dMP dMMMMb  dMMMMMP dMMMMMMMMb  .aMMMb  .dMMMb         dMP dMMMMb  dMMMMMP .aMMMb
+  dMP"VMP amr dMP dMP dMP     dMP"dMP"dMP dMP"dMP dMP" VP        amr dMP dMP dMP     dMP"dMP
+ dMP     dMP dMP dMP dMMMP   dMP dMP dMP dMMMMMP  VMMMb         dMP dMP dMP dMMMP   dMP dMP
+dMP.aMP dMP dMP dMP dMP     dMP dMP dMP dMP dMP dP .dMP        dMP dMP dMP dMP     dMP.aMP
+VMMMP" dMP dMP dMP dMMMMMP dMP dMP dMP dMP dMP  VMMMP"        dMP dMP dMP dMP      VMMMP"
+--------------------------------------------------------------------------------------------
+Cinemas information manager
+ISEL > LEIC > LS [1718v : LI41D Group6]
+
+A41429 - Rodrigo Silva
+A41457 - Pedro Raminhos
+A41566 - Nuno Faiao
+--------------------------------------------------------------------------------------------
+HOW TO USE:
+
+Each command is defined using the following generic structure
+    {method} {path} {parameters}
+
+where
+    the method defines the type of action to perform (e.g. GET or POST)
+    the path defines the resource on which the command is executed (e.g. /cinemas/123)
+    the parameters is a sequence of name=value pairs, seperated by &
+        (e.g. name=City+Campo+Pequeno&city=Lisboa)
+
+    Example: POST /cinemas name=City+Campo+Pequeno&city=Lisboa
+--------------------------------------------------------------------------------------------
+
+HELP                                : Display this help message
+
+ - Movie management -
+POST /movies                        : Creates a new movie, given the following parameters
+        title - the title name
+        releaseYear - the movie's release year
+        duration - the movie's duration (in minutes)
+GET /movies                         : List all movies
+GET /movies/{mid}                   : Detailed information for the movie identified by {mid}
+
+ - Cinema management -
+POST /cinemas                       : Creates a new cinema, given the following parameters
+        name - the cinema name
+        city - the city where the cinema is located
+GET /cinemas                        : List all cinemas
+GET /cinemas/{cid}                  : Detailed information for the cinema identified by {cid}
+POST /cinemas/{cid}/theaters        : Adds a new theater to a cinema, given the following params
+        name - theater name
+        rows - theater number of rows
+        seats - number of seats per rows
+GET /cinemas/{cid}/theaters         : List all theaters of the cinema identified by {cid}
+GET /cinemas/{cid}/theaters/{tid}   : Detailed information for the theater identified by {tid}
+
+ - Sessions management -
+POST /cinemas/{cid}/theaters/{tid}/sessions
+                                    : Creates a new session, given the following parameters
+        date - session date
+        mid - movie identifier
+GET /cinemas/{cid}/theaters/{tid}/sessions
+                                    : List all sessions in the theater identified by {tid}
+                                      on the cinema identified by {cid}
+GET /cinemas/{cid}/sessions         : List all sessions in the cinema identified by {cid}
+GET /cinemas/{cid}/sessions/{sid}   : Detailed information for the session identified by {sid}
+GET /cinemas/{cid}/sessions/today   : List all sessions for the current day for cinema {cid}
+GET /cinemas/{cid}/theaters/{tid}/sessions/today
+                                    : List all sessions for the current day for the cinema
+                                      and theater identified by {cid} and {tid} respectively

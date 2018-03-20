@@ -46,12 +46,16 @@ public class CommandBuilder {
 
     /**
      * Organizes the input command so it can be used.
-     * @param command Input command.
+     * @param cmdList Input command.
      */
     private void stringToList(String[] cmdList){
-        this.method = cmdList[0];
-        if (cmdList.length >= 2)
-            this.path.addAll(Arrays.asList(cmdList[1].substring(1).split(String.valueOf(DIR_SEPARATOR))));
+        if (cmdList.length == 0) {
+            this.method = String.valueOf(HELP);
+        } else {
+            this.method = cmdList[0];
+            if (cmdList.length >= 2)
+                this.path.addAll(Arrays.asList(cmdList[1].substring(1).split(String.valueOf(DIR_SEPARATOR))));
+        }
     }
 
     /**

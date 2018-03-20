@@ -4,19 +4,24 @@ import pt.isel.ls.command.exceptions.CommandNotFoundException;
 import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
 import pt.isel.ls.command.utils.CommandBuilder;
 import pt.isel.ls.view.command.CommandView;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface Command {
+public abstract class Command {
 
-    /* !!! DISABLED ATM SINCE ITS NOT BEING USED !!!
     /**
+     * Execute internal command, without the need of SQL connection.
+     *
      * @param cmdBuilder Command builder, aka context
      * @throws InvalidCommandParametersException
      * @throws CommandNotFoundException
      */
-    //void execute(CommandBuilder cmdBuilder) throws InvalidCommandParametersException, CommandNotFoundException;
+    public CommandView execute(CommandBuilder cmdBuilder)
+            throws InvalidCommandParametersException, CommandNotFoundException {
+        throw new CommandNotFoundException();
+    }
 
     /**
      * Accesses the Database and executes the SQL queries
@@ -27,7 +32,9 @@ public interface Command {
      * @throws CommandNotFoundException
      * @throws SQLException
      */
-    CommandView execute(CommandBuilder cmdBuilder, Connection connection)
-            throws InvalidCommandParametersException, CommandNotFoundException, SQLException;
+    public CommandView execute(CommandBuilder cmdBuilder, Connection connection)
+            throws InvalidCommandParametersException, CommandNotFoundException, SQLException {
+        throw new CommandNotFoundException();
+    }
 
 }

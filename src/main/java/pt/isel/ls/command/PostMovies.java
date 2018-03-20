@@ -9,7 +9,7 @@ import java.sql.*;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
-public class PostMovies implements Command {
+public class PostMovies extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, SQLException {

@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
-public class GetCinemaIDSessionsToday implements Command {
+public class GetCinemaIDSessionsToday extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {

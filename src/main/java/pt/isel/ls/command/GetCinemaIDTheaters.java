@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
-public class GetCinemaIDTheaters implements Command {
+public class GetCinemaIDTheaters extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {

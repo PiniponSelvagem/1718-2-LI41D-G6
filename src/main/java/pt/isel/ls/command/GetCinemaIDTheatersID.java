@@ -9,7 +9,7 @@ import java.sql.*;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
 
-public class GetCinemaIDTheatersID implements Command {
+public class GetCinemaIDTheatersID extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {

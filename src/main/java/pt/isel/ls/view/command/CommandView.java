@@ -32,5 +32,7 @@ public abstract class CommandView {
      * Comparing to getList(), this returns 1 of those objects. If this view has a LinkedList to store objects,
      * this should return the first one.
      */
-    public abstract Object getSingle();
+    public Object getSingle() {
+        return null;
+    }
 }

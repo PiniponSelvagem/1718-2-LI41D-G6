@@ -12,7 +12,7 @@ public class CommandTree {
      * Create new command Tree.
      * @param root Base directory.
      */
-    public CommandTree( CommandNode root ) {
+    public CommandTree(CommandNode root) {
         this.root = root;
         commonRoot = null;
     }

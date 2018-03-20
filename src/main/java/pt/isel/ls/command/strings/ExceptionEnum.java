@@ -1,9 +1,11 @@
 package pt.isel.ls.command.strings;
 
+import static pt.isel.ls.command.strings.CommandEnum.HELP;
+
 public enum ExceptionEnum {
 
-    NOT_FOUND("Command not found."),
-    INVALID_PARAMETERS("Invalid command parameters.");
+    NOT_FOUND("Command not found. Check available commands with: "+HELP),
+    INVALID_PARAMETERS("Invalid command parameters. Check available parameters for this command with: "+HELP);
 
 
     private final String str;

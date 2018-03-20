@@ -27,6 +27,13 @@ public class CommandUtils {
      * Fills the Tree with all the possible commands available.
      */
     public void initializeTree() {
+        /* Internal commands */
+        //"HELP"
+        cmdTree.add(new CommandBuilder(""+
+                HELP,
+                new Help())
+        );
+
         /* Commands related to MOVIES */
         //"POST /movies"
         cmdTree.add(new CommandBuilder(""+

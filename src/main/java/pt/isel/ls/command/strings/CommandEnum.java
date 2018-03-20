@@ -13,6 +13,7 @@ public enum CommandEnum {
     PARAMS_VALS_SEPERATOR_REPLACEMENT(" "),
 
     //Methods
+    HELP("HELP"),
     POST("POST"),
     GET("GET"),
 
@@ -27,10 +28,10 @@ public enum CommandEnum {
     NAME("name"),
     CITY("city"),
     TITLE("title"),
-    YEAR("year"),
+    YEAR("releaseYear"),
     DURATION("duration"),
     ROWS("rows"),
-    SEATS_ROW("seatsrow"),
+    SEATS_ROW("seats"),
     DATE("date");
 
 
