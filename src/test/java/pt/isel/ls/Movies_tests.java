@@ -27,7 +27,7 @@ public class Movies_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&year=2000&duration=90"}, new CommandUtils()));
+                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()));
             }
         } catch (CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
