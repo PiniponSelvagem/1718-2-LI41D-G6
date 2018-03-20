@@ -27,10 +27,10 @@ public enum CommandEnum {
     NAME("name"),
     CITY("city"),
     TITLE("title"),
-    YEAR("year"),
+    YEAR("releaseYear"),
     DURATION("duration"),
     ROWS("rows"),
-    SEATS_ROW("seatsrow"),
+    SEATS_ROW("seats"),
     DATE("date");
 
 
