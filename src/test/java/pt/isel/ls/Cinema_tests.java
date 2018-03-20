@@ -22,13 +22,13 @@ public class Cinema_tests {
     private Connection con = null;
 
 
-    private void create_cinemas(Connection con){
+    public void create_cinemas(Connection con){
         for(int i = 0; i < 3; i++){
             String name = "nameTest" + (i + 1);
             try {
-                Main.executeBuildedCommand(con, new CommandBuilder(new String[]
-                        {"POST", "/cinemas", "name="+name+"&city=cityTest"}, new CommandUtils()));
-            } catch (CommandNotFoundException | InvalidCommandParametersException e) {
+                PreparedStatement stmt = con.prepareStatement("INSERT INTO CINEMA VALUES('" + name +"', 'cityTest')");
+                stmt.executeUpdate();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -41,7 +41,11 @@ public class Cinema_tests {
             con = Sql.getConnection();
             con.setAutoCommit(false);
 
-            create_cinemas(con);
+            for(int i = 0; i < 3; i++) {
+                String name = "nameTest" + (i + 1);
+                Main.executeBuildedCommand(con, new CommandBuilder(new String[]
+                        {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, new CommandUtils()));
+            }
 
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM CINEMA");
             ResultSet rs = stmt.executeQuery();
@@ -53,7 +57,7 @@ public class Cinema_tests {
                 assertEquals("nameTest" + (i + 1), c.getName());
                 i++;
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InvalidCommandParametersException | CommandNotFoundException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {

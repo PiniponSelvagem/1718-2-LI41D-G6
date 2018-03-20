@@ -27,9 +27,10 @@ public class Movies_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()));
+                PreparedStatement stmt = con.prepareStatement("INSERT INTO MOVIE VALUES('" + title + "', 2000, 90) ");
+                stmt.execute();
             }
-        } catch (CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -41,7 +42,11 @@ public class Movies_tests {
             con = Sql.getConnection();
             con.setAutoCommit(false);
 
-            createMovie(con);
+            for (int i = 0; i < 3; i++) {
+                String title = "TestTitle";
+                title += (i + 1);
+                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()));
+            }
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -49,12 +54,11 @@ public class Movies_tests {
             }
             int i = 1;
             for (Movie m : movies) {
-                //assertEquals(i, m.getId());
                 assertEquals("TestTitle" + i, m.getTitle());
                 i++;
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {

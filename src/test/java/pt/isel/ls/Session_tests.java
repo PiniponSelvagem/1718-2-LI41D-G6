@@ -25,18 +25,45 @@ import static org.junit.Assert.assertEquals;
 
 public class Session_tests {
     Connection con = null;
+    int movieID = 0;
+    int cinemaID = 0;
+    int theaterID = 0;
 
     public void createSession(Connection con) {
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
-            for (int i = 0; i < 3; i++) {
-                String title = "TestTitle";
-                title += (i + 1);
-                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()));
-            }
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas", "name=cinema1&city=cidade1"}, new CommandUtils()));
+            PreparedStatement stmt = con.prepareStatement("INSERT INTO MOVIE VALUES('title1', 2000, 90)");
+            stmt.executeUpdate();
+
+            stmt = con.prepareStatement("SELECT mid FROM MOVIE");
+            ResultSet rs = stmt.executeQuery();
+            movieID = 0;
+            if(rs.next()) movieID = rs.getInt(1);
+
+            stmt = con.prepareStatement("INSERT INTO CINEMA VALUES('nameTest1', 'cityTest')");
+            //stmt = con.prepareStatement("INSERT INTO CINEMA VALUES('nameTest2', 'cityTest')");
+            stmt.executeUpdate();
+
+            stmt = con.prepareStatement("SELECT cid FROM CINEMA");
+            rs = stmt.executeQuery();
+            cinemaID = 0;
+            if(rs.next()) cinemaID = rs.getInt(1);
+            stmt = con.prepareStatement("INSERT INTO THEATER VALUES(10, 5, 20, 'theaterName', " + cinemaID + ")");
+            stmt.executeUpdate();
+
+            stmt = con.prepareStatement("SELECT tid FROM THEATER");
+            rs = stmt.executeQuery();
+            theaterID = 0;
+            if(rs.next()) theaterID = rs.getInt(1);
+
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaID + "/theaters/" + theaterID + "/sessions", "date=2018/4/1&mid=" + movieID}, new CommandUtils()));
+            //stmt = con.prepareStatement("INSERT INTO CINEMA_SESSION VALUES('2018/4/1', " + movieID + ", " + theaterID + ")");
+            //stmt.executeUpdate();
+
+
+            /*Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas", "name=cinema1&city=cidade1"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters", "name=sala1&rows=12&seats=18"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters", "name=sala2&rows=12&seats=18"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters/2/sessions", "date=2018/4/1&mid=1"}, new CommandUtils()));
@@ -45,7 +72,8 @@ public class Session_tests {
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters/1/sessions", "date=2018/4/1&mid=1"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters/1/sessions", "date=2018/4/1&mid=2"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters/1/sessions", "date="+date+"&mid=3"}, new CommandUtils()));
-        } catch (CommandNotFoundException | InvalidCommandParametersException e) {
+            */
+        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
         }
     }
@@ -62,17 +90,11 @@ public class Session_tests {
             con.setAutoCommit(false);
 
             createSession(con);
-            PreparedStatement stmt = con.prepareStatement("SELECT s.sid, s.tid, s.mid FROM CINEMA_SESSION AS s");
+            PreparedStatement stmt = con.prepareStatement("SELECT s.tid, s.mid FROM CINEMA_SESSION AS s");
             ResultSet rs = stmt.executeQuery();
-            int i=0, j=0, t=2;
             while (rs.next()) {
-                i++;
-                j++;
-                if(i>3)t=1;
-                assertEquals(rs.getInt(1),i);
-                assertEquals(rs.getInt(2),t);
-                assertEquals(rs.getInt(3),j);
-                if(j==3)j=0;
+                assertEquals(theaterID, rs.getInt(1));
+                assertEquals(movieID, rs.getInt(2));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,15 +117,11 @@ public class Session_tests {
             con.setAutoCommit(false);
 
             createSession(con);
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/1/sessions"}, new CommandUtils()));
-            LinkedList<Session> sessions;
-            sessions = view.getList();
-            int i = 1;
-            for (Session s : sessions) {
-                assertEquals(i, s.getId());
-                assertEquals(1, s.getCinemaID());
-                i++;
-            }
+            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{
+                    "GET", "/cinemas/" + cinemaID + "/sessions"}, new CommandUtils()));
+           assertEquals("2018-04-01", view.getSingle().getDate().toString());
+           assertEquals("title1", view.getSingle().getMovie().getTitle());
+
         } catch (SQLException | InvalidCommandParametersException | CommandNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -126,12 +144,12 @@ public class Session_tests {
             con.setAutoCommit(false);
 
             createSession(con);
-            for(int t=1; t<3; t++) {
-                GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/1/theaters/" + t + "/sessions"}, new CommandUtils()));
-                LinkedList<Session> sessions;
-                sessions = view.getList();
-                for (Session s : sessions) assertEquals(t, s.getTheater().getId());
-            }
+
+            GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{
+                    "GET", "/cinemas/" + cinemaID + "/theaters/" + theaterID + "/sessions"}, new CommandUtils()));
+            assertEquals("2018-04-01", view.getSingle().getDate().toString());
+            assertEquals("title1", view.getSingle().getMovie().getTitle());
+
         } catch (SQLException | InvalidCommandParametersException | CommandNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -153,12 +171,15 @@ public class Session_tests {
             con.setAutoCommit(false);
 
             createSession(con);
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM CINEMA_SESSION");
+            PreparedStatement stmt = con.prepareStatement("SELECT sid FROM CINEMA_SESSION");
+            int sid;
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                int id=rs.getInt(1);
-                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/1/sessions/" + id}, new CommandUtils()));
-                assertEquals(id, sessionIDView.getSingle().getId());
+                sid = rs.getInt(1);
+                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{
+                        "GET", "/cinemas/" + cinemaID + "/sessions/" + sid}, new CommandUtils()));
+                assertEquals("2018-04-01", sessionIDView.getSingle().getDate().toString());
+                assertEquals("title1", sessionIDView.getSingle().getMovie().getTitle());
             }
 
         } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
@@ -190,7 +211,8 @@ public class Session_tests {
             while (rs.next()) {
                 int id=rs.getInt(1);
                 int cid=rs.getInt(2);
-                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/1/sessions/today"}, new CommandUtils()));
+                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{
+                        "GET", "/cinemas/1/sessions/today"}, new CommandUtils()));
                 assertEquals(id, sessionIDView.getSingle().getId());
                 assertEquals(cid, sessionIDView.getSingle().getId());
             }
