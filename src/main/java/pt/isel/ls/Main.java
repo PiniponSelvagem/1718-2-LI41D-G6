@@ -18,7 +18,7 @@ public class Main {
         Connection con = null;
         try {
             if (args.length >= 1 && args.length <= 3) {
-                con = Sql.CreateConnetion();
+                con = Sql.getConnection();
                 con.setAutoCommit(false);
                 executeBuildedCommand(con, new CommandBuilder(args, new CommandUtils())).printAllInfo();
                 con.commit();

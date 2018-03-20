@@ -38,7 +38,7 @@ public class Movies_tests {
     public void insert_movies() {
         LinkedList<Movie> movies = new LinkedList<>();
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             createMovie(con);
@@ -71,7 +71,7 @@ public class Movies_tests {
     @Test
     public void get_movies() {
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             createMovie(con);
@@ -101,7 +101,7 @@ public class Movies_tests {
     @Test
     public void get_movie_by_id(){
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
             LinkedList<Movie> movies = new LinkedList<>();
 

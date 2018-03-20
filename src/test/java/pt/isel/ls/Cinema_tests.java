@@ -26,7 +26,7 @@ public class Cinema_tests {
     public void insert_cinema(){
         LinkedList<Cinema> cinemas = new LinkedList<>();
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             for(int i = 0; i < 3; i++){
