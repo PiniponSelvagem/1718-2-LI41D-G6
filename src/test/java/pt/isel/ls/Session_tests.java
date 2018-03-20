@@ -34,11 +34,11 @@ public class Session_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&year=2000&duration=90"}, new CommandUtils()));
+                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()));
             }
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas", "name=cinema1&city=cidade1"}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters", "name=sala1&rows=12&seatsrow=18"}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters", "name=sala2&rows=12&seatsrow=18"}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters", "name=sala1&rows=12&seats=18"}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters", "name=sala2&rows=12&seats=18"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters/2/sessions", "date=2018/4/1&mid=1"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters/2/sessions", "date="+date+"&mid=2"}, new CommandUtils()));
             Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/1/theaters/2/sessions", "date=2018/4/1&mid=3"}, new CommandUtils()));

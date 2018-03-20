@@ -70,7 +70,7 @@ public class Cinema_tests {
     @Test
     public void get_cinemas() {
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
@@ -87,7 +87,7 @@ public class Cinema_tests {
             }
         } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if(con != null){
                 try {
                     con.rollback();
@@ -102,7 +102,7 @@ public class Cinema_tests {
     @Test
     public void get_cinema_by_id(){
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
             create_cinemas(con);
 
@@ -121,7 +121,7 @@ public class Cinema_tests {
             assertEquals(ids[1], view.getSingle().getId());
         } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if(con != null){
                 try {
                     con.rollback();
@@ -136,7 +136,7 @@ public class Cinema_tests {
     @Test
     public void insert_cinemaID_theater(){
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
@@ -167,7 +167,7 @@ public class Cinema_tests {
             }
         } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if (con != null){
                 try {
                     con.rollback();
@@ -182,7 +182,7 @@ public class Cinema_tests {
     @Test
     public void get_cinemasID_theater(){
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
@@ -215,7 +215,7 @@ public class Cinema_tests {
             }
         } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if(con != null){
                 try {
                     con.rollback();
@@ -230,7 +230,7 @@ public class Cinema_tests {
     @Test
     public void get_cinemaID_theaterID(){
         try {
-            con = Sql.CreateConnetion();
+            con = Sql.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
@@ -266,7 +266,7 @@ public class Cinema_tests {
 
         } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if (con != null)
                 try {
                     con.rollback();
