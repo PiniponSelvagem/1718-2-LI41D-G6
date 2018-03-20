@@ -20,8 +20,6 @@ public class Main {
                 executeBuildedCommand(new CommandBuilder(args, new CommandUtils())).printAllInfo();
             }
             else if (args.length <= 3) {
-                con = Sql.CreateConnetion();
-            if (args.length >= 1 && args.length <= 3) {
                 con = Sql.getConnection();
                 con.setAutoCommit(false);
                 executeBuildedCommand(con, new CommandBuilder(args, new CommandUtils())).printAllInfo();
