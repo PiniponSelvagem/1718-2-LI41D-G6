@@ -135,7 +135,6 @@ public class CommandBuilder {
         return cmd;
     }
 
-    //TODO: https://github.com/isel-leic-ls/1718-1-LI41D-G6/issues/4
     public String getId(String id) {
         return ids.get(ID_PREFIX+id+ID_SUFFIX);
     }
