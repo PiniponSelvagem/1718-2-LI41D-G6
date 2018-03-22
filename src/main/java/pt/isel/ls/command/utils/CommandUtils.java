@@ -105,7 +105,7 @@ public class CommandUtils {
         );
         //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
         cmdTree.add(new CommandBuilder(""+
-                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
                 +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS
                 +DIR_SEPARATOR+TODAY,
                 new GetCinemaIDTheaterIDSessionsToday())
