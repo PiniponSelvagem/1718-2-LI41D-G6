@@ -242,6 +242,7 @@ public class Session_tests {
 
     @Test
     public void get_sessions_today_by_theater(){
+		//line 255 command never identified
         /*try {
             con = Sql.getConnection();
             con.setAutoCommit(false);
