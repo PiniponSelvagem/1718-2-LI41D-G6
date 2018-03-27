@@ -130,6 +130,61 @@ public class CommandUtils {
                 GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+TODAY,
                 new GetCinemaIDSessionsToday())
         );
+
+
+        /* Commands related to Tickets */
+        //"POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new CommandBuilder(""+
+                POST+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
+                +DIR_SEPARATOR+TICKETS,
+                new PostCinemaIDTheaterIDSessionIDTickets())
+        );
+        //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new CommandBuilder(""+
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
+                +DIR_SEPARATOR+TICKETS,
+                new GetCinemaIDTheaterIDSessionIDTickets())
+        );
+        //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}"
+        cmdTree.add(new CommandBuilder(""+
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
+                +DIR_SEPARATOR+TICKETS+DIR_SEPARATOR+ID_PREFIX+TICKET_ID+ID_SUFFIX,
+                new GetCinemaIDTheaterIDSessionIDTicketID())
+        );
+        //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available"
+        cmdTree.add(new CommandBuilder(""+
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
+                +DIR_SEPARATOR+TICKETS+DIR_SEPARATOR+AVAILABLE,
+                new GetCinemaIDTheaterIDSessionIDTicketsAvailable())
+        );
+        //"DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new CommandBuilder(""+
+                DELETE+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
+                +DIR_SEPARATOR+TICKETS,
+                new DeleteCinemaIDTheaterIDSessionIDTicket())
+        );
+        //"GET /cinemas/{cid}/sessions/date/{d}"
+        cmdTree.add(new CommandBuilder(""+
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+DATE+DIR_SEPARATOR+ID_PREFIX+DATE_ID+ID_SUFFIX,
+                new GetCinemaIDSessionsDateID())
+        );
+        //"GET /movies/{mid}/sessions/date/{d}"
+        cmdTree.add(new CommandBuilder(""+
+                GET+ARGS_SEPARATOR+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+DATE+DIR_SEPARATOR+ID_PREFIX+DATE_ID+ID_SUFFIX,
+                new GetMovieIDSessionsDateID())
+        );
     }
 
     /**
@@ -164,7 +219,7 @@ public class CommandUtils {
         putParamsCheck(String.valueOf(SEATS_ROW));
 
         putParamsCheck(String.valueOf(SESSION_ID));
-        putParamsCheck(String.valueOf(DATE));
+        putParamsCheck(String.valueOf(DATE_PARAM));
     }
 
     /**

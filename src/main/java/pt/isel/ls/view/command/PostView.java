@@ -10,8 +10,6 @@ public class PostView extends CommandView {
         this.uniqueId = uniqueId;
     }
 
-    public PostView(){}
-
     @Override
     public void printAllInfo() {
         System.out.println("Information posted with success.");

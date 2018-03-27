@@ -16,12 +16,16 @@ public enum CommandEnum {
     HELP("HELP"),
     POST("POST"),
     GET("GET"),
+    DELETE("DELETE"),
 
     //Directories
     MOVIES("movies"),           MOVIE_ID("mid"),
     CINEMAS("cinemas"),         CINEMA_ID("cid"),
     THEATERS("theaters"),       THEATER_ID("tid"),
     SESSIONS("sessions"),       SESSION_ID("sid"),
+    TICKETS("tickets"),         TICKET_ID("tkid"),
+    AVAILABLE("available"),
+    DATE("date"),               DATE_ID("d"),
     TODAY("today"),
 
     //Parameters
@@ -32,7 +36,7 @@ public enum CommandEnum {
     DURATION("duration"),
     ROWS("rows"),
     SEATS_ROW("seats"),
-    DATE("date");
+    DATE_PARAM("date");
 
 
     private final String str;
