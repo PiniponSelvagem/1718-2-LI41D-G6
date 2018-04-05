@@ -10,7 +10,7 @@ public class DeleteView extends CommandView {
 
     @Override
     public void printAllInfo() {
-        System.out.println("Information delete with success.");
+        System.out.println("Information deleted with success.");
         System.out.println(type);
     }
 

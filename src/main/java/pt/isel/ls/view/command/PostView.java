@@ -1,11 +1,11 @@
 package pt.isel.ls.view.command;
 
-public class PostView extends CommandView {
+public class PostView<T> extends CommandView {
 
-    private int uniqueId;
+    private T uniqueId;
     private String type;
 
-    public PostView(String type, int uniqueId){
+    public PostView(String type, T uniqueId){
         this.type = type;
         this.uniqueId = uniqueId;
     }

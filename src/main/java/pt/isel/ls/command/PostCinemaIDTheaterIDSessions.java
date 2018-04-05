@@ -7,6 +7,7 @@ import pt.isel.ls.view.command.PostView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static pt.isel.ls.command.strings.CommandEnum.*;
@@ -21,6 +22,10 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         stmt.setString(3, cmdBuilder.getId(String.valueOf(THEATER_ID)));
         stmt.execute();
 
-        return new PostView("Session: ", -1);
+        ResultSet rs = stmt.getGeneratedKeys();
+        int id = 0;
+        if(rs.next()) id = rs.getInt(1);
+
+        return new PostView<>("Session: ", id);
     }
 }

@@ -22,6 +22,6 @@ public class PostCinemas extends Command {
         if(rs.next()) id = rs.getInt(1);
 
 
-        return new PostView("Cinema ID: ", id);
+        return new PostView<>("Cinema ID: ", id);
     }
 }

@@ -82,7 +82,6 @@ public class Main {
                     e1.printStackTrace();
                 }
             }
-
         }
         return cmdView;
     }

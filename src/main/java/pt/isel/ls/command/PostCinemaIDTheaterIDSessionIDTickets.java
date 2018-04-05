@@ -6,21 +6,25 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.PostView;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import static pt.isel.ls.command.strings.CommandEnum.*;
 
 public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws InvalidCommandParametersException, SQLException {
 
-        int id = -1;
-        //TODO:
-        /*
-        POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets - creates a new ticket given the following parameters
-            row - row letter;
-            seat - seat number.
-         */
+        String id = "";
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO TICKET VALUES(?, ?, ?, ?)");
+        id = cmdBuilder.getParameter((String.valueOf(ROWS))) + cmdBuilder.getParameter((String.valueOf(SEATS_ROW)));
+        stmt.setString(1, id);
+        stmt.setString(2, cmdBuilder.getParameter((String.valueOf(SEATS_ROW))));
+        stmt.setString(3, cmdBuilder.getParameter((String.valueOf(ROWS))));
+        stmt.setString(4, cmdBuilder.getId((String.valueOf(SESSION_ID))));
+        stmt.execute();
 
-        return new PostView("Ticket ID: ", id);
+        return new PostView<>("Ticket ID: ", id);
     }
 }
