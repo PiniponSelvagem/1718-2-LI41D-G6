@@ -1,15 +1,17 @@
 package pt.isel.ls;
 
-import pt.isel.ls.command.Command;
-import pt.isel.ls.command.exceptions.CommandNotFoundException;
-import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
-import pt.isel.ls.command.utils.CommandBuilder;
-import pt.isel.ls.command.utils.CommandUtils;
+import pt.isel.ls.core.commands.Command;
+import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.CommandView;
+import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
 
 public class Main {
 
@@ -19,15 +21,15 @@ public class Main {
             if (args.length <= 1) {
                 executeBuildedCommand(new CommandBuilder(args, new CommandUtils())).printAllInfo();
             }
-            else if (args.length <= 3) {
+            else if (args.length <= 4) {
                 con = Sql.getConnection();
                 con.setAutoCommit(false);
                 executeBuildedCommand(con, new CommandBuilder(args, new CommandUtils())).printAllInfo();
                 con.commit();
             }
             else
-                throw new CommandNotFoundException();
-        } catch (CommandNotFoundException | InvalidCommandParametersException e) {
+                throw new CommandException(COMMAND__NOT_FOUND);
+        } catch (CommandException  e) {
             System.out.println(e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,34 +45,33 @@ public class Main {
     }
 
     /**
-     * Executes and validates the user command, ONLY INTERNAL COMMANDS.
+     * Executes and validates the user core, ONLY INTERNAL COMMANDS.
      * @param cmdBuilder
-     * @return Returns the view for that command.
+     * @return Returns the view for that core.
      */
-    private static CommandView executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandNotFoundException, InvalidCommandParametersException {
-        Command cmd = cmdBuilder.getCmdUtils().getCmdTree().search(cmdBuilder);
+    private static CommandView executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandException {
+        Command cmd = cmdBuilder.execute();
         if (cmd == null)
-            throw new CommandNotFoundException();
+            throw new CommandException(COMMAND__NOT_FOUND);
         return cmd.execute(cmdBuilder);
     }
 
     /**
-     * Executes and validates the user command.
+     * Executes and validates the user core.
      *
-     * @param cmdBuilder Builded command ready to be searched.
-     * @return Returns the view for that command.
+     * @param cmdBuilder Builded core ready to be searched.
+     * @return Returns the view for that core.
      * @throws SQLException
-     * @throws CommandNotFoundException
-     * @throws InvalidCommandParametersException
+     * @throws CommandException
      */
-    public static CommandView executeBuildedCommand(Connection con, CommandBuilder cmdBuilder) throws CommandNotFoundException, InvalidCommandParametersException {
+    public static CommandView executeBuildedCommand(Connection con, CommandBuilder cmdBuilder) throws CommandException {
 
         CommandView cmdView = null;
 
         try {
-            Command cmd = cmdBuilder.getCmdUtils().getCmdTree().search(cmdBuilder);
+            Command cmd = cmdBuilder.execute();
             if (cmd == null)
-                throw new CommandNotFoundException();
+                throw new CommandException(COMMAND__NOT_FOUND);
             cmdView = cmd.execute(cmdBuilder, con);
 
         } catch(SQLException e) {

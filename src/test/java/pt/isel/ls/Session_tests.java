@@ -2,10 +2,9 @@ package pt.isel.ls;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import pt.isel.ls.command.exceptions.CommandNotFoundException;
-import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
-import pt.isel.ls.command.utils.CommandBuilder;
-import pt.isel.ls.command.utils.CommandUtils;
+import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.GetCinemaIDSessionIDView;
@@ -16,10 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
@@ -81,7 +78,7 @@ public class Session_tests {
                 sessionsId[i] = rs.getInt(1);
                 i++;
             }
-        } catch (CommandNotFoundException | InvalidCommandParametersException | SQLException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         }
     }
@@ -135,7 +132,7 @@ public class Session_tests {
                 assertEquals(cinemaId, s.getCinemaID());
                 i++;
             }
-        } catch (SQLException | InvalidCommandParametersException | CommandNotFoundException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -163,7 +160,7 @@ public class Session_tests {
                 sessions = view.getList();
                 for (Session s : sessions) assertEquals(theatersId[t], s.getTheater().getId());
             }
-        } catch (SQLException | InvalidCommandParametersException | CommandNotFoundException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -192,7 +189,7 @@ public class Session_tests {
                 assertEquals(id, sessionIDView.getSingle().getId());
             }
 
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -225,7 +222,7 @@ public class Session_tests {
                 assertEquals(date, s.getDate().toString());
                 i+=4;
             }
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -242,7 +239,7 @@ public class Session_tests {
 
     @Test
     public void get_sessions_today_by_theater(){
-		//line 255 command never identified
+		//line 255 core never identified
         try {
             con = Sql.getConnection();
             con.setAutoCommit(false);
@@ -262,7 +259,7 @@ public class Session_tests {
                     assertEquals(date, s.getDate().toString());
                 }
             }
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {

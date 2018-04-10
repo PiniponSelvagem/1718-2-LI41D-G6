@@ -1,25 +1,30 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Theater;
 
 public class GetCinemaIDTheatersIDView extends CommandView {
-    private Theater theater;
 
-    public GetCinemaIDTheatersIDView(Theater theater) {
-        this.theater = theater;
+    public GetCinemaIDTheatersIDView(DataContainer data) {
+        this.data = data;
     }
 
     @Override
     public void printAllInfo() {
-        System.out.println("Theater (ID: " + theater.getId()+") [Cinema ID: " + theater.getCinemaID()+"]");
-        System.out.println("  > Name: " + theater.getName());
-        System.out.println("  > Rows: " + theater.getRows());
-        System.out.println("  > Seats per row: " + theater.getSeatsPerRow());
-        System.out.println("  > Available seats: " + theater.getAvailableSeats());
-    }
+        Header header = data.getHeader();
 
-    @Override
-    public Theater getSingle() {
-        return theater;
+        if (header != null) {
+            Theater theater = (Theater) data.getData(0);
+            header.addObject("Theater (ID: " + theater.getId()+") [Cinema ID: " + theater.getCinemaID()+"]",
+                    new String[]{"Name", "Rows", "Seats per row", "Available seats"},
+                    new String[]{theater.getName(), String.valueOf(theater.getRows()), String.valueOf(theater.getSeatsPerRow()), String.valueOf(theater.getAvailableSeats())}
+            );
+
+            header.close();
+            header.writeToFile();
+
+            System.out.println(header.getBuildedString());
+        }
     }
 }

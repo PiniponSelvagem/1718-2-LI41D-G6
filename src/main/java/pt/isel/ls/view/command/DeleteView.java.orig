@@ -5,5 +5,14 @@ public class DeleteView extends CommandView {
     @Override
     public void printAllInfo() {
         System.out.println("Information deleted with success.");
+<<<<<<< HEAD
+        System.out.println(type);
+    }
+
+    @Override
+    public Object getSingle() {
+        return null;
+=======
+>>>>>>> d0553ddbe9bdb056e70902058f702b842d02dd16
     }
 }

@@ -1,37 +1,42 @@
 package pt.isel.ls.view.command;
 
-import pt.isel.ls.model.Movie;
 
-import java.util.LinkedList;
+import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.model.Movie;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 public class GetMoviesView extends CommandView {
-    private LinkedList<Movie> movies = new LinkedList<>();
 
-    public void add(Movie movie) {
-       movies.add(movie);
+    public GetMoviesView(DataContainer data) {
+        this.data = data;
     }
 
     @Override
     public void printAllInfo() {
-        System.out.println("Movies:");
-        System.out.println("   ID   |        Title       | Year | Duration ");
-        System.out.println("--------+--------------------+------+----------");
-        for (Movie cinema : movies) {
-            System.out.println(String.format("%7d", cinema.getId())
-                    + " | " + String.format("%18s", cinema.getTitle())
-                    + " | " + String.format("%4d", cinema.getYear())
-                    + " | " + String.format("%8d", cinema.getDuration())
-            );
+        Header header = data.getHeader();
+
+        if (header != null) {
+            header.addTitle("Movies");
+
+            String[][] tableData  = new String[data.size()][4];
+            String[] tableColumns = {"ID", "Title", "Year", "Duration"};
+
+            Movie movie;
+            for (int y=0; y<data.size(); ++y) {
+                movie = (Movie) data.getData(y);
+                tableData[y][0] = String.valueOf(movie.getId());
+                tableData[y][1] = String.valueOf(movie.getTitle());
+                tableData[y][2] = String.valueOf(movie.getYear());
+                tableData[y][3] = String.valueOf(movie.getDuration());
+            }
+            header.addTable(tableColumns, tableData);
+
+            header.close();
+            header.writeToFile();
+
+            System.out.println(header.getBuildedString());
         }
-    }
-
-    @Override
-    public LinkedList getList() {
-        return movies;
-    }
-
-    @Override
-    public Movie getSingle() {
-        return movies.getFirst();
     }
 }

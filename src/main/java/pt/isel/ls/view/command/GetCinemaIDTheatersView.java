@@ -1,43 +1,43 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Theater;
 
-import java.util.LinkedList;
 
 public class GetCinemaIDTheatersView extends CommandView {
     private final int cinemaId;
-    private LinkedList<Theater> theaters = new LinkedList<>();
 
-    public GetCinemaIDTheatersView(int cinemaId) {
+    public GetCinemaIDTheatersView(DataContainer data, int cinemaId) {
+        this.data = data;
         this.cinemaId = cinemaId;
-    }
-
-    public void add(Theater theater) {
-        theaters.add(theater);
     }
 
     @Override
     public void printAllInfo() {
-        System.out.println("Theaters (CinemaID: "+cinemaId+")");
-        System.out.println("   ID   |    Theater Name    | Rows | Seats per row | Available seats ");
-        System.out.println("--------+--------------------+------+---------------+-----------------");
-        for (Theater theater : theaters) {
-            System.out.println(String.format("%7d", theater.getId())
-                    + " | " + String.format("%18s", theater.getName())
-                    + " | " + String.format("%4s", theater.getRows())
-                    + " | " + String.format("%13s", theater.getSeatsPerRow())
-                    + " | " + String.format("%15s", theater.getAvailableSeats())
-            );
+        Header header = data.getHeader();
+
+        if (header != null) {
+            header.addTitle("Theaters (CinemaID: "+cinemaId+")");
+
+            String[][] tableData  = new String[data.size()][5];
+            String[] tableColumns = {"ID", "Theater name", "Rows", "Seats pre row", "Available seats"};
+
+            Theater theater;
+            for (int y=0; y<data.size(); ++y) {
+                theater = (Theater) data.getData(y);
+                tableData[y][0] = String.valueOf(theater.getId());
+                tableData[y][1] = theater.getName();
+                tableData[y][2] = String.valueOf(theater.getRows());
+                tableData[y][3] = String.valueOf(theater.getSeatsPerRow());
+                tableData[y][4] = String.valueOf(theater.getAvailableSeats());
+            }
+            header.addTable(tableColumns, tableData);
+
+            header.close();
+            header.writeToFile();
+
+            System.out.println(header.getBuildedString());
         }
-    }
-
-    @Override
-    public LinkedList getList() {
-        return theaters;
-    }
-
-    @Override
-    public Theater getSingle() {
-        return theaters.getFirst();
     }
 }

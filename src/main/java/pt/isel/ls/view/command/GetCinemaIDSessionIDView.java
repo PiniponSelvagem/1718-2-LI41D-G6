@@ -1,27 +1,33 @@
 package pt.isel.ls.view.command;
 
 
+import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Session;
 
 public class GetCinemaIDSessionIDView extends CommandView {
-    private Session session;
 
-    public GetCinemaIDSessionIDView(Session session) {
-        this.session = session;
+    public GetCinemaIDSessionIDView(DataContainer data) {
+        this.data = data;
     }
 
     @Override
     public void printAllInfo() {
-        System.out.println("Cinema (ID: " + session.getCinemaID()+")");
-        System.out.println("  > Date: " + session.getDate());
-        System.out.println("  > Title: " + session.getMovie().getTitle());
-        System.out.println("  > Duration: " + session.getMovie().getDuration());
-        System.out.println("  > Theater Name: " + session.getTheater().getName());
-        System.out.println("  > Available seats: " + session.getTheater().getAvailableSeats());
-    }
+        Header header = data.getHeader();
 
-    @Override
-    public Session getSingle() {
-        return session;
+        if (header != null) {
+            Session session = (Session) data.getData(0);
+            header.addObject("Cinema "+session.getCinemaID()+" - Session "+session.getId(),
+                    new String[]{"Date", "Title", "Duration", "Theater name", "Available seats"},
+                    new String[]{String.valueOf(session.getDate()), session.getMovie().getTitle(),
+                            String.valueOf(session.getMovie().getDuration()), session.getTheater().getName(),
+                            String.valueOf(session.getTheater().getAvailableSeats())}
+            );
+
+            header.close();
+            header.writeToFile();
+
+            System.out.println(header.getBuildedString());
+        }
     }
 }
