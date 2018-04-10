@@ -1,36 +1,39 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
 
-import java.util.LinkedList;
 
 public class GetCinemasView extends CommandView {
-    private LinkedList<Cinema> cinemas = new LinkedList<>();
 
-    public void add(Cinema cinema) {
-        cinemas.add(cinema);
+    public GetCinemasView(DataContainer data) {
+        this.data = data;
     }
 
     @Override
     public void printAllInfo() {
-        System.out.println("Cinemas:");
-        System.out.println("   ID   |        Name        |        City        ");
-        System.out.println("--------+--------------------+--------------------");
-        for (Cinema cinema : cinemas) {
-            System.out.println(String.format("%7d", cinema.getId())
-                    + " | " + String.format("%18s", cinema.getName())
-                    + " | " + String.format("%18s", cinema.getCity())
-            );
+        Header header = data.getHeader();
+
+        if (header != null) {
+            header.addTitle("Cinemas");
+
+            String[][] tableData  = new String[data.size()][3];
+            String[] tableColumns = {"ID", "Name", "City"};
+
+            Cinema cinema;
+            for (int y=0; y<data.size(); ++y) {
+                cinema = (Cinema) data.getData(y);
+                tableData[y][0] = String.valueOf(cinema.getId());
+                tableData[y][1] = cinema.getName();
+                tableData[y][2] = cinema.getCity();
+            }
+            header.addTable(tableColumns, tableData);
+
+            header.close();
+            header.writeToFile();
+
+            System.out.println(header.getBuildedString());
         }
-    }
-
-    @Override
-    public LinkedList getList() {
-        return cinemas;
-    }
-
-    @Override
-    public Cinema getSingle() {
-        return cinemas.getFirst();
     }
 }

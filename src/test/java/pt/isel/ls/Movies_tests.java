@@ -1,10 +1,9 @@
 package pt.isel.ls;
 
 import org.junit.Test;
-import pt.isel.ls.command.exceptions.CommandNotFoundException;
-import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
-import pt.isel.ls.command.utils.CommandBuilder;
-import pt.isel.ls.command.utils.CommandUtils;
+import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.GetMovieIDView;
@@ -58,7 +57,7 @@ public class Movies_tests {
                 i++;
             }
 
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -87,7 +86,7 @@ public class Movies_tests {
                 assertEquals("TestTitle" + i, m.getTitle());
                 i++;
             }
-        } catch (SQLException | InvalidCommandParametersException | CommandNotFoundException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -120,7 +119,7 @@ public class Movies_tests {
             GetMovieIDView movieIDView = (GetMovieIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()));
             assertEquals(id, movieIDView.getSingle().getId());
 
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         }finally {
             if (con != null){

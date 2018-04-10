@@ -1,24 +1,30 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
 
 public class GetMovieIDView extends CommandView {
-    private Movie movie;
 
-    public GetMovieIDView(Movie movie) {
-        this.movie = movie;
+    public GetMovieIDView(DataContainer data) {
+        this.data = data;
     }
 
     @Override
     public void printAllInfo() {
-        System.out.println("Movie (ID: " + movie.getId()+")");
-        System.out.println("  > Title: " + movie.getTitle());
-        System.out.println("  > Year: " + movie.getYear());
-        System.out.println("  > Duration: " + movie.getDuration());
-    }
+        Header header = data.getHeader();
 
-    @Override
-    public Movie getSingle() {
-        return movie;
+        if (header != null) {
+            Movie movie = (Movie) data.getData(0);
+            header.addObject("Movie "+movie.getId(),
+                    new String[]{"Title", "Year", "Duration"},
+                    new String[]{movie.getTitle(), String.valueOf(movie.getYear()), String.valueOf(movie.getDuration())}
+            );
+
+            header.close();
+            header.writeToFile();
+
+            System.out.println(header.getBuildedString());
+        }
     }
 }

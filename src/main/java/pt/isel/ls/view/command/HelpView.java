@@ -18,6 +18,5 @@ public class HelpView extends CommandView {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

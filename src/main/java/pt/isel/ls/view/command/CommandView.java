@@ -1,8 +1,9 @@
 package pt.isel.ls.view.command;
 
-import java.util.LinkedList;
+import pt.isel.ls.core.utils.DataContainer;
 
 public abstract class CommandView {
+    protected DataContainer data;
 
     /**
      * Prints to console all the information it has.
@@ -11,28 +12,14 @@ public abstract class CommandView {
 
     /**
      * Example usage:
-     *      CommandView cmdView = cmd.execute(...);
-     *      LinkedList list = cmdView.getList();
-     *      Cinema c = (Cinema) list.getFirst();
-     *      System.out.println(c.getName());
+     * CommandView cmdView = cmd.execute(...);
+     * DataContainer data = cmdView.getData();
+     * Cinema c = (Cinema) data.getData(0);    //value '0' is the first one, going to a max of 'data.size()'
+     * System.out.println(c.getName());
      *
-     * @return Returns LinkedList with all the information for this type of view.
+     * @return Returns DataContainer with all the information for this type of view.
      */
-    public LinkedList getList() {
-        return null;
-    }
-
-    /**
-     * Example usage: (
-     *      CommandView cmdView = cmd.execute(...);
-     *      Cinema c = cmdView.getSingle();
-     *      System.out.println(c.getName());
-     *
-     * @return Returns this view, better explanation:
-     * Comparing to getList(), this returns 1 of those objects. If this view has a LinkedList to store objects,
-     * this should return the first one.
-     */
-    public Object getSingle() {
-        return null;
+    public DataContainer getData() {
+        return data;
     }
 }

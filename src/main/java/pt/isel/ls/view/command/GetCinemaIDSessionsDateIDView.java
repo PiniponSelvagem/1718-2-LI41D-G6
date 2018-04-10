@@ -1,46 +1,46 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Session;
 
 import java.util.Date;
-import java.util.LinkedList;
 
 public class GetCinemaIDSessionsDateIDView extends CommandView {
     private int cinemaId;
     private Date date;
-    private LinkedList<Session> sessions = new LinkedList<>();
 
-    public GetCinemaIDSessionsDateIDView(int cinemaId, Date date) {
+    public GetCinemaIDSessionsDateIDView(DataContainer data, int cinemaId, Date date) {
+        this.data = data;
         this.cinemaId = cinemaId;
         this.date = date;
     }
-
-    public void add(Session session) {
-        sessions.add(session);
-    }
-
     @Override
     public void printAllInfo() {
-        System.out.println("Sessions (CinemaID: "+cinemaId+") [Date: "+date);
-        System.out.println("   ID   |        Title       | Duration |    Theater Name    | Available seats ");
-        System.out.println("--------+--------------------+----------+--------------------+-----------------");
-        for (Session sessions : sessions) {
-            System.out.println(String.format("%7d", sessions.getId())
-                    + " | " + String.format("%18s", sessions.getMovie().getTitle())
-                    + " | " + String.format("%8d", sessions.getMovie().getDuration())
-                    + " | " + String.format("%18s", sessions.getTheater().getName())
-                    + " | " + String.format("%14d", sessions.getTheater().getAvailableSeats())
-            );
+        Header header = data.getHeader();
+
+        if (header != null) {
+            header.addTitle("Sessions (CinemaID: "+cinemaId+") [Date: "+date+"]");
+
+            String[][] tableData  = new String[data.size()][5];
+            String[] tableColumns = {"ID", "Title", "Duration", "Theater name", "Available seats"};
+
+            Session session;
+            for (int y=0; y<data.size(); ++y) {
+                session = (Session) data.getData(y);
+                tableData[y][0] = String.valueOf(session.getId());
+                tableData[y][1] = String.valueOf(session.getMovie().getTitle());
+                tableData[y][2] = String.valueOf(session.getMovie().getDuration());
+                tableData[y][3] = String.valueOf(session.getTheater().getName());
+                tableData[y][4] = String.valueOf(session.getTheater().getAvailableSeats());
+            }
+            header.addTable(tableColumns, tableData);
+
+            header.close();
+            header.writeToFile();
+
+            System.out.println(header.getBuildedString());
         }
-    }
-
-    @Override
-    public LinkedList getList() {
-        return sessions;
-    }
-
-    @Override
-    public Session getSingle() {
-        return sessions.getFirst();
     }
 }

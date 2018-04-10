@@ -1,10 +1,9 @@
 package pt.isel.ls;
 
 import org.junit.Test;
-import pt.isel.ls.command.exceptions.CommandNotFoundException;
-import pt.isel.ls.command.exceptions.InvalidCommandParametersException;
-import pt.isel.ls.command.utils.CommandBuilder;
-import pt.isel.ls.command.utils.CommandUtils;
+import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.sql.Sql;
@@ -57,7 +56,7 @@ public class Cinema_tests {
                 assertEquals("nameTest" + (i + 1), c.getName());
                 i++;
             }
-        } catch (SQLException | InvalidCommandParametersException | CommandNotFoundException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -89,7 +88,7 @@ public class Cinema_tests {
                 assertEquals(name, c.getName());
                 i++;
             }
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if(con != null){
@@ -123,7 +122,7 @@ public class Cinema_tests {
             GetCinemaIDView view = (GetCinemaIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[1]}, new CommandUtils()));
             assertEquals(ids[1], view.getSingle().getId());
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if(con != null){
@@ -169,7 +168,7 @@ public class Cinema_tests {
                 assertEquals(name + (k + 1), rs2.getString(1));
                 k++;
             }
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null){
@@ -217,7 +216,7 @@ public class Cinema_tests {
                 assertEquals(name, t.getName());
                 k++;
             }
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if(con != null){
@@ -268,7 +267,7 @@ public class Cinema_tests {
                     {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()));
             assertEquals("theater1", view.getSingle().getName());
 
-        } catch (SQLException | CommandNotFoundException | InvalidCommandParametersException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null)
