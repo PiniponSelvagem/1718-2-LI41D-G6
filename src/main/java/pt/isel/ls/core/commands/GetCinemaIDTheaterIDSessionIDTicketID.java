@@ -25,6 +25,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         ResultSet rs = null; //= stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
+
         //TODO: something like GetCinemaIDSessionsID
 
         return new GetCinemaIDTheaterIDSessionIDTicketIDView(
