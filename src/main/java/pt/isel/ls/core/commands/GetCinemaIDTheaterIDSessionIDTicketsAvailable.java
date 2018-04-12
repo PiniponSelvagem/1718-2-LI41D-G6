@@ -4,12 +4,12 @@ import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
+import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID;
+import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID;
 import static pt.isel.ls.core.strings.CommandEnum.THEATER_ID;
 
 public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
@@ -22,19 +22,31 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
             GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available - returns the number of available tickets for a session.
         */
 
-        ResultSet rs = null; //= stmt.executeQuery();
+        PreparedStatement stmt = connection.prepareStatement(
+                "SELECT DISTINCT t.SeatsAvailable FROM CINEMA_SESSION AS s " +
+                        "INNER JOIN THEATER AS t ON s.tid=t.tid " +
+                        "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
+                        "WHERE s.sid=?"
+        );
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
+        ResultSet rs = stmt.executeQuery();
+        int availableSeats = rs.getInt(1);
+
+        stmt = connection.prepareStatement(
+                "SELECT DISTINCT COUNT(tk.tkid) FROM TICKET AS tk " +
+                        "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
+                        "INNER JOIN THEATER AS t ON s.tid=t.tid " +
+                        "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
+                        "INNER JOIN MOVIE AS t ON m.mid=s.mid "+
+                        "WHERE s.sid=?"
+        );
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
+        rs = stmt.executeQuery();
+        availableSeats -= rs.getInt(1);
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
+        data.add(availableSeats);
 
-        while(rs.next()){
-            //TODO: something like GetCinemaIDSessions
-        }
-
-        return new GetCinemaIDTheaterIDSessionIDTicketIDView(
-                data,
-                Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))),
-                Integer.parseInt(cmdBuilder.getId(String.valueOf(THEATER_ID))),
-                Integer.parseInt(cmdBuilder.getId(String.valueOf(THEATER_ID)))
-        );
+        return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data,Integer.parseInt(cmdBuilder.getId(String.valueOf(SESSION_ID))));
     }
 }

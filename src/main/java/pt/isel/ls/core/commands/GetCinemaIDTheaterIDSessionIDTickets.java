@@ -12,6 +12,7 @@ import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsView;
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID;
+import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID;
 import static pt.isel.ls.core.strings.CommandEnum.THEATER_ID;
 
 public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
@@ -29,8 +30,10 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
                         "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
                         "INNER JOIN THEATER AS t ON s.tid=t.tid " +
                         "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                        "INNER JOIN MOVIE AS t ON m.mid=s.mid"
+                        "INNER JOIN MOVIE AS t ON m.mid=s.mid " +
+                        "WHERE s.sid=?"
         );
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
