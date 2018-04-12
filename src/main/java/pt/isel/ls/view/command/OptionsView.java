@@ -2,9 +2,9 @@ package pt.isel.ls.view.command;
 
 import java.io.*;
 
-public class HelpView extends CommandView {
+public class OptionsView extends CommandView {
     private ClassLoader classLoader = getClass().getClassLoader();
-    private File file = new File(classLoader.getResource("command_help").getFile());
+    private File file = new File(classLoader.getResource("command_options").getFile());
 
     @Override
     public void printAllInfo() {

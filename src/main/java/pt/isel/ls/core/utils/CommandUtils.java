@@ -35,9 +35,9 @@ public class CommandUtils {
         /* Internal commands */
         //"HELP"
         cmdTree.add(new CommandBuilder(""+
-                HELP,
+                OPTIONS,
                 null,
-                new Help())
+                new Options())
         );
 
         /* Commands related to MOVIES */

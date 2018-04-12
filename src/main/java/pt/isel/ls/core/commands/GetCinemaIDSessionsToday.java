@@ -33,12 +33,12 @@ public class GetCinemaIDSessionsToday extends Command {
 
         DataContainer data =  new DataContainer(cmdBuilder.getHeader());
         int id, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
-        Date dateSession;
+        Timestamp dateTime;
         String theaterName, title;
 
         while(rs.next()){
             id = rs.getInt(1);
-            dateSession = rs.getDate(2);
+            dateTime = rs.getTimestamp(2);
             mid = rs.getInt(3);
             tid = rs.getInt(4);
             availableSeats = rs.getInt(6);
@@ -51,7 +51,7 @@ public class GetCinemaIDSessionsToday extends Command {
             duration = rs.getInt(14);
 
             data.add(
-                    new Session(id, dateSession,
+                    new Session(id, dateTime,
                             new Movie(mid, title, year, duration),
                             new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid),
                             cid

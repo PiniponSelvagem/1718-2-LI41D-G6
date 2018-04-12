@@ -15,7 +15,7 @@ public enum CommandEnum {
     HEADERS_EQUALTO(":"),
 
     //Methods
-    HELP("HELP"),
+    OPTIONS("OPTIONS"),
     POST("POST"),
     GET("GET"),
     DELETE("DELETE"),

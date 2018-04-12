@@ -21,7 +21,7 @@ public class GetCinemaIDTheatersView extends CommandView {
             header.addTitle("Theaters (CinemaID: "+cinemaId+")");
 
             String[][] tableData  = new String[data.size()][5];
-            String[] tableColumns = {"ID", "Theater name", "Rows", "Seats pre row", "Available seats"};
+            String[] tableColumns = {"ID", "Theater name", "Rows", "Seats per row", "Available seats"};
 
             Theater theater;
             for (int y=0; y<data.size(); ++y) {

@@ -26,7 +26,7 @@ where
     Example: POST /cinemas name=City+Campo+Pequeno&city=Lisboa
 --------------------------------------------------------------------------------------------
 
-HELP                                : Display this help message
+OPTIONS                             : Display this help message
 
  - Movie management -
 POST /movies                        : Creates a new movie, given the following parameters

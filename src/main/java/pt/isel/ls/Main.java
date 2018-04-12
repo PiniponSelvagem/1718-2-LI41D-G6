@@ -6,7 +6,6 @@ import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.Connection;
 import java.sql.SQLException;

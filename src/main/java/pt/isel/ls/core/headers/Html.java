@@ -16,14 +16,14 @@ public class Html extends Header {
     public void addTable(String[] columns, String[][] data) {
         text.append("<table border = 1>");
         text.append("<tr>");
-        for(int i = 0; i < columns.length; i++){
-            text.append("<th>").append(columns[i]).append("</th>");
+        for(int y=0; y<columns.length; ++y){
+            text.append("<th>").append(columns[y]).append("</th>");
         }
         text.append("</tr>");
-        for(int i = 0; i < data.length; i++){
+        for(int y=0; y<data.length; ++y){
             text.append("<tr>");
-            for(int j = 0; j < data[i].length; j++){
-                text.append("<td>").append(data[i][j]).append("</td>");
+            for(int x=0; x<data[y].length; ++x){
+                text.append("<td>").append(data[y][x]).append("</td>");
             }
             text.append("</tr>");
         }
@@ -33,9 +33,9 @@ public class Html extends Header {
     public void addObject(String id, String[] fieldName, String[] value) {
         addTitle(id);
         text.append("<ul>");
-        for(int i = 0; i < fieldName.length && i < value.length; i++){
+        for(int y=0; y<fieldName.length && y<value.length; ++y){
             text.append("<li>")
-                    .append("<b>").append(fieldName[i]).append("</b>").append(": ").append(value[i]);
+                    .append("<b>").append(fieldName[y]).append("</b>").append(": ").append(value[y]);
             text.append("</li>");
         }
         text.append("</ul>");

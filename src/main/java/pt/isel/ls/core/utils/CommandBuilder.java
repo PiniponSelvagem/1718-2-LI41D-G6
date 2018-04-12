@@ -3,6 +3,7 @@ package pt.isel.ls.core.utils;
 import pt.isel.ls.core.commands.Command;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.headers.Html;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,14 +19,12 @@ public class CommandBuilder {
     private String methodName;
     private LinkedList<String> path = new LinkedList<>();
     private HashMap<String, String> params;
-    private static final int paramsIdx = 4;
     private HashMap<String, String> ids;
 
     private String headerName;
     private LinkedList<String> pathHeaders;
     private HashMap<String, String> headers;
     private Header header;
-    private static final int headersIdx = 3;
 
 
     /**
@@ -51,8 +50,7 @@ public class CommandBuilder {
         parseMethod(args);
         parsePath(args);
         findIdsAndReplace(this.cmdUtils);
-        parseHeaders(args);
-        parseParameters(args);
+        findOptions(args);
     }
 
 
@@ -65,7 +63,7 @@ public class CommandBuilder {
     //TODO: add comment
     private void parseMethod(String[] args) {
         if (args.length == 0) {
-            this.methodName = String.valueOf(HELP);
+            this.methodName = String.valueOf(OPTIONS);
         } else {
             this.methodName = args[0];
         }
@@ -79,16 +77,33 @@ public class CommandBuilder {
     }
 
     //TODO: add comment
-    private void parseHeaders(String[] args) throws CommandException {
-        if (args.length >= headersIdx) {
-            findHeaders(args[headersIdx-1]);
-        }
-    }
+    private void findOptions(String[] args) throws CommandException {
+        /*
+        FUTURE NOTE: Parameters for date with time style -> 12:55, can conflict with
+                     detection of headers, since ':' is the equals syntax for it.
+                     ATM to work around this, its looking for '=' syntax, since its
+                     only used for the parameters equals syntax.
+         */
 
-    //TODO: add comment
-    private void parseParameters(String[] args) throws CommandException {
-        if (args.length >= paramsIdx) {
-            findParams(args[paramsIdx-1]);
+        if (args.length == 3) {
+            if (args[2].contains(String.valueOf(PARAMS_EQUALTO))) {
+                findParams(args[2]);
+            }
+            else {
+                findHeaders(args[2]);
+            }
+        }
+        else {
+            if (args.length == 4) {
+                if (args[3].contains(String.valueOf(PARAMS_EQUALTO))) {
+                    findParams(args[3]);
+                    findHeaders(args[2]);
+                }
+                else {
+                    findHeaders(args[3]);
+                    findParams(args[2]);
+                }
+            }
         }
     }
 
@@ -206,6 +221,9 @@ public class CommandBuilder {
         if (headers != null) {
             header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);
             header.fileName = headers.get(String.valueOf(FILE_NAME));
+        }
+        else {
+            header = new Html();
         }
         return (Command) cmdUtils.getCmdTree().search(path, methodName);
     }
