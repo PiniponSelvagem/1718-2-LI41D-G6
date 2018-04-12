@@ -4,6 +4,7 @@ import org.junit.Test;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.GetMovieIDView;
@@ -25,7 +26,7 @@ public class Movies_tests {
         try {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
-                title += (i + 1);
+                title += (i);
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO MOVIE VALUES('" + title + "', 2000, 90) ");
                 stmt.execute();
             }
@@ -79,11 +80,12 @@ public class Movies_tests {
 
             createMovie(con);
             GetMoviesView view = (GetMoviesView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()));
-            LinkedList<Movie> movies;
-            movies = view.getList();
-            int i = 1;
-            for (Movie m : movies) {
-                assertEquals("TestTitle" + i, m.getTitle());
+            DataContainer data;
+            data = view.getData();
+            Movie movie;
+            for(int i = 0; i < data.size(); ){
+                movie =  (Movie) data.getData(i);
+                assertEquals("TestTitle" + i, movie.getTitle());
                 i++;
             }
         } catch (SQLException | CommandException e) {
@@ -117,7 +119,10 @@ public class Movies_tests {
 
             int id = movies.getFirst().getId();
             GetMovieIDView movieIDView = (GetMovieIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()));
-            assertEquals(id, movieIDView.getSingle().getId());
+            DataContainer data;
+            data = movieIDView.getData();
+            Movie movie = (Movie) data.getData(0);
+            assertEquals(id, movie.getId());
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();

@@ -5,6 +5,7 @@ import org.junit.Test;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.GetCinemaIDSessionIDView;
@@ -124,12 +125,13 @@ public class Session_tests {
 
             createSession(con);
             GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions"}, new CommandUtils()));
-            LinkedList<Session> sessions;
-            sessions = view.getList();
-            int i = 0;
-            for (Session s : sessions) {
-                assertEquals(sessionsId[i], s.getId());
-                assertEquals(cinemaId, s.getCinemaID());
+            DataContainer data = view.getData();
+            Session session;
+
+            for (int i = 0; i < data.size(); i++) {
+                session = (Session) data.getData(i);
+                assertEquals(sessionsId[i], session.getId());
+                assertEquals(cinemaId, session.getCinemaID());
                 i++;
             }
         } catch (SQLException | CommandException e) {
@@ -156,9 +158,12 @@ public class Session_tests {
             createSession(con);
             for(int t=0; t<theatersId.length; t++) {
                 GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions"}, new CommandUtils()));
-                LinkedList<Session> sessions;
-                sessions = view.getList();
-                for (Session s : sessions) assertEquals(theatersId[t], s.getTheater().getId());
+                DataContainer data = view.getData();
+                Session session;
+                for (int i = 0; i < data.size(); i++) {
+                    session = (Session) data.getData(i);
+                    assertEquals(theatersId[t], session.getTheater().getId());
+                }
             }
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
@@ -185,8 +190,10 @@ public class Session_tests {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id=rs.getInt(1);
-                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/" + id}, new CommandUtils()));
-                assertEquals(id, sessionIDView.getSingle().getId());
+                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/sessions/" + id}, new CommandUtils()));
+                DataContainer data = sessionIDView.getData();
+                Session session = (Session)data.getData(0);
+                assertEquals(id, session.getId());
             }
 
         } catch (SQLException | CommandException e) {
@@ -214,12 +221,13 @@ public class Session_tests {
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
             GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()));
-            LinkedList<Session> sessions = view.getList();
-            int i=1;
-            for (Session s : sessions){
-                assertEquals(sessionsId[i], s.getId());
-                assertEquals(cinemaId, s.getCinemaID());
-                assertEquals(date, s.getDate().toString());
+            DataContainer data = view.getData();
+            Session session;
+            for (int i = 0; i < data.size(); i++) {
+                session = (Session) data.getData(i);
+                assertEquals(sessionsId[i], session.getId());
+                assertEquals(cinemaId, session.getCinemaID());
+                assertEquals(date, session.getDate().toString());
                 i+=4;
             }
         } catch (SQLException | CommandException e) {
@@ -250,13 +258,13 @@ public class Session_tests {
             String date= dtf.format(localDate);
             for(int t=0;t<theatersId.length;t++) {
                 GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions/today"}, new CommandUtils()));
-                LinkedList<Session> sessions = view.getList();
-                int i=1;
-                for (Session s : sessions){
-                    if(t==1) i=5;
-                    assertEquals(sessionsId[i], s.getId());
-                    assertEquals(theatersId[t], s.getTheater().getId());
-                    assertEquals(date, s.getDate().toString());
+                DataContainer data = view.getData();
+                Session session;
+                for (int i = 0; i < data.size(); i++) {
+                    session = (Session) data.getData(i);
+                    assertEquals(sessionsId[i], session.getId());
+                    assertEquals(theatersId[t], session.getTheater().getId());
+                    assertEquals(date, session.getDate().toString());
                 }
             }
         } catch (SQLException | CommandException e) {

@@ -4,7 +4,9 @@ import org.junit.Test;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
+import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.*;
@@ -77,15 +79,18 @@ public class Cinema_tests {
             con.setAutoCommit(false);
 
             create_cinemas(con);
-            LinkedList<Cinema> cinemas;
+
 
             GetCinemasView view = (GetCinemasView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]
                     {"GET", "/cinemas"}, new CommandUtils()));
-            cinemas = view.getList();
-            int i = 0;
-            for(Cinema c : cinemas) {
+
+            DataContainer data;
+            data = view.getData();
+            Cinema cinema;
+            for(int i = 0; i < data.size(); i++){
+                cinema = (Cinema) data.getData(i);
                 String name = "nameTest" + (i + 1);
-                assertEquals(name, c.getName());
+                assertEquals(name, cinema.getName());
                 i++;
             }
         } catch (SQLException | CommandException e) {
@@ -121,7 +126,10 @@ public class Cinema_tests {
 
             GetCinemaIDView view = (GetCinemaIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[1]}, new CommandUtils()));
-            assertEquals(ids[1], view.getSingle().getId());
+            DataContainer data;
+            data = view.getData();
+            Cinema cinema = (Cinema)data.getData(0);
+            assertEquals(ids[1], cinema.getId());
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
@@ -208,12 +216,14 @@ public class Cinema_tests {
 
             GetCinemaIDTheatersView view = (GetCinemaIDTheatersView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[0] + "/theaters"}, new CommandUtils()));
-            LinkedList<Theater> theaters = view.getList();
-            int k = 0;
-            for(Theater t : theaters){
+            DataContainer data;
+            data = view.getData();
+            Theater theater;
+            for(int k = 0; k < data.size(); k++){
+                theater = (Theater) data.getData(k);
                 String name = "theater";
                 name += (k + 1);
-                assertEquals(name, t.getName());
+                assertEquals(name, theater.getName());
                 k++;
             }
         } catch (SQLException | CommandException e) {
@@ -265,7 +275,10 @@ public class Cinema_tests {
 
             GetCinemaIDTheatersIDView view = (GetCinemaIDTheatersIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()));
-            assertEquals("theater1", view.getSingle().getName());
+            DataContainer data;
+            data = view.getData();
+            Theater theater = (Theater) data.getData(0);
+            assertEquals("theater1", theater.getName());
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
