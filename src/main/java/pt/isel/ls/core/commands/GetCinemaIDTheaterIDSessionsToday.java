@@ -26,7 +26,7 @@ public class GetCinemaIDTheaterIDSessionsToday extends Command {
                 "SELECT * FROM CINEMA_SESSION AS s " +
                         "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                         "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                        "WHERE cid=? AND t.tid=? AND (CONVERT(DATE, s.Date))=?"
+                        "WHERE cid=? AND t.tid=? AND (CONVERT(s.Date, DATE))=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
