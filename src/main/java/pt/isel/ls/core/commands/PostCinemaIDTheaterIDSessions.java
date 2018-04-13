@@ -19,17 +19,22 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         /*  ALTERNATIVA
         "SELECT s.Date FROM CINEMA_SESSION AS s " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
-                "WHERE CAST(s.Date AS DATETIME) + ReadTime BETWEEN ? AND ADDTIME(? ,  m.Duration * ?)"
+                "WHERE CAST(s.Date AS DATETIME) + s.Date BETWEEN ? AND ADDTIME(? ,  m.Duration * ?)"
         */
         PreparedStatement stmt = connection.prepareStatement("SELECT s.Date FROM CINEMA_SESSION AS s " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
-                "WHERE s.Date BETWEEN ? AND ADDTIME(? ,  m.Duration * ?)");
+                "WHERE (s.Date BETWEEN ? AND ADDTIME(? ,  m.Duration * ?)) " +
+                "AND s.tid=?"
+        );
+        
         stmt.setString(1, cmdBuilder.getParameter((String.valueOf(DATE_PARAM))));
         stmt.setString(2, cmdBuilder.getParameter((String.valueOf(DATE_PARAM))));
-        stmt.setString(3, cmdBuilder.getParameter((String.valueOf(60))));
+        stmt.setInt(3, 60);
+        stmt.setString(4, cmdBuilder.getId(String.valueOf(THEATER_ID)));
         stmt.execute();
 
         ResultSet rs = stmt.executeQuery();
+
         if (!rs.next()) {
             stmt = connection.prepareStatement("INSERT INTO CINEMA_SESSION VALUES (?, ?, ?)");
             stmt.setString(1, cmdBuilder.getParameter((String.valueOf(DATE_PARAM))));
