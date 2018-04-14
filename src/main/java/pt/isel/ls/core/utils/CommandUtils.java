@@ -33,11 +33,17 @@ public class CommandUtils {
      */
     private void initializeCommandsTree() {
         /* Internal commands */
-        //"HELP"
+        //"OPTIONS"
         cmdTree.add(new CommandBuilder(""+
                 OPTIONS,
                 null,
                 new Options())
+        );
+        //"EXIT"
+        cmdTree.add(new CommandBuilder(""+
+                EXIT,
+                null,
+                new Exit())
         );
 
         /* Commands related to MOVIES */

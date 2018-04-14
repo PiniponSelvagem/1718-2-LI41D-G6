@@ -27,6 +27,7 @@ where
 --------------------------------------------------------------------------------------------
 
 OPTIONS                             : Display this help message
+EXIT                                : Terminates this application.
 
  - Movie management -
 POST /movies                        : Creates a new movie, given the following parameters

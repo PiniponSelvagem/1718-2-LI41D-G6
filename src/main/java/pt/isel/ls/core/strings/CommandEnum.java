@@ -16,6 +16,7 @@ public enum CommandEnum {
 
     //Methods
     OPTIONS("OPTIONS"),
+    EXIT("EXIT"),
     POST("POST"),
     GET("GET"),
     DELETE("DELETE"),

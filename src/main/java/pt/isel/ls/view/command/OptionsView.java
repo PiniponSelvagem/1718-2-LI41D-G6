@@ -3,8 +3,8 @@ package pt.isel.ls.view.command;
 import java.io.*;
 
 public class OptionsView extends CommandView {
-    private ClassLoader classLoader = getClass().getClassLoader();
-    private File file = new File(classLoader.getResource("command_options").getFile());
+    private final static String FILE_NAME = "command_options";
+    private File file = new File(getClass().getClassLoader().getResource(FILE_NAME).getFile());
 
     @Override
     public void printAllInfo() {
@@ -17,6 +17,8 @@ public class OptionsView extends CommandView {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("WARNING: ["+FILE_NAME+"] not found.");
         }
     }
 }
