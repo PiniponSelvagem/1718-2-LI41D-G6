@@ -20,8 +20,8 @@ public class GetMoviesView extends CommandView {
         if (header != null) {
             header.addTitle("Movies");
 
-            String[][] tableData  = new String[data.size()][4];
             String[] tableColumns = {"ID", "Title", "Year", "Duration"};
+            String[][] tableData  = new String[data.size()][tableColumns.length];
 
             Movie movie;
             for (int y=0; y<data.size(); ++y) {

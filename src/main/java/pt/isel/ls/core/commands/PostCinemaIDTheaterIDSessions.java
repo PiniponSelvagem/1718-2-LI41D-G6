@@ -21,7 +21,8 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
                 "WHERE CAST(s.Date AS DATETIME) + s.Date BETWEEN ? AND ADDTIME(? ,  m.Duration * ?)"
         */
-        PreparedStatement stmt = connection.prepareStatement("SELECT s.Date FROM CINEMA_SESSION AS s " +
+        PreparedStatement stmt = connection.prepareStatement(
+                "SELECT s.Date FROM CINEMA_SESSION AS s " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
                 "WHERE (s.Date BETWEEN ? AND ADDTIME(? ,  m.Duration * ?)) " +
                 "AND s.tid=?"

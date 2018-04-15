@@ -18,8 +18,8 @@ public class GetCinemasView extends CommandView {
         if (header != null) {
             header.addTitle("Cinemas");
 
-            String[][] tableData  = new String[data.size()][3];
             String[] tableColumns = {"ID", "Name", "City"};
+            String[][] tableData  = new String[data.size()][tableColumns.length];
 
             Cinema cinema;
             for (int y=0; y<data.size(); ++y) {

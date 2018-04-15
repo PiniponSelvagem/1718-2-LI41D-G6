@@ -20,8 +20,8 @@ public class GetCinemaIDTheaterIDSessionIDTicketsView extends CommandView {
         if (header != null) {
             header.addTitle("Tickets (CinemaID: "+sessionId+")");
 
-            String[][] tableData  = new String[data.size()][6];
             String[] tableColumns = {"ID", "Date", "Title", "Duration", "Theater name", "Seat"};
+            String[][] tableData  = new String[data.size()][tableColumns.length];
 
             Ticket ticket;
             for (int y=0; y<data.size(); ++y) {

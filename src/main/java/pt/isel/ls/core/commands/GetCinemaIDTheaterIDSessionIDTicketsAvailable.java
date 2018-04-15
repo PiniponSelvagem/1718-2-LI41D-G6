@@ -3,14 +3,11 @@ package pt.isel.ls.core.commands;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
 
 import java.sql.*;
 
-import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID;
 import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID;
-import static pt.isel.ls.core.strings.CommandEnum.THEATER_ID;
 
 public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
 
@@ -24,9 +21,9 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
 
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT DISTINCT t.SeatsAvailable FROM CINEMA_SESSION AS s " +
-                        "INNER JOIN THEATER AS t ON s.tid=t.tid " +
-                        "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                        "WHERE s.sid=?"
+                "INNER JOIN THEATER AS t ON s.tid=t.tid " +
+                "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
+                "WHERE s.sid=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
         ResultSet rs = stmt.executeQuery();
@@ -34,11 +31,11 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
 
         stmt = connection.prepareStatement(
                 "SELECT DISTINCT COUNT(tk.tkid) FROM TICKET AS tk " +
-                        "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
-                        "INNER JOIN THEATER AS t ON s.tid=t.tid " +
-                        "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                        "INNER JOIN MOVIE AS t ON m.mid=s.mid "+
-                        "WHERE s.sid=?"
+                "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
+                "INNER JOIN THEATER AS t ON s.tid=t.tid " +
+                "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
+                "INNER JOIN MOVIE AS t ON m.mid=s.mid "+
+                "WHERE s.sid=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
         rs = stmt.executeQuery();

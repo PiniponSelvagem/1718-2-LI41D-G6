@@ -1,7 +1,6 @@
 package pt.isel.ls.core.utils.directorytree;
 
 import pt.isel.ls.core.commands.NotFound;
-import pt.isel.ls.core.utils.CommandBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class DirectoryNode {
     }
 
     /**
-     * Add the core to the right place based on the PATH, when PATH is empty
+     * Add the command to the right place based on the PATH, when PATH is empty
      * then places the METHOD aka Command there.
      * @param path Path left till the right place to add the core.
      * @param method Method name to add.

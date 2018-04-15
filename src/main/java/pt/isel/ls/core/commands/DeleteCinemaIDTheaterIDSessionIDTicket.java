@@ -6,7 +6,6 @@ import pt.isel.ls.view.command.DeleteView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID;

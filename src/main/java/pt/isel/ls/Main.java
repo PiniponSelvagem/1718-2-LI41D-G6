@@ -30,7 +30,9 @@ public class Main {
             interactiveMode();
     }
 
-    //TODO: add comment
+    /**
+     * Wait for user input command and then run it.
+     */
     private static void interactiveMode() {
         Scanner in = new Scanner(System.in);
         String[] args;
@@ -43,7 +45,10 @@ public class Main {
         } while(!args[0].equals(String.valueOf(EXIT)));
     }
 
-    //TODO: add comment
+    /**
+     * Checks which type of command is being requested, internal or sql and prepares it.
+     * @param args {method, path, header, parameters} or {method, path, header, parameters}
+     */
     private static void commandRequest(String[] args) {
         try {
             if (args.length <= 1) {
@@ -59,12 +64,20 @@ public class Main {
         }
     }
 
-    //TODO: add comment
+    /**
+     * Internal command request, dosent open an sql connection.
+     * @param args
+     * @throws CommandException
+     */
     private static void executeInternalCommand(String[] args) throws CommandException {
         executeBuildedCommand(new CommandBuilder(args, new CommandUtils())).printAllInfo();
     }
 
-    //TODO: add comment
+    /**
+     * External command request, opens an sql connection.
+     * @param args
+     * @throws CommandException
+     */
     private static void executeSQLCommand(String[] args) throws CommandException {
         Connection con = null;
         try {
@@ -130,7 +143,9 @@ public class Main {
     }
 
 
-    //TODO: add comment
+    /**
+     * Prints to console the content of welcome_message file.
+     */
     private static void printWelcomeMessage() {
         try {
             File file = new File(Main.class.getClassLoader().getResource(FILE_NAME_WELCOME).getFile());

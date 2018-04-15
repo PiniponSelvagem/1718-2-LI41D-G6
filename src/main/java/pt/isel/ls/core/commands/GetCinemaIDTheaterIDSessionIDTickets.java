@@ -11,9 +11,7 @@ import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsView;
 
 import java.sql.*;
 
-import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID;
 import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID;
-import static pt.isel.ls.core.strings.CommandEnum.THEATER_ID;
 
 public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
 
@@ -26,12 +24,12 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
         */
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT tk.seat, tk.row,s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
-                        "FROM TICKET AS tk " +
-                        "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
-                        "INNER JOIN THEATER AS t ON s.tid=t.tid " +
-                        "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                        "INNER JOIN MOVIE AS t ON m.mid=s.mid " +
-                        "WHERE s.sid=?"
+                "FROM TICKET AS tk " +
+                "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
+                "INNER JOIN THEATER AS t ON s.tid=t.tid " +
+                "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
+                "INNER JOIN MOVIE AS t ON m.mid=s.mid " +
+                "WHERE s.sid=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
         ResultSet rs = stmt.executeQuery();

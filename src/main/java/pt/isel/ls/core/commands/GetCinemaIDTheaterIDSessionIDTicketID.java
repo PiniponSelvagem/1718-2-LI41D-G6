@@ -26,12 +26,12 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
 
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT tk.seat, tk.row,s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
-                        "FROM TICKET AS tk " +
-                        "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
-                        "INNER JOIN THEATER AS t ON s.tid=t.tid " +
-                        "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                        "INNER JOIN MOVIE AS t ON m.mid=s.mid " +
-                        "WHERE tk.tkid=? AND tk.sid=?"
+                "FROM TICKET AS tk " +
+                "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
+                "INNER JOIN THEATER AS t ON s.tid=t.tid " +
+                "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
+                "INNER JOIN MOVIE AS t ON m.mid=s.mid " +
+                "WHERE tk.tkid=? AND tk.sid=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(TICKET_ID)));
         stmt.setString(2, cmdBuilder.getId(String.valueOf(SESSION_ID)));

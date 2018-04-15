@@ -23,8 +23,8 @@ public class GetMovieIDSessionsDateIDView extends CommandView {
         if (header != null) {
             header.addTitle("Sessions (MovieID: "+movieId+") [Date: "+date+"]");
 
-            String[][] tableData  = new String[data.size()][5];
-            String[] tableColumns = {"ID", "Cinema ID", "Theater name", "Available seats","Starting time"};
+            String[] tableColumns = {"ID", "Cinema ID", "Theater name", "Available seats", "Starting time"};
+            String[][] tableData  = new String[data.size()][tableColumns.length];
 
             Session session;
             for (int y=0; y<data.size(); ++y) {

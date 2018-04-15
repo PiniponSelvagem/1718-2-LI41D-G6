@@ -18,7 +18,9 @@ public class GetMovieIDView extends CommandView {
             Movie movie = (Movie) data.getData(0);
             header.addObject("Movie "+movie.getId(),
                     new String[]{"Title", "Year", "Duration"},
-                    new String[]{movie.getTitle(), String.valueOf(movie.getYear()), String.valueOf(movie.getDuration())}
+                    new String[]{movie.getTitle(),
+                            String.valueOf(movie.getYear()),
+                            String.valueOf(movie.getDuration())}
             );
 
             header.close();

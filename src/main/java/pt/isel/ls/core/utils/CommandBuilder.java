@@ -54,36 +54,48 @@ public class CommandBuilder {
     }
 
 
-    //TODO: add comment
+    /**
+     * Parse path of this command.
+     * @param path
+     */
     private void pathToList(String path) {
         if (path != null)
             this.path.addAll(Arrays.asList(path.substring(1).split(String.valueOf(DIR_SEPARATOR))));
     }
 
-    //TODO: add comment
+    /**
+     * Parse method name of this command.
+     * @param args
+     */
     private void parseMethod(String[] args) {
-        if (args.length == 0) {
-            this.methodName = String.valueOf(OPTIONS);
-        } else {
-            this.methodName = args[0];
-        }
+        this.methodName = args[0];
     }
 
-    //TODO: add comment
+    /**
+     * Parse path to list.
+     * @param args
+     */
     private void parsePath(String[] args) {
         if (args.length >= 2) {
             pathToList(args[1]);
         }
     }
 
-    //TODO: add comment
+    /**
+     * Checks for headers / parameters in the command args.
+     * @param args
+     * @throws CommandException
+     */
     private void findOptions(String[] args) throws CommandException {
         /*
         FUTURE NOTE: Parameters for date with time style -> 12:55, can conflict with
                      detection of headers, since ':' is the equals syntax for it.
                      ATM to work around this, its looking for '=' syntax, since its
                      only used for the parameters equals syntax.
-         */
+
+        WARNING:     UNTIL A FIX IS FOUND FOR THIS SITUATION, THE args[x].contains
+                     MUST BE DIFFERENT THAN HEADERS_EQUALTO.
+        */
 
         if (args.length == 3) {
             if (args[2].contains(String.valueOf(PARAMS_EQUALTO))) {
@@ -174,7 +186,7 @@ public class CommandBuilder {
 
 
     /**
-     * @return Returns this core METHOD.
+     * @return Returns this command METHOD.
      */
     public String getMethodName() {
         return methodName;
@@ -206,17 +218,27 @@ public class CommandBuilder {
         return params.get(param);
     }
 
-    //TODO: add comment
+    /**
+     * Returns the id value for the requested key.
+     * @param id
+     * @return
+     */
     public String getId(String id) {
         return ids.get(ID_PREFIX+id+ID_SUFFIX);
     }
 
-    //TODO: add comment
+    /**
+     * @return Returns this command header.
+     */
     public Header getHeader() {
         return header;
     }
 
-    //TODO: add comment
+    /**
+     * @return If the command that is being requested to execute dosent have headers,
+     *         add default header "HTML". If it has, add the correct header and its options.
+     *         Search the command in the commands tree and return it.
+     */
     public Command execute() {
         if (headers != null) {
             header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);

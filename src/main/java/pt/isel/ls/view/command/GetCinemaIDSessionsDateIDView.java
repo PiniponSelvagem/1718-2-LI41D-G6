@@ -2,7 +2,6 @@ package pt.isel.ls.view.command;
 
 import pt.isel.ls.core.headers.Header;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Session;
 
 import java.util.Date;
@@ -16,6 +15,7 @@ public class GetCinemaIDSessionsDateIDView extends CommandView {
         this.cinemaId = cinemaId;
         this.date = date;
     }
+
     @Override
     public void printAllInfo() {
         Header header = data.getHeader();
@@ -23,8 +23,8 @@ public class GetCinemaIDSessionsDateIDView extends CommandView {
         if (header != null) {
             header.addTitle("Sessions (CinemaID: "+cinemaId+") [Date: "+date+"]");
 
-            String[][] tableData  = new String[data.size()][6];
             String[] tableColumns = {"ID", "Title", "Duration", "Theater name", "Available seats","Starting time"};
+            String[][] tableData  = new String[data.size()][tableColumns.length];
 
             Session session;
             for (int y=0; y<data.size(); ++y) {
