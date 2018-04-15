@@ -6,11 +6,12 @@ import pt.isel.ls.model.Ticket;
 
 
 public class GetCinemaIDTheaterIDSessionIDTicketsView extends CommandView {
-    private int sessionId;
+    private int cinemaId, sessionId;
 
-    public GetCinemaIDTheaterIDSessionIDTicketsView(DataContainer data ,int sessionId ) {
+    public GetCinemaIDTheaterIDSessionIDTicketsView(DataContainer data, int cinemaId, int sessionId ) {
         this.data = data;
-        this.sessionId=sessionId;
+        this.cinemaId = cinemaId;
+        this.sessionId = sessionId;
     }
 
     @Override
@@ -18,7 +19,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsView extends CommandView {
         Header header = data.getHeader();
 
         if (header != null) {
-            header.addTitle("Tickets (CinemaID: "+sessionId+")");
+            header.addTitle("Tickets (CinemaID: "+cinemaId+") [SessionID: "+sessionId+"]");
 
             String[] tableColumns = {"ID", "Date", "Title", "Duration", "Theater name", "Seat"};
             String[][] tableData  = new String[data.size()][tableColumns.length];
@@ -33,13 +34,12 @@ public class GetCinemaIDTheaterIDSessionIDTicketsView extends CommandView {
                 tableData[y][4] = String.valueOf(ticket.getSession().getTheater().getName());
                 tableData[y][5] = String.valueOf(ticket.getRow()+""+ticket.getSeat());
             }
-            header.addTable(tableColumns, tableData);
+            header.addTable("Tickets - cid:"+cinemaId+" sid:"+sessionId, tableColumns, tableData);
 
             header.close();
             header.writeToFile();
 
             System.out.println(header.getBuildedString());
         }
-        System.out.println("TODO: implement");
     }
 }

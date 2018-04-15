@@ -10,7 +10,7 @@ public class Plain extends Header {
     }
 
     @Override
-    public void addTable(String[] columns, String[][] data) {
+    public void addTable(String title, String[] columns, String[][] data) {
         for (String column : columns) {
             text.append(String.format(tablePadding, column));
         }
@@ -28,8 +28,8 @@ public class Plain extends Header {
     }
 
     @Override
-    public void addObject(String id, String[] fieldName, String[] value) {
-        addTitle(id+":");
+    public void addObject(String nameId, String[] fieldName, String[] value) {
+        addTitle(nameId+":");
         for (int i=0; i<fieldName.length; ++i) {
             text.append(" > ").append(fieldName[i]).append(": ")
                     .append(value[i])

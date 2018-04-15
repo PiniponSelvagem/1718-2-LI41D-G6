@@ -36,7 +36,7 @@ public class GetCinemaIDSessionsDateIDView extends CommandView {
                 tableData[y][4] = String.valueOf(session.getTheater().getAvailableSeats());
                 tableData[y][5] = String.valueOf(session.getDate());
             }
-            header.addTable(tableColumns, tableData);
+            header.addTable("Sessions cid:"+cinemaId+" date:"+date, tableColumns, tableData);
 
             header.close();
             header.writeToFile();

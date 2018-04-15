@@ -4,7 +4,6 @@ package pt.isel.ls.view.command;
 import pt.isel.ls.core.headers.Header;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 public class GetMoviesView extends CommandView {
@@ -31,7 +30,7 @@ public class GetMoviesView extends CommandView {
                 tableData[y][2] = String.valueOf(movie.getYear());
                 tableData[y][3] = String.valueOf(movie.getDuration());
             }
-            header.addTable(tableColumns, tableData);
+            header.addTable("Movie", tableColumns, tableData);
 
             header.close();
             header.writeToFile();

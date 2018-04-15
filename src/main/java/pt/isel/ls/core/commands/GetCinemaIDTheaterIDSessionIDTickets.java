@@ -35,7 +35,7 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
-        int seat, sid=0, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
+        int seat, sid=0, mid, tid, availableSeats, rows, seatsRow, cid=0, year, duration;
         String row;
         Date date;
         String theaterName, title;
@@ -61,6 +61,6 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
             );
         }
 
-        return new GetCinemaIDTheaterIDSessionIDTicketsView(data,sid);
+        return new GetCinemaIDTheaterIDSessionIDTicketsView(data, cid, sid);
     }
 }

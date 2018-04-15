@@ -13,14 +13,14 @@ public class Html extends Header {
     }
 
     @Override
-    public void addTable(String[] columns, String[][] data) {
+    public void addTable(String title, String[] columns, String[][] data) {
         text.append("<table border = 1>");
         text.append("<tr>");
-        for(int y=0; y<columns.length; ++y){
+        for (int y=0; y<columns.length; ++y) {
             text.append("<th>").append(columns[y]).append("</th>");
         }
         text.append("</tr>");
-        for(int y=0; y<data.length; ++y){
+        for (int y=0; y<data.length; ++y) {
             text.append("<tr>");
             for(int x=0; x<data[y].length; ++x){
                 text.append("<td>").append(data[y][x]).append("</td>");
@@ -30,10 +30,10 @@ public class Html extends Header {
     }
 
     @Override
-    public void addObject(String id, String[] fieldName, String[] value) {
-        addTitle(id);
+    public void addObject(String nameId, String[] fieldName, String[] value) {
+        addTitle(nameId);
         text.append("<ul>");
-        for(int y=0; y<fieldName.length && y<value.length; ++y){
+        for (int y=0; y<fieldName.length && y<value.length; ++y) {
             text.append("<li>")
                     .append("<b>").append(fieldName[y]).append("</b>").append(": ").append(value[y]);
             text.append("</li>");

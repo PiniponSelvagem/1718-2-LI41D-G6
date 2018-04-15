@@ -33,7 +33,7 @@ public class GetCinemaIDSessionsView extends CommandView {
                 tableData[y][4] = String.valueOf(session.getTheater().getName());
                 tableData[y][5] = String.valueOf(session.getTheater().getAvailableSeats());
             }
-            header.addTable(tableColumns, tableData);
+            header.addTable("Sessions cid:"+cinemaId, tableColumns, tableData);
 
             header.close();
             header.writeToFile();

@@ -32,7 +32,7 @@ public class GetCinemaIDTheatersView extends CommandView {
                 tableData[y][3] = String.valueOf(theater.getSeatsPerRow());
                 tableData[y][4] = String.valueOf(theater.getAvailableSeats());
             }
-            header.addTable(tableColumns, tableData);
+            header.addTable("Theaters - cid:"+cinemaId, tableColumns, tableData);
 
             header.close();
             header.writeToFile();

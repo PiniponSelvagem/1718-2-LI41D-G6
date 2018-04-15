@@ -38,15 +38,15 @@ public abstract class Header {
      * @param columns Names for each column
      * @param data String[y][x] --> y=lines, x=columns
      */
-    public abstract void addTable(String[] columns, String[][] data);
+    public abstract void addTable(String title, String[] columns, String[][] data);
 
     /**
      * Represent object
-     * @param id Name to identify the object
+     * @param nameId Name to identify the object
      * @param fieldName Names of the multiple fields
      * @param value Values to place in each field
      */
-    public abstract void addObject(String id, String[] fieldName, String[] value);
+    public abstract void addObject(String nameId, String[] fieldName, String[] value);
 
     /**
      * If supported, adds a new line to the view.

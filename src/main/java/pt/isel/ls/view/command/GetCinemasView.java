@@ -28,7 +28,7 @@ public class GetCinemasView extends CommandView {
                 tableData[y][1] = cinema.getName();
                 tableData[y][2] = cinema.getCity();
             }
-            header.addTable(tableColumns, tableData);
+            header.addTable("Cinemas", tableColumns, tableData);
 
             header.close();
             header.writeToFile();
