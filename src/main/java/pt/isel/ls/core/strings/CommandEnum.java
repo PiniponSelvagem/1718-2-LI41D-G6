@@ -28,7 +28,7 @@ public enum CommandEnum {
     SESSIONS("sessions"),       SESSION_ID("sid"),
     TICKETS("tickets"),         TICKET_ID("tkid"),
     AVAILABLE("available"),
-    DATE("date"),               DATE_ID("d"),
+    DATE("date"),               DATE_ID("dmy"),
     TODAY("today"),
 
     //Headers_Cmds

@@ -14,8 +14,10 @@ A41566 - Nuno Faiao
 --------------------------------------------------------------------------------------------
 HOW TO USE:
 
-Each command is defined using the following generic structure
-    {method} {path} {parameters}
+Each command is defined using the following generic structure:
+    {method} {path} {headers} {parameters}
+
+! NOTE ! -> {headers} is optional and can be commutated with {parameters}.
 
 where
     the method defines the type of action to perform (e.g. GET or POST)
@@ -25,6 +27,21 @@ where
 
     Example: POST /cinemas name=City+Campo+Pequeno&city=Lisboa
 --------------------------------------------------------------------------------------------
+HEADERS:
+
+The headers component is composed by a sequence of name-value pairs,
+where each pair is separated by the '|' character.
+The name is separated from the value by the ':' character. An example is
+    accept:text/plain|file-name:movies.txt
+
+accept:                             : Represent information...
+    text/plain - plain text
+    text/html - html format
+    application/json - json format
+
+file-name:<name.extension>          : Write to file the information
+--------------------------------------------------------------------------------------------
+COMMANDS:
 
 OPTIONS                             : Display this help message
 EXIT                                : Terminates this application.
@@ -64,3 +81,31 @@ GET /cinemas/{cid}/sessions/today   : List all sessions for the current day for 
 GET /cinemas/{cid}/theaters/{tid}/sessions/today
                                     : List all sessions for the current day for the cinema
                                       and theater identified by {cid} and {tid} respectively
+
+ - Tickets management -
+POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets
+                                    : Creates a new ticket, given the following parameters
+        row - row letter
+        seat - seat number
+GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets
+                                    : Returns a list with all tickets for a session
+GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}
+                                    : Returns the detailed information of the ticket,
+                                      including session information
+GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available
+                                    : Returns the number of available tickets for a session
+DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets
+                                    : Removes a ticket set, given the following parameter
+                                      that can occur multiple times (e.g. tkid=A3&tkid=B5`)
+        tkid - ticket identifier composed of the row letter and its number on the row
+GET /cinemas/{cid}/sessions/date/{dmy}
+                                    : Return a list with the sessions in cinema cid in the
+                                      date dmy, where dmy contains day, month and year
+GET /movies/{mid}/sessions/date/{dmy}
+                                    : Returns a list with the sessions for the movie
+                                      identified by mid in the day of the year dmy given
+                                      one of the following optional parameters:
+    city - the city name
+    cid - the cinema identifier
+    available - the minimum number of available seats
+--------------------------------------------------------------------------------------------
