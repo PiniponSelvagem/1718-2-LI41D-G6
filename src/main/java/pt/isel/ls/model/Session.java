@@ -5,14 +5,14 @@ import java.sql.Timestamp;
 
 public class Session {
     private int id, cid;
-    private Timestamp date;
+    private String dateTime;
     private Movie movie;
     private Theater theater;
 
 
-    public Session(int id, Timestamp date, Movie movie, Theater theater, int cid) {
+    public Session(int id, Timestamp dateTime, Movie movie, Theater theater, int cid) {
         this.id = id;
-        this.date = date;
+        this.dateTime = dateTime.toLocalDateTime().toString().replace('T', ' ');
         this.movie = movie;
         this.theater = theater;
         this.cid = cid;
@@ -22,8 +22,8 @@ public class Session {
         return id;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public String getDateTime() {
+        return dateTime;
     }
 
     public Movie getMovie() {

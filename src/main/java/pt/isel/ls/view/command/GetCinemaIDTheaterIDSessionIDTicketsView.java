@@ -28,7 +28,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsView extends CommandView {
             for (int y=0; y<data.size(); ++y) {
                 ticket = (Ticket) data.getData(y);
                 tableData[y][0] = String.valueOf(ticket.getId());
-                tableData[y][1] = ticket.getSession().getDate().toString();
+                tableData[y][1] = ticket.getSession().getDateTime();
                 tableData[y][2] = String.valueOf(ticket.getSession().getMovie().getTitle());
                 tableData[y][3] = String.valueOf(ticket.getSession().getMovie().getDuration());
                 tableData[y][4] = String.valueOf(ticket.getSession().getTheater().getName());

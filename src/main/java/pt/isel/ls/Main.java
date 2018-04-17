@@ -84,7 +84,9 @@ public class Main {
         try {
             con = Sql.getConnection();
             con.setAutoCommit(false);
-            executeBuildedCommand(con, new CommandBuilder(args, cmdUtils)).printAllInfo();
+            CommandView cmdView = executeBuildedCommand(con, new CommandBuilder(args, cmdUtils));
+            if (cmdView != null)
+                cmdView.printAllInfo();
             con.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,8 +101,7 @@ public class Main {
         }
     }
 
-
-
+    
     /**
      * Executes and validates the user core, ONLY INTERNAL COMMANDS.
      * @param cmdBuilder
@@ -131,7 +132,23 @@ public class Main {
             cmdView = cmd.execute(cmdBuilder, con);
 
         } catch(SQLException e) {
-            e.printStackTrace();
+
+            //TODO: Find a better way to handle SQL exceptions!
+            //TODO: Find a better way to handle SQL exceptions!
+            //TODO: Find a better way to handle SQL exceptions!
+            //TODO: Find a better way to handle SQL exceptions!
+            //TODO: Find a better way to handle SQL exceptions!
+
+            int errorCode = e.getErrorCode();
+            if (errorCode == 547) {
+                System.out.println("ERROR ("+errorCode+"): Unable to insert. Dependent information for this insert was not found in database.");
+                System.out.println(e.getMessage());
+            }
+            else if (errorCode == 2627) {
+                System.out.println("ERROR ("+errorCode+"): Unable to insert. Duplicated key value.");
+                System.out.println(e.getMessage());
+            }
+            //System.out.println("ERROR CODE: "+e.getErrorCode()+" -> "+e.getMessage());
             if (con != null) {
                 try {
                     con.rollback();

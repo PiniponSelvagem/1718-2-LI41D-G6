@@ -18,7 +18,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -227,7 +226,7 @@ public class Session_tests {
                 session = (Session) data.getData(i);
                 assertEquals(sessionsId[i], session.getId());
                 assertEquals(cinemaId, session.getCinemaID());
-                assertEquals(date, session.getDate().toString());
+                assertEquals(date, session.getDateTime().toString());
                 i+=4;
             }
         } catch (SQLException | CommandException e) {
@@ -264,7 +263,7 @@ public class Session_tests {
                     session = (Session) data.getData(i);
                     assertEquals(sessionsId[i], session.getId());
                     assertEquals(theatersId[t], session.getTheater().getId());
-                    assertEquals(date, session.getDate().toString());
+                    assertEquals(date, session.getDateTime().toString());
                 }
             }
         } catch (SQLException | CommandException e) {
