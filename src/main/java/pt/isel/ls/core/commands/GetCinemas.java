@@ -19,12 +19,6 @@ public class GetCinemas extends Command {
         PreparedStatement stmt = connection.prepareStatement("SELECT * from CINEMA");
         ResultSet rs = stmt.executeQuery();
 
-        try {
-            System.out.println(cmdBuilder.getParameter("abc"));
-        } catch (CommandException e) {
-            e.printStackTrace();
-        }
-
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
 
         while(rs.next()){
