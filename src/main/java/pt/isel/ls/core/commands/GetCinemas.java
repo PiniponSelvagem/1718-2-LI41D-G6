@@ -1,5 +1,6 @@
 package pt.isel.ls.core.commands;
 
+import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
@@ -17,6 +18,12 @@ public class GetCinemas extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("SELECT * from CINEMA");
         ResultSet rs = stmt.executeQuery();
+
+        try {
+            System.out.println(cmdBuilder.getParameter("abc"));
+        } catch (CommandException e) {
+            e.printStackTrace();
+        }
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
 

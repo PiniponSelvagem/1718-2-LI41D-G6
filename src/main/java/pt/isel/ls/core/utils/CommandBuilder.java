@@ -218,6 +218,11 @@ public class CommandBuilder {
         return params.get(param);
     }
 
+    //TODO: add comment
+    public boolean hasParameter(String param) {
+        return params.containsKey(param);
+    }
+
     /**
      * Returns the id value for the requested key.
      * @param id
@@ -236,13 +241,19 @@ public class CommandBuilder {
 
     /**
      * @return If the command that is being requested to execute dosent have headers,
-     *         add default header "HTML". If it has, add the correct header and its options.
+     *         add default header "HTML". If it has, create the correct header and its options.
      *         Search the command in the commands tree and return it.
      */
     public Command execute() {
         if (headers != null) {
-            header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);
-            header.fileName = headers.get(String.valueOf(FILE_NAME));
+            try {
+                header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName).getClass().newInstance();
+                header.fileName = headers.get(String.valueOf(FILE_NAME));
+            } catch (InstantiationException | IllegalAccessException e) {
+                System.out.println("ERROR: THIS SHOULD NOT HAPPEN! UNABLE TO CREATE HEADER!");
+                System.out.println("       Falling back to default header creation...");
+                header = new Html();
+            }
         }
         else {
             header = new Html();

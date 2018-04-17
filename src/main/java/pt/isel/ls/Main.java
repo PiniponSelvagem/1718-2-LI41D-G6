@@ -22,6 +22,7 @@ import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
 public class Main {
     private final static String FILE_NAME_WELCOME = "welcome_message",
                                 WAIT_INPUT = "> ";
+    private final static CommandUtils cmdUtils = new CommandUtils();
 
     public static void main(String[] args) {
         if (args.length != 0)
@@ -83,7 +84,7 @@ public class Main {
         try {
             con = Sql.getConnection();
             con.setAutoCommit(false);
-            executeBuildedCommand(con, new CommandBuilder(args, new CommandUtils())).printAllInfo();
+            executeBuildedCommand(con, new CommandBuilder(args, cmdUtils)).printAllInfo();
             con.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -156,9 +157,7 @@ public class Main {
                 System.out.println(line);
                 line = in.readLine();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | IOException e) {
             System.out.println("WARNING: ["+FILE_NAME_WELCOME+"] not found.");
         }
     }
