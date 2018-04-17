@@ -25,7 +25,8 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         //TODO: is it missing {cid} ????
 
         PreparedStatement stmt = connection.prepareStatement(
-                "DELETE FROM TICKET WHERE sid=? AND tk=?"
+                "DELETE FROM TICKET WHERE sid=? AND tk=?" +
+                        " INNER JOIN "
         );
         stmt.setString(2, cmdBuilder.getParameter(String.valueOf(TICKET_ID)));
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));

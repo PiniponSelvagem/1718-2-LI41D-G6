@@ -15,9 +15,7 @@ public class OptionsView extends CommandView {
                 System.out.println(line);
                 line = in.readLine();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | IOException e) {
             System.out.println("WARNING: ["+FILE_NAME+"] not found.");
         }
     }
