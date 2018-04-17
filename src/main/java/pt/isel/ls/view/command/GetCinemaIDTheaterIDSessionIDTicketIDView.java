@@ -21,7 +21,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketIDView extends CommandView {
             header.addObject("Cinema " + ticket.getSession().getCinemaID() + " - Theater " +
                     ticket.getSession().getTheater().getName() + " - Session " + ticket.getSession().getId() + " - Ticket " +ticket.getId(),
                     new String[]{"Date", "Title", "Duration", "Theater name", "Seat"},
-                    new String[]{String.valueOf(ticket.getSession().getDate()),
+                    new String[]{ticket.getSession().getDateTime(),
                             ticket.getSession().getMovie().getTitle(),
                             String.valueOf(ticket.getSession().getMovie().getDuration()),
                             String.valueOf(ticket.getSession().getTheater().getName()),
