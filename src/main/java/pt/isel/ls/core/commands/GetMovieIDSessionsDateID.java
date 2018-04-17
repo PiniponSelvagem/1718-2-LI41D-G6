@@ -26,8 +26,6 @@ public class GetMovieIDSessionsDateID extends Command {
         */
 
 
-
-
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
         int sid = 0, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
         Timestamp date = null;
@@ -127,7 +125,6 @@ public class GetMovieIDSessionsDateID extends Command {
             }
 
         } else {
-
 
             PreparedStatement stmt = connection.prepareStatement(
                     "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
