@@ -9,6 +9,9 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionsView;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 
@@ -30,10 +33,10 @@ public class GetCinemaIDTheaterIDSessions extends Command {
         Timestamp dateSession;
         String theaterName, title;
 
+
         while(rs.next()){
             id = rs.getInt(1);
             dateSession = rs.getTimestamp(2);
-            System.out.println(rs.getTimestamp(2));
             mid = rs.getInt(3);
             tid = rs.getInt(4);
             availableSeats = rs.getInt(6);

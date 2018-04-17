@@ -22,12 +22,15 @@ public class GetCinemaIDSessionsDateID extends Command {
         /*
            GET /cinemas/{cid}/sessions/date/{d} - return a list with the sessions in cinema cid in the day of the year d.
         */
+
+        //O comando não é reconhecido
+
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                 "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid "+
                 "INNER JOIN THEATER AS t ON t.tid=s.tid "+
                 "INNER JOIN CINEMA AS c ON t.cid=c.cid "+
-                "WHERE (CONVERT(s.Date, DATE))=? AND c.cid=?"
+                "WHERE (CONVERT(DATE, s.Date, 106))=? AND c.cid=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(DATE_ID)));
         stmt.setString(2, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
