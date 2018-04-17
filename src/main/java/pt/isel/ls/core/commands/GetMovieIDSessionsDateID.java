@@ -28,6 +28,10 @@ public class GetMovieIDSessionsDateID extends Command {
 
         //TODO: missing optional parameters
 
+        if()
+
+
+
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                 "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid "+
