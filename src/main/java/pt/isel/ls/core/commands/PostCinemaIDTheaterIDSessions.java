@@ -30,11 +30,11 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         Timestamp timestamp;
         PreparedStatement stmt;
         ResultSet rs;
-        boolean flag=true;
-        int duration,eventDuration=0;
+        boolean flag = true;
+        int duration, eventDuration = 0;
 
         try {
-            String check=cmdBuilder.getParameter((String.valueOf(DATE_PARAM)))+":00";
+            String check = cmdBuilder.getParameter((String.valueOf(DATE_PARAM))) + ":00";
             event = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(check);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -42,23 +42,22 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         aux.setTimeInMillis(event.getTime());
 
         stmt = connection.prepareStatement(
-                "SELECT m.Duration FROM MOVIE AS m "+
+                "SELECT m.Duration FROM MOVIE AS m " +
                         "WHERE m.mid=?"
         );
+
         stmt.setString(1, cmdBuilder.getParameter(String.valueOf(MOVIE_ID)));
         rs = stmt.executeQuery();
         if(rs.next())eventDuration=rs.getInt(1);
         Date newEvent=new Date(event.getTime() + eventDuration * 60000);
-
         stmt = connection.prepareStatement(
                 "SELECT s.Date, m.Duration FROM CINEMA_SESSION AS s " +
                         "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
                         "WHERE s.tid=?"
         );
-        */
 
         stmt.setString(1, cmdBuilder.getId(String.valueOf(THEATER_ID)));
-        try {
+        stmt.execute();
         rs = stmt.executeQuery();
         while(rs.next()){
             timestamp = rs.getTimestamp(1);
@@ -70,16 +69,18 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             newDate =new Date(date.getTime() + (duration * 60000));
             if((date.before(event) && newDate.after(event)) || (event.before(date) && newEvent.after(date))) flag=false;
         }
+        int id=0;
         if (flag) {
             stmt = connection.prepareStatement("INSERT INTO CINEMA_SESSION VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, cmdBuilder.getParameter((String.valueOf(DATE_PARAM)))+":00");
-        stmt.setString(2, cmdBuilder.getParameter((String.valueOf(MOVIE_ID))));
-        stmt.setString(3, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+            stmt.setTimestamp(1, new java.sql.Timestamp(event.getTime()));
+            stmt.setString(2, cmdBuilder.getParameter((String.valueOf(MOVIE_ID))));
+            stmt.setString(3, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+            stmt.execute();
             stmt.executeUpdate();
 
-        ResultSet rs = stmt.getGeneratedKeys();
-        int id = 0;
-        if (rs.next()) id = rs.getInt(1);
+            rs = stmt.getGeneratedKeys();
+            if(rs.next()) id = rs.getInt(1);
+        }
         return new PostView<>("Session: ", id);
     }
 }
