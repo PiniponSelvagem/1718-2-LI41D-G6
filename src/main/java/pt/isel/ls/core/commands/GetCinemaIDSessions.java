@@ -9,6 +9,7 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDSessionsView;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 

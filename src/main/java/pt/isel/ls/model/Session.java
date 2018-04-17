@@ -1,15 +1,16 @@
 package pt.isel.ls.model;
 
-import java.util.Date;
+
+import java.sql.Timestamp;
 
 public class Session {
     private int id, cid;
-    private Date date;
+    private Timestamp date;
     private Movie movie;
     private Theater theater;
 
 
-    public Session(int id, Date date, Movie movie, Theater theater, int cid) {
+    public Session(int id, Timestamp date, Movie movie, Theater theater, int cid) {
         this.id = id;
         this.date = date;
         this.movie = movie;
@@ -21,7 +22,7 @@ public class Session {
         return id;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 

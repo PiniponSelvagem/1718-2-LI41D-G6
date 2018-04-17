@@ -40,13 +40,13 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
         int seat, sid, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
         String row;
-        Date date;
+        Timestamp date;
         String theaterName, title;
 
         seat = rs.getInt(1);
         row = rs.getString(2);
         sid = rs.getInt(3);
-        date = rs.getDate(4);
+        date = rs.getTimestamp(4);
         mid = rs.getInt(5);
         tid = rs.getInt(6);
         availableSeats = rs.getInt(7);

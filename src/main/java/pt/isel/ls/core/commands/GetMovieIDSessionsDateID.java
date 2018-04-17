@@ -40,13 +40,13 @@ public class GetMovieIDSessionsDateID extends Command {
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
-        int sid=0, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
-        Date date=null;
+        int sid, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
+        Timestamp date=null;
         String theaterName, title;
 
         while(rs.next()){
             sid = rs.getInt(1);
-            date = rs.getDate(2);
+            date = rs.getTimestamp(2);
             mid = rs.getInt(3);
             tid = rs.getInt(4);
             availableSeats = rs.getInt(5);
