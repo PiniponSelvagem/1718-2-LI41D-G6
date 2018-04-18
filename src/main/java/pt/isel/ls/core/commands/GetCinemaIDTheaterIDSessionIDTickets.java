@@ -28,7 +28,7 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
                 "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
                 "INNER JOIN THEATER AS t ON s.tid=t.tid " +
                 "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                "INNER JOIN MOVIE AS t ON m.mid=s.mid " +
+                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE s.sid=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
