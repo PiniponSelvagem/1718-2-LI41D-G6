@@ -56,8 +56,8 @@ public class Session_tests {
             stmt = con.prepareStatement("SELECT cid FROM CINEMA");
             rs = stmt.executeQuery();
             if(rs.next()) cinemaId = rs.getInt(1);
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala1&rows=12&seats=18"}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala2&rows=12&seats=18"}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala1&row=12&seat=18"}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala2&row=12&seat=18"}, new CommandUtils()));
             stmt = con.prepareStatement("SELECT tid FROM THEATER");
             rs = stmt.executeQuery();
             i=0;
