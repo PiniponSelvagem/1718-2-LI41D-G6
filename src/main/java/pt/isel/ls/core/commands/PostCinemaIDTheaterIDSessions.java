@@ -29,7 +29,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
 
         SimpleDateFormat sdf1= new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //format 1
         SimpleDateFormat sdf2= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format 2
-        Calendar aux = Calendar.getInstance();
+        //Calendar aux = Calendar.getInstance();
         Date date, newDate, event = null;
         Timestamp timestamp;
         PreparedStatement stmt;
@@ -51,7 +51,6 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 System.out.println("Please enter a valid date!");
             }
         }
-        //aux.setTimeInMillis(event.getTime());
 
         stmt = connection.prepareStatement(
                 "SELECT m.Duration FROM MOVIE AS m "+
@@ -78,7 +77,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 date = new Date(timestamp.getTime());
             else {date=rs.getDate(1);}
             duration=rs.getInt(2);
-            aux.setTimeInMillis(date.getTime());
+            //aux.setTimeInMillis(date.getTime());
             newDate =new Date(date.getTime() + (duration * 60000));
             if((date.before(event) && newDate.after(event)) || (event.before(date) && newEvent.after(date)) || date.equals(event) || newDate.equals(newEvent) || date.equals(newEvent) || event.equals(newDate)) {
                 flag=false;

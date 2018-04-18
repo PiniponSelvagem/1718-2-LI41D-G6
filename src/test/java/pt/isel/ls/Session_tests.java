@@ -65,12 +65,12 @@ public class Session_tests {
                 theatersId[i] = rs.getInt(1);
                 i++;
             }
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1&mid="+movId[0]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date="+date+"&mid="+movId[1]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1&mid="+movId[2]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1&mid="+movId[0]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1&mid="+movId[1]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date="+date+"&mid="+movId[2]}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date="+date+"+19:00&mid="+movId[1]}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+15:30&mid="+movId[2]}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+15:30&mid="+movId[1]}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date="+date+"+19:00&mid="+movId[2]}, new CommandUtils()));
             stmt = con.prepareStatement("SELECT sid FROM CINEMA_SESSION");
             rs = stmt.executeQuery();
             i=0;
@@ -103,6 +103,41 @@ public class Session_tests {
                 j++;
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try {
+                    con.rollback();
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void session_not_posted(){
+        try{
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            createSession(con);
+
+            PreparedStatement stmt = con.prepareStatement("SELECT s.sid, s.tid, s.mid FROM CINEMA_SESSION AS s");
+            ResultSet rs = stmt.executeQuery();
+            int size=0;
+            while (rs.next()) size++;
+
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+16:00&mid="+movId[2]}, new CommandUtils()));
+            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:30&mid="+movId[0]}, new CommandUtils()));
+
+            stmt = con.prepareStatement("SELECT s.sid, s.tid, s.mid FROM CINEMA_SESSION AS s");
+            rs = stmt.executeQuery();
+            int sizeAfter=0;
+            while (rs.next()) sizeAfter++;
+            assertEquals(size,sizeAfter);
+
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -263,7 +298,7 @@ public class Session_tests {
                     session = (Session) data.getData(i);
                     assertEquals(sessionsId[i], session.getId());
                     assertEquals(theatersId[t], session.getTheater().getId());
-                    assertEquals(date, session.getDateTime().toString());
+                    assertEquals(date, session.getDateTime().split(" ")[0]);
                 }
             }
         } catch (SQLException | CommandException e) {
@@ -279,4 +314,49 @@ public class Session_tests {
             }
         }
     }
+/*
+    @Test
+    public void get_movie_session_on_date(){
+        try{
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            createSession(con);
+
+
+        } catch (SQLException | CommandException e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try {
+                    con.rollback();
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void get_cinema_session_on_date(){
+        try{
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            createSession(con);
+
+
+        } catch (SQLException | CommandException e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try {
+                    con.rollback();
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+*/
 }

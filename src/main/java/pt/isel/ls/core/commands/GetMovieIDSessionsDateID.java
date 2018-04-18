@@ -37,7 +37,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.City = ? " +
-                            "WHERE (CONVERT(s.Date, DATE))=? AND m.mid=?"
+                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
             stmt.setString(1, cmdBuilder.getId(String.valueOf(CITY)));
             stmt.setString(2, cmdBuilder.getId(String.valueOf(DATE_ID)));
@@ -68,7 +68,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.cid = ?" +
-                            "WHERE (CONVERT(s.Date, DATE))=? AND m.mid=?"
+                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
             stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
             stmt.setString(2, cmdBuilder.getId(String.valueOf(DATE_ID)));
@@ -99,7 +99,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid AND t.SeatsAvailable=? " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                            "WHERE (CONVERT(s.Date, DATE))=? AND m.mid=?"
+                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
             stmt.setString(1, cmdBuilder.getId(String.valueOf(AVAILABLE)));
             stmt.setString(2, cmdBuilder.getId(String.valueOf(DATE_ID)));
@@ -125,13 +125,12 @@ public class GetMovieIDSessionsDateID extends Command {
             }
 
         } else {
-
             PreparedStatement stmt = connection.prepareStatement(
                     "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                            "WHERE (CONVERT(s.Date, DATE))=? AND m.mid=?"
+                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
             stmt.setString(1, cmdBuilder.getId(String.valueOf(DATE_ID)));
             stmt.setString(2, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
