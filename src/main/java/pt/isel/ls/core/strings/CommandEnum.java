@@ -50,8 +50,8 @@ public enum CommandEnum {
     TITLE("title"),
     YEAR("releaseYear"),
     DURATION("duration"),
-    ROWS("rows"),
-    SEATS_ROW("seats"),
+    ROWS("row"),
+    SEATS_ROW("seat"),
     DATE_PARAM("date");
 
 

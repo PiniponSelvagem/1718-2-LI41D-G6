@@ -138,7 +138,7 @@ public class Main {
             //TODO: Find a better way to handle SQL exceptions!
             //TODO: Find a better way to handle SQL exceptions!
             //TODO: Find a better way to handle SQL exceptions!
-            
+
             System.out.println("ERROR CODE: "+e.getErrorCode()+" -> "+e.getMessage());
             if (con != null) {
                 try {

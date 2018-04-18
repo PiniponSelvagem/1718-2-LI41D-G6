@@ -32,7 +32,10 @@ public class GetCinemaIDSessionsDateID extends Command {
                 "INNER JOIN CINEMA AS c ON t.cid=c.cid "+
                 "WHERE (CAST(s.Date AS DATE))=? AND c.cid=?"
         );
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(DATE_ID)));
+        
+        String dateString = cmdBuilder.getId(String.valueOf(DATE_ID));
+
+        stmt.setString(1, dateString);
         stmt.setString(2, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         ResultSet rs = stmt.executeQuery();
 
