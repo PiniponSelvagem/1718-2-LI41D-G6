@@ -18,17 +18,15 @@ public class GetCinemaIDSessionsToday extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate localDate = LocalDate.now();
-        String date= dtf.format(localDate);
+        Date date = new java.sql.Date( new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT * FROM CINEMA_SESSION AS s " +
-                "INNER JOIN THEATER AS t ON t.tid=s.tid " +
-                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "WHERE cid=? AND (CAST(s.Date AS DATE))=?");
+                        "INNER JOIN THEATER AS t ON t.tid=s.tid " +
+                        "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
+                        "WHERE cid=? AND (CAST(s.Date AS DATE))=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
-        stmt.setString(2, localDate.toString());
+        stmt.setDate(2, date);
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data =  new DataContainer(cmdBuilder.getHeader());
@@ -62,3 +60,4 @@ public class GetCinemaIDSessionsToday extends Command {
         return new GetCinemaIDSessionsView(data, Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))));
     }
 }
+
