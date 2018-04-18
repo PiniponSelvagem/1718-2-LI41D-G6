@@ -1,12 +1,14 @@
 package pt.isel.ls.core.headers;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public abstract class Header {
     protected StringBuilder text = new StringBuilder();
     public String fileName;
+    private final static String dirFiles = "header_files";
 
     Header() {
         open();
@@ -69,7 +71,9 @@ public abstract class Header {
         if (fileName != null) {
             BufferedWriter writer;
             try {
-                writer = new BufferedWriter(new FileWriter(fileName, false));
+                File file = new File(dirFiles);
+                file.mkdir();   //create dirFiles directory if dosent exits
+                writer = new BufferedWriter(new FileWriter(file.getPath()+"/"+fileName));
                 writer.write(text.toString());
                 writer.close();
             } catch (IOException e) {

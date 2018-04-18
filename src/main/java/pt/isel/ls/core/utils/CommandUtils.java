@@ -204,7 +204,7 @@ public class CommandUtils {
                     +DIR_SEPARATOR+TICKETS,
                 new DeleteCinemaIDTheaterIDSessionIDTicket())
         );
-        //"GET /cinemas/{cid}/sessions/date/{d}"
+        //"GET /cinemas/{cid}/sessions/date/{dmy}"
         cmdTree.add(new CommandBuilder(""+
                 GET, ""+
                 DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
@@ -231,6 +231,7 @@ public class CommandUtils {
         dirID.put(String.valueOf(MOVIES),   String.valueOf(ID_PREFIX)+String.valueOf(MOVIE_ID)+String.valueOf(ID_SUFFIX));
         dirID.put(String.valueOf(THEATERS), String.valueOf(ID_PREFIX)+String.valueOf(THEATER_ID)+String.valueOf(ID_SUFFIX));
         dirID.put(String.valueOf(SESSIONS), String.valueOf(ID_PREFIX)+String.valueOf(SESSION_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(String.valueOf(DATE), String.valueOf(ID_PREFIX)+String.valueOf(DATE_ID)+String.valueOf(ID_SUFFIX));
     }
 
     /**
