@@ -27,6 +27,7 @@ public class Html extends Header {
             }
             text.append("</tr>");
         }
+        text.append("</table>");
     }
 
     @Override

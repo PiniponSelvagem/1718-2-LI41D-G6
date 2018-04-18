@@ -69,7 +69,7 @@ public abstract class Header {
         if (fileName != null) {
             BufferedWriter writer;
             try {
-                writer = new BufferedWriter(new FileWriter(fileName));
+                writer = new BufferedWriter(new FileWriter(fileName, false));
                 writer.write(text.toString());
                 writer.close();
             } catch (IOException e) {
