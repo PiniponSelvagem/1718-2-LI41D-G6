@@ -259,9 +259,8 @@ public class Session_tests {
             Session session;
             for (int i = 0; i < data.size(); i++) {
                 session = (Session) data.getData(i);
-                assertEquals(sessionsId[i], session.getId());
                 assertEquals(cinemaId, session.getCinemaID());
-                assertEquals(date, session.getDateTime().toString());
+                assertEquals(date, session.getDateTime().split(" ")[0]);
                 i+=4;
             }
         } catch (SQLException | CommandException e) {
@@ -296,7 +295,6 @@ public class Session_tests {
                 Session session;
                 for (int i = 0; i < data.size(); i++) {
                     session = (Session) data.getData(i);
-                    assertEquals(sessionsId[i], session.getId());
                     assertEquals(theatersId[t], session.getTheater().getId());
                     assertEquals(date, session.getDateTime().split(" ")[0]);
                 }
@@ -314,14 +312,26 @@ public class Session_tests {
             }
         }
     }
-/*
-    @Test
+
+ /*   @Test
     public void get_movie_session_on_date(){
         try{
             con = Sql.getConnection();
             con.setAutoCommit(false);
             createSession(con);
 
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate = LocalDate.now();
+            String date= dtf.format(localDate);
+            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/01042018 "}, new CommandUtils()));
+            DataContainer data = view.getData();
+            Session session;
+            for (int i = 0; i < data.size(); i++) {
+                session = (Session) data.getData(i);
+                assertEquals(cinemaId, session.getCinemaID());
+                assertEquals(date, session.getDateTime().split(" ")[0]);
+                i+=4;
+            }
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
