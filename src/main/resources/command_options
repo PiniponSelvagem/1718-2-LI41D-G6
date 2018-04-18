@@ -62,8 +62,8 @@ GET /cinemas                        : List all cinemas
 GET /cinemas/{cid}                  : Detailed information for the cinema identified by {cid}
 POST /cinemas/{cid}/theaters        : Adds a new theater to a cinema, given the following params
         name - theater name
-        rows - theater number of rows
-        seats - number of seats per rows
+        row  - theater number of rows
+        seat - number of seats per rows
 GET /cinemas/{cid}/theaters         : List all theaters of the cinema identified by {cid}
 GET /cinemas/{cid}/theaters/{tid}   : Detailed information for the theater identified by {tid}
 
