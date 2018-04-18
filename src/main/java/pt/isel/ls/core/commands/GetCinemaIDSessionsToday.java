@@ -28,7 +28,7 @@ public class GetCinemaIDSessionsToday extends Command {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE cid=? AND (CAST(s.Date AS DATE))=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
-        stmt.setString(2, date);
+        stmt.setString(2, localDate.toString());
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data =  new DataContainer(cmdBuilder.getHeader());
