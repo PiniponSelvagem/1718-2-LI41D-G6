@@ -244,11 +244,17 @@ public class CommandBuilder {
      *         add default header "HTML". If it has, create the correct header and its options.
      *         Search the command in the commands tree and return it.
      */
-    public Command execute() {
+    public Command execute() throws CommandException {
         if (headers != null) {
             try {
-                header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName).getClass().newInstance();
-                header.fileName = headers.get(String.valueOf(FILE_NAME));
+                header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);
+                if (header != null) {
+                    header = header.getClass().newInstance();
+                    header.fileName = headers.get(String.valueOf(FILE_NAME));
+                }
+                else {
+                    throw new CommandException(HEADERS__INVALID);
+                }
             } catch (InstantiationException | IllegalAccessException e) {
                 System.out.println("ERROR: THIS SHOULD NOT HAPPEN! UNABLE TO CREATE HEADER!");
                 System.out.println("       Falling back to default header creation...");
