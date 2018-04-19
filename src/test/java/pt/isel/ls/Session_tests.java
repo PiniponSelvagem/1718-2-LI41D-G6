@@ -8,9 +8,7 @@ import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.sql.Sql;
-import pt.isel.ls.view.command.GetCinemaIDSessionIDView;
-import pt.isel.ls.view.command.GetCinemaIDSessionsView;
-import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionsView;
+import pt.isel.ls.view.command.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -321,10 +319,9 @@ public class Session_tests {
             createSession(con);
             int available=12*18, cid=1, idx =0;
             String city="Lisboa";
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String localDate= "01/04/2018";
-            String date= dtf.format(dtf.parse(localDate));
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 available="+available}, new CommandUtils()));
+            String date= "01/04/2018";
+
+            GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 available="+available}, new CommandUtils()));
             DataContainer data = view.getData();
             Session session;
             for (int i = 0; i < data.size(); i++) {
@@ -334,7 +331,7 @@ public class Session_tests {
                 assertEquals(available, session.getTheater().getAvailableSeats());
             }
 
-            view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 cid="+cid}, new CommandUtils()));
+            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 cid="+cid}, new CommandUtils()));
             data = view.getData();
             for (int i = 0; i < data.size(); i++) {
                 session = (Session) data.getData(i);
@@ -342,9 +339,10 @@ public class Session_tests {
                 assertEquals(date, session.getDateTime().split(" ")[0]);
                 assertEquals(cid, session.getCinemaID());
             }
+
             PreparedStatement stmt;
             ResultSet rs;
-            view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 city="+city}, new CommandUtils()));
+            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/01042018 city="+city}, new CommandUtils()));
             data = view.getData();
             for (int i = 0; i < data.size(); i++) {
                 session = (Session) data.getData(i);
@@ -376,10 +374,8 @@ public class Session_tests {
             con.setAutoCommit(false);
             createSession(con);
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String localDate= "01/04/2018";
-            String date= dtf.format(dtf.parse(localDate));
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/01042018"}, new CommandUtils()));
+            String date= "01/04/2018";
+            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/01042018"}, new CommandUtils()));
             DataContainer data = view.getData();
             Session session;
             for (int i = 0; i < data.size(); i++) {
