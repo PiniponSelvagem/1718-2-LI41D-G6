@@ -46,6 +46,7 @@ COMMANDS:
 OPTIONS                             : Display this help message
 EXIT                                : Terminates this application.
 
+
  - Movie management -
 POST /movies                        : Creates a new movie, given the following parameters
         title - the title name
@@ -53,6 +54,7 @@ POST /movies                        : Creates a new movie, given the following p
         duration - the movie's duration (in minutes)
 GET /movies                         : List all movies
 GET /movies/{mid}                   : Detailed information for the movie identified by {mid}
+
 
  - Cinema management -
 POST /cinemas                       : Creates a new cinema, given the following parameters
@@ -66,6 +68,7 @@ POST /cinemas/{cid}/theaters        : Adds a new theater to a cinema, given the 
         seat - number of seats per rows
 GET /cinemas/{cid}/theaters         : List all theaters of the cinema identified by {cid}
 GET /cinemas/{cid}/theaters/{tid}   : Detailed information for the theater identified by {tid}
+
 
  - Sessions management -
 POST /cinemas/{cid}/theaters/{tid}/sessions
@@ -81,6 +84,17 @@ GET /cinemas/{cid}/sessions/today   : List all sessions for the current day for 
 GET /cinemas/{cid}/theaters/{tid}/sessions/today
                                     : List all sessions for the current day for the cinema
                                       and theater identified by {cid} and {tid} respectively
+GET /cinemas/{cid}/sessions/date/{dmy}
+                                    : Return a list with the sessions in cinema cid in the
+                                      date dmy, where dmy contains day, month and year
+GET /movies/{mid}/sessions/date/{dmy}
+                                    : Returns a list with the sessions for the movie
+                                      identified by mid in the day of the year dmy given
+                                      one of the following optional parameters:
+    city - the city name
+    cid - the cinema identifier
+    available - the minimum number of available seats
+
 
  - Tickets management -
 POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets
@@ -98,14 +112,4 @@ DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets
                                     : Removes a ticket set, given the following parameter
                                       that can occur multiple times (e.g. tkid=A3&tkid=B5`)
         tkid - ticket identifier composed of the row letter and its number on the row
-GET /cinemas/{cid}/sessions/date/{dmy}
-                                    : Return a list with the sessions in cinema cid in the
-                                      date dmy, where dmy contains day, month and year
-GET /movies/{mid}/sessions/date/{dmy}
-                                    : Returns a list with the sessions for the movie
-                                      identified by mid in the day of the year dmy given
-                                      one of the following optional parameters:
-    city - the city name
-    cid - the cinema identifier
-    available - the minimum number of available seats
 --------------------------------------------------------------------------------------------

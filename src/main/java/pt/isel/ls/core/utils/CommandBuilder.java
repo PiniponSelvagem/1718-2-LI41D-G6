@@ -128,17 +128,19 @@ public class CommandBuilder {
         this.ids = new HashMap<>();
         String currDir = cmdUtils.getRootName();
         for (int i=0; i<path.size(); ++i) {
-            //if (cmdUtils.getDirID(currDir) != null) {
-            //TODO: this testChar and IfElse might be temporary till better solution is found.
-            char testChar;
-            if (path.get(i).length() >= 2)
-                testChar = path.get(i).charAt(1);
-            else
-                testChar = path.get(i).charAt(0);
+            if (path.get(i).length() > 0) {
+                //if (cmdUtils.getDirID(currDir) != null) {
+                //TODO: this testChar and IfElse might be temporary till better solution is found.
+                char testChar;
+                if (path.get(i).length() >= 2)
+                    testChar = path.get(i).charAt(1);
+                else
+                    testChar = path.get(i).charAt(0);
 
-            if (Character.isDigit(testChar)) {
-                ids.put(cmdUtils.getDirID(currDir), path.get(i));
-                path.set(i, cmdUtils.getDirID(currDir));
+                if (Character.isDigit(testChar)) {
+                    ids.put(cmdUtils.getDirID(currDir), path.get(i));
+                    path.set(i, cmdUtils.getDirID(currDir));
+                }
             }
             currDir = path.get(i);
         }

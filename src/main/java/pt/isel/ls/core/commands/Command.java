@@ -17,7 +17,7 @@ public abstract class Command {
      *                          but the implementation of this method should only throw it if command was wrong or similar
      */
     public CommandView execute(CommandBuilder cmdBuilder) throws CommandException {
-        throw new CommandException("COMMAND NOT CORRECTLY IMPLEMENTED.");
+        throw new CommandException("COMMAND NOT CORRECTLY IMPLEMENTED. @CommandView.execute(CommandBuilder)");
     }
 
     /**
@@ -30,6 +30,6 @@ public abstract class Command {
      * @throws SQLException SQLException
      */
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
-        throw new CommandException("COMMAND NOT CORRECTLY IMPLEMENTED.");
+        throw new CommandException("COMMAND NOT CORRECTLY IMPLEMENTED. @CommandView.execute(CommandBuilder, Connection)");
     }
 }
