@@ -22,13 +22,20 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
                 tkid - ticket identifier composed of the row letter and its number on the row.
         */
 
-        //TODO: is it missing {cid} ????
 
         PreparedStatement stmt = connection.prepareStatement(
                 "DELETE FROM TICKET WHERE sid=? AND tk=?" +
                         " INNER JOIN "
         );
-        stmt.setString(2, cmdBuilder.getParameter(String.valueOf(TICKET_ID)));
+
+        int i = 0;
+        while (cmdBuilder.getParameterSize(String.valueOf(TICKET_ID)) >= i) {
+            System.out.println("index:"+i+" tkid:"+
+                    cmdBuilder.getParameter(String.valueOf(TICKET_ID), i++)
+            );
+        }
+        //stmt.setString(2, cmdBuilder.getParameter(String.valueOf(TICKET_ID), i));
+
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
         stmt.executeQuery();
 

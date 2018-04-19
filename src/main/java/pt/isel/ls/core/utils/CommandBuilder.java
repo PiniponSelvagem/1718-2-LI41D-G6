@@ -18,7 +18,7 @@ public class CommandBuilder {
 
     private String methodName;
     private LinkedList<String> path = new LinkedList<>();
-    private HashMap<String, String> params;
+    private HashMap<String, LinkedList<String>> params;
     private HashMap<String, String> ids;
 
     private String headerName;
@@ -128,7 +128,8 @@ public class CommandBuilder {
         this.ids = new HashMap<>();
         String currDir = cmdUtils.getRootName();
         for (int i=0; i<path.size(); ++i) {
-            //if (cmdUtils.getDirID(currDir) != null && ) {
+            //if (cmdUtils.getDirID(currDir) != null) {
+            //TODO: this testChar and IfElse might be temporary till better solution is found.
             char testChar;
             if (path.get(i).length() >= 2)
                 testChar = path.get(i).charAt(1);
@@ -152,15 +153,25 @@ public class CommandBuilder {
         if (params == null) throw new CommandException(PARAMETERS__NOT_FOUND);
         this.params = new HashMap<>();
         String[] paramsSplit = params.split(String.valueOf(PARAMS_SEPARATOR));
+        String value;
+        LinkedList<String> list;
 
         for (String aParamsSplit : paramsSplit) {
             String[] aux = aParamsSplit.split(String.valueOf(PARAMS_EQUALTO));
             if (aux.length != 2) {
                 throw new CommandException(String.format(String.valueOf(PARAMETERS__NO_VALUE_ASSIGNED), aux[0]));
             }
-            this.params.put(aux[0], aux[1].replace(
-                    String.valueOf(PARAMS_VALS_SEPARATOR), String.valueOf(PARAMS_VALS_SEPERATOR_REPLACEMENT)
-            ));
+            value = aux[1].replace(
+                    String.valueOf(PARAMS_VALS_SEPARATOR),
+                    String.valueOf(PARAMS_VALS_SEPERATOR_REPLACEMENT)
+            );
+
+            list = this.params.get(aux[0]);
+            if (list==null) {
+                list = new LinkedList<>();
+                this.params.put(aux[0], list);
+            }
+            list.add(value);
         }
     }
 
@@ -222,10 +233,26 @@ public class CommandBuilder {
     public String getParameter(String param) throws CommandException {
         if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
             throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
-        return params.get(param);
+        return params.get(param).getFirst();
     }
 
     //TODO: add comment
+    public String getParameter(String param, int i) throws CommandException {
+        if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
+            throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
+        return params.get(param).get(i);
+    }
+
+    //TODO: add comment
+    public int getParameterSize(String param) {
+        return params.size();
+    }
+
+    /**
+     * Returns bool if params hashmap has this key.
+     * @param param
+     * @return
+     */
     public boolean hasParameter(String param) {
         return params != null && params.containsKey(param);
     }

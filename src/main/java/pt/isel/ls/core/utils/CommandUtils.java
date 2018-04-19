@@ -256,6 +256,7 @@ public class CommandUtils {
         putParamsCheck(String.valueOf(SESSION_ID));
         putParamsCheck(String.valueOf(DATE_PARAM));
 
+        putParamsCheck(String.valueOf(TICKET_ID));
         putParamsCheck(String.valueOf(AVAILABLE));
     }
 
@@ -333,6 +334,7 @@ public class CommandUtils {
      * @return Returns TRUE if yes, FALSE if is invalid aka not found.
      */
     public boolean validParam(String param) {
-        return paramsCheck.get(param);
+        if (paramsCheck.get(param) == null) return false;
+        else return paramsCheck.get(param);
     }
 }
