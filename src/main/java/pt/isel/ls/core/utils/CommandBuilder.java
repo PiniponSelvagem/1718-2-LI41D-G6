@@ -26,8 +26,6 @@ public class CommandBuilder {
     private HashMap<String, String> headers;
     private Header header;
 
-    private LinkedList<String> paramContainer = new LinkedList<>();
-
 
     /**
      * Build new command.
@@ -156,7 +154,7 @@ public class CommandBuilder {
         this.params = new HashMap<>();
         String[] paramsSplit = params.split(String.valueOf(PARAMS_SEPARATOR));
         String value;
-
+        LinkedList<String> list;
 
         for (String aParamsSplit : paramsSplit) {
             String[] aux = aParamsSplit.split(String.valueOf(PARAMS_EQUALTO));
@@ -168,12 +166,10 @@ public class CommandBuilder {
                     String.valueOf(PARAMS_VALS_SEPERATOR_REPLACEMENT)
             );
 
-            paramContainer = this.params.get(aux[0]);
-            if (paramContainer==null) {
-                paramContainer = new LinkedList<>();
-                this.params.put(aux[0], paramContainer);
-            }
-            paramContainer.add(value);
+            list = this.params.get(aux[0]);
+            if (list==null) list = new LinkedList<>();
+            list.add(value);
+            this.params.put(aux[0], list);
         }
     }
 
@@ -247,11 +243,7 @@ public class CommandBuilder {
 
     //TODO: add comment
     public int getParameterSize(String param) {
-        return params.size();
-    }
-
-    public int getParamContainerSize(){
-        return paramContainer.size();
+        return params.get(param).size();
     }
 
     /**
