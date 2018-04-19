@@ -22,7 +22,7 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         */
 
         StringBuilder sql = new StringBuilder();
-        int paramSize = cmdBuilder.getParamContainerSize();
+        int paramSize = cmdBuilder.getParameterSize(String.valueOf(TICKET_ID));
 
         int i = 0;
         while (i < paramSize) {
@@ -33,6 +33,14 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         PreparedStatement stmt = connection.prepareStatement(
                 "DELETE FROM TICKET FROM TICKET INNER JOIN CINEMA_SESSION ON TICKET.sid = CINEMA_SESSION.sid AND CINEMA_SESSION.sid = ? " +
                         "WHERE " + sql.toString()
+        );
+
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
+        stmt.executeUpdate();
+
+        stmt = connection.prepareStatement("UPDATE THEATER SET SeatsAvailable = SeatsAvailable + " + paramSize +
+                                                    " FROM THEATER INNER JOIN CINEMA_SESSION ON THEATER.tid = CINEMA_SESSION.tid "+
+                                                    " WHERE CINEMA_SESSION.sid = ?"
         );
 
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
