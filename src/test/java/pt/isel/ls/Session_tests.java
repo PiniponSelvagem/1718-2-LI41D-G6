@@ -313,24 +313,46 @@ public class Session_tests {
         }
     }
 
- /*   @Test
+    @Test
     public void get_movie_session_on_date(){
         try{
             con = Sql.getConnection();
             con.setAutoCommit(false);
             createSession(con);
-
+            int available=12*18, cid=1, idx =0;
+            String city="Lisboa";
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = LocalDate.now();
-            String date= dtf.format(localDate);
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/01042018 "}, new CommandUtils()));
+            String localDate= "01/04/2018";
+            String date= dtf.format(dtf.parse(localDate));
+            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 available="+available}, new CommandUtils()));
             DataContainer data = view.getData();
             Session session;
             for (int i = 0; i < data.size(); i++) {
                 session = (Session) data.getData(i);
-                assertEquals(cinemaId, session.getCinemaID());
+                assertEquals(movId[idx], session.getMovie().getId());
                 assertEquals(date, session.getDateTime().split(" ")[0]);
-                i+=4;
+                assertEquals(available, session.getTheater().getAvailableSeats());
+            }
+
+            view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 cid="+cid}, new CommandUtils()));
+            data = view.getData();
+            for (int i = 0; i < data.size(); i++) {
+                session = (Session) data.getData(i);
+                assertEquals(movId[idx], session.getMovie().getId());
+                assertEquals(date, session.getDateTime().split(" ")[0]);
+                assertEquals(cid, session.getCinemaID());
+            }
+            PreparedStatement stmt;
+            ResultSet rs;
+            view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 city="+city}, new CommandUtils()));
+            data = view.getData();
+            for (int i = 0; i < data.size(); i++) {
+                session = (Session) data.getData(i);
+                assertEquals(movId[idx], session.getMovie().getId());
+                assertEquals(date, session.getDateTime().split(" ")[0]);
+                stmt = con.prepareStatement("SELECT DISTINCT c.City FROM CINEMA WHERE c.cid="+session.getCinemaID());
+                rs = stmt.executeQuery();
+                assertEquals(city,rs.getString(1));
             }
 
         } catch (SQLException | CommandException e) {
@@ -354,6 +376,17 @@ public class Session_tests {
             con.setAutoCommit(false);
             createSession(con);
 
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String localDate= "01/04/2018";
+            String date= dtf.format(dtf.parse(localDate));
+            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/01042018"}, new CommandUtils()));
+            DataContainer data = view.getData();
+            Session session;
+            for (int i = 0; i < data.size(); i++) {
+                session = (Session) data.getData(i);
+                assertEquals(cinemaId, session.getCinemaID());
+                assertEquals(date, session.getDateTime().split(" ")[0]);
+            }
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
@@ -368,5 +401,5 @@ public class Session_tests {
             }
         }
     }
-*/
+
 }
