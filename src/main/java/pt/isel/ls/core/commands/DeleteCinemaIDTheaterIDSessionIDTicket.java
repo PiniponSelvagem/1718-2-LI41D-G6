@@ -22,7 +22,7 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         */
 
         StringBuilder sql = new StringBuilder();
-        int paramSize = cmdBuilder.getParamContainerSize();
+        int paramSize = cmdBuilder.getParameterSize(String.valueOf(TICKET_ID));
 
         int i = 0;
         while (i < paramSize) {
