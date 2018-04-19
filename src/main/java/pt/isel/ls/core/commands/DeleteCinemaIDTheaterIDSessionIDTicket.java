@@ -38,6 +38,14 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
         stmt.executeUpdate();
 
+        stmt = connection.prepareStatement("UPDATE THEATER SET SeatsAvailable = SeatsAvailable + " + paramSize +
+                                                    " FROM THEATER INNER JOIN CINEMA_SESSION ON THEATER.tid = CINEMA_SESSION.tid "+
+                                                    " WHERE CINEMA_SESSION.sid = ?"
+        );
+
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
+        stmt.executeUpdate();
+
         return new DeleteView();
     }
 }
