@@ -255,6 +255,8 @@ public class CommandUtils {
 
         putParamsCheck(String.valueOf(SESSION_ID));
         putParamsCheck(String.valueOf(DATE_PARAM));
+
+        putParamsCheck(String.valueOf(AVAILABLE));
     }
 
     /**

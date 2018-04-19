@@ -1,5 +1,6 @@
 package pt.isel.ls.core.commands;
 
+import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
@@ -18,7 +19,7 @@ import static pt.isel.ls.core.strings.CommandEnum.*;
 public class GetMovieIDSessionsDateID extends Command {
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
+    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException, CommandException {
 
         /*
             GET /movies/{mid}/sessions/date/{d} - returns a list with the sessions for the movie identified by mid in the day of the year d given one of the following optional parameters:
@@ -34,7 +35,7 @@ public class GetMovieIDSessionsDateID extends Command {
         Date date1 = Date.valueOf(localDate);
 
 
-                DataContainer data = new DataContainer(cmdBuilder.getHeader());
+        DataContainer data = new DataContainer(cmdBuilder.getHeader());
         int sid = 0, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
         Timestamp date = null;
         String theaterName, title;
@@ -47,13 +48,11 @@ public class GetMovieIDSessionsDateID extends Command {
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.City=? " +
                             "WHERE m.mid=? AND (CAST(s.Date AS DATE))=?"
             );
-            stmt.setString(1, cmdBuilder.getId(String.valueOf(CITY)));
+            stmt.setString(1, cmdBuilder.getParameter(String.valueOf(CITY)));
             stmt.setString(2, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
             stmt.setDate(3, date1);
 
             ResultSet rs = stmt.executeQuery();
-
-            if(rs.next()) System.out.println("NOT NULL");
 
             while (rs.next()) {
                 sid = rs.getInt(1);
@@ -81,7 +80,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.cid = ?" +
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
-            stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+            stmt.setString(1, cmdBuilder.getParameter(String.valueOf(CINEMA_ID)));
             stmt.setString(2, localDate.toString());
             stmt.setString(3, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
             ResultSet rs = stmt.executeQuery();
@@ -112,7 +111,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
-            stmt.setString(1, cmdBuilder.getId(String.valueOf(AVAILABLE)));
+            stmt.setString(1, cmdBuilder.getParameter(String.valueOf(AVAILABLE)));
             stmt.setString(2, localDate.toString());
             stmt.setString(3, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
             ResultSet rs = stmt.executeQuery();
