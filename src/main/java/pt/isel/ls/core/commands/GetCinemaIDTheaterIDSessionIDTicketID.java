@@ -8,6 +8,7 @@ import pt.isel.ls.model.Theater;
 import pt.isel.ls.model.Ticket;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
+import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.*;
 
@@ -30,7 +31,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
                 "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
                 "INNER JOIN THEATER AS t ON s.tid=t.tid " +
                 "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                "INNER JOIN MOVIE AS t ON m.mid=s.mid " +
+                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE tk.tkid=? AND tk.sid=?"
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(TICKET_ID)));
@@ -42,6 +43,9 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         String row;
         Timestamp date;
         String theaterName, title;
+
+        if (!rs.next())
+            return new InfoNotFoundView();
 
         seat = rs.getInt(1);
         row = rs.getString(2);
@@ -58,8 +62,9 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         year = rs.getInt(13);
         duration = rs.getInt(14);
 
-        data.add(new Ticket(row.charAt(0),seat,new Session(sid, date, new Movie(mid, title, year, duration),
-                        new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid))
+
+        data.add(new Ticket(row.charAt(0), seat, new Session(sid, date, new Movie(mid, title, year, duration),
+                new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid))
         );
 
         return new GetCinemaIDTheaterIDSessionIDTicketIDView(data);

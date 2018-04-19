@@ -18,9 +18,8 @@ public class GetCinemaIDTheaterIDSessionsToday extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate localDate = LocalDate.now();
-        String date= dtf.format(localDate);
+
+        Date date = new java.sql.Date( new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT * FROM CINEMA_SESSION AS s " +
@@ -30,7 +29,7 @@ public class GetCinemaIDTheaterIDSessionsToday extends Command {
         );
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
-        stmt.setString(3, date);
+        stmt.setDate(3, date);
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
