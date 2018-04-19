@@ -22,7 +22,15 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
         stmt.setString(2, cmdBuilder.getParameter((String.valueOf(SEATS_ROW))));
         stmt.setString(3, cmdBuilder.getParameter((String.valueOf(ROWS))));
         stmt.setString(4, cmdBuilder.getId((String.valueOf(SESSION_ID))));
-        stmt.execute();
+        stmt.executeUpdate();
+
+        stmt = connection.prepareStatement("UPDATE THEATER SET SeatsAvailable = SeatsAvailable - 1 " +
+                                                "FROM THEATER INNER JOIN CINEMA_SESSION ON THEATER.tid = CINEMA_SESSION.tid " +
+                                                "INNER JOIN TICKET ON TICKET.sid = CINEMA_SESSION.sid " +
+                                                "WHERE TICKET.tkid=?"
+        );
+        stmt.setString(1, id);
+        stmt.executeUpdate();
 
         return new PostView<>("Ticket ID: ", id);
     }

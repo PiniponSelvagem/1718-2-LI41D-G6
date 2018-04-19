@@ -34,19 +34,6 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
         ResultSet rs = stmt1.executeQuery();
         if(rs.next()) availableSeats = rs.getInt(1);
 
-        PreparedStatement stmt2 = connection.prepareStatement(
-                "SELECT DISTINCT COUNT(tk.tkid) FROM TICKET AS tk " +
-                "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid AND s.sid=? " +
-                "INNER JOIN THEATER AS t ON s.tid=t.tid AND t.tid=? " +
-                "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.cid=? " +
-                "INNER JOIN MOVIE AS m ON m.mid=s.mid"
-        );
-        stmt2.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
-        stmt2.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
-        stmt2.setString(3, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
-        rs = stmt2.executeQuery();
-        if(rs.next()) availableSeats -= rs.getInt(1);
-
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
         data.add(availableSeats);
 

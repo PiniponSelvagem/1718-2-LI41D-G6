@@ -9,6 +9,8 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDSessionsDateIDView;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID;
 import static pt.isel.ls.core.strings.CommandEnum.DATE_ID;
@@ -25,6 +27,11 @@ public class GetCinemaIDSessionsDateID extends Command {
 
         //O comando não é reconhecido
 
+        LocalDate localDate;
+        String str = cmdBuilder.getId(String.valueOf(DATE_ID));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+        localDate = LocalDate.parse(str, formatter);
+
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                 "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid "+
@@ -32,10 +39,8 @@ public class GetCinemaIDSessionsDateID extends Command {
                 "INNER JOIN CINEMA AS c ON t.cid=c.cid "+
                 "WHERE (CAST(s.Date AS DATE))=? AND c.cid=?"
         );
-        
-        String dateString = cmdBuilder.getId(String.valueOf(DATE_ID));
 
-        stmt.setString(1, dateString);
+        stmt.setString(1, localDate.toString());
         stmt.setString(2, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         ResultSet rs = stmt.executeQuery();
 
