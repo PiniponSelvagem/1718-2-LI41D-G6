@@ -43,24 +43,27 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         Timestamp date;
         String theaterName, title;
 
-        seat = rs.getInt(1);
-        row = rs.getString(2);
-        sid = rs.getInt(3);
-        date = rs.getTimestamp(4);
-        mid = rs.getInt(5);
-        tid = rs.getInt(6);
-        availableSeats = rs.getInt(7);
-        rows = rs.getInt(8);
-        seatsRow = rs.getInt(9);
-        theaterName = rs.getString(10);
-        cid = rs.getInt(11);
-        title = rs.getString(12);
-        year = rs.getInt(13);
-        duration = rs.getInt(14);
+        if(rs.next()) {
+            seat = rs.getInt(1);
+            row = rs.getString(2);
+            sid = rs.getInt(3);
+            date = rs.getTimestamp(4);
+            mid = rs.getInt(5);
+            tid = rs.getInt(6);
+            availableSeats = rs.getInt(7);
+            rows = rs.getInt(8);
+            seatsRow = rs.getInt(9);
+            theaterName = rs.getString(10);
+            cid = rs.getInt(11);
+            title = rs.getString(12);
+            year = rs.getInt(13);
+            duration = rs.getInt(14);
 
-        data.add(new Ticket(row.charAt(0),seat,new Session(sid, date, new Movie(mid, title, year, duration),
-                        new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid))
-        );
+
+            data.add(new Ticket(row.charAt(0), seat, new Session(sid, date, new Movie(mid, title, year, duration),
+                    new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid))
+            );
+        }
 
         return new GetCinemaIDTheaterIDSessionIDTicketIDView(data);
     }

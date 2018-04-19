@@ -226,7 +226,7 @@ public class CommandBuilder {
 
     //TODO: add comment
     public boolean hasParameter(String param) {
-        return params.containsKey(param);
+        return params != null && params.containsKey(param);
     }
 
     /**
