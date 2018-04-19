@@ -8,11 +8,11 @@ public enum ExceptionEnum {
 
     PARAMETERS__NOT_FOUND("This command requires parameters and they weren't found. More info at: "+OPTIONS),
     PARAMETERS__NO_VALUE_ASSIGNED("Parameter { %s } doesn't have an assigned value."),
-    PARAMETERS__EXPECTED("Parameter not found. Expected parameter was: %s"),
+    PARAMETERS__EXPECTED("Parameter not found. Input parameter was: %s"),
 
     HEADERS__NOT_FOUND("Header not found. Check available headers at: "+OPTIONS),
     HEADERS__NO_VALUE_ASSIGNED("Header { %s } doesn't have an assigned value."),
-    HEADERS__EXPECTED("Header not found. Expected headers was: %s"),
+    HEADERS__EXPECTED("Header not found. Input headers was: %s"),
     HEADERS__INVALID("Header with invalid syntax. More info at: "+OPTIONS);
 
     private final String str;

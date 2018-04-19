@@ -229,21 +229,31 @@ public class CommandBuilder {
      * @throws CommandException
      */
     public String getParameter(String param) throws CommandException {
-        if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
-            throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
+        parameterValidator(param);
         return params.get(param).getFirst();
     }
 
     //TODO: add comment
     public String getParameter(String param, int i) throws CommandException {
-        if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
-            throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
+        parameterValidator(param);
         return params.get(param).get(i);
     }
 
     //TODO: add comment
-    public int getParameterSize(String param) {
+    public int getParameterSize(String param) throws CommandException {
+        parameterValidator(param);
         return params.get(param).size();
+    }
+
+    /**
+     * Throws CommandException if parameter wasnt found or if is not a known parameter.
+     * Good to validate user input parameter, and stop the action if its not valid.
+     * @param param
+     * @throws CommandException
+     */
+    private void parameterValidator(String param) throws CommandException {
+        if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
+            throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
     }
 
     /**
