@@ -67,8 +67,8 @@ public class Main {
 
     /**
      * Internal command request, dosent open an sql connection.
-     * @param args
-     * @throws CommandException
+     * @param args String[] containing the input command
+     * @throws CommandException CommandException
      */
     private static void executeInternalCommand(String[] args) throws CommandException {
         executeBuildedCommand(new CommandBuilder(args, new CommandUtils())).printAllInfo();
@@ -76,8 +76,8 @@ public class Main {
 
     /**
      * External command request, opens an sql connection.
-     * @param args
-     * @throws CommandException
+     * @param args String[] containing the input command
+     * @throws CommandException CommandException
      */
     private static void executeSQLCommand(String[] args) throws CommandException {
         Connection con = null;
@@ -104,8 +104,9 @@ public class Main {
 
     /**
      * Executes and validates the user core, ONLY INTERNAL COMMANDS.
-     * @param cmdBuilder
+     * @param cmdBuilder Builded command ready to be searched.
      * @return Returns the view for that core.
+     * * @throws CommandException when command was not found
      */
     private static CommandView executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandException {
         Command cmd = cmdBuilder.execute();
@@ -117,10 +118,9 @@ public class Main {
     /**
      * Executes and validates the user core.
      *
-     * @param cmdBuilder Builded core ready to be searched.
+     * @param cmdBuilder Builded command ready to be searched.
      * @return Returns the view for that core.
-     * @throws SQLException
-     * @throws CommandException
+     * @throws CommandException when command was not found
      */
     public static CommandView executeBuildedCommand(Connection con, CommandBuilder cmdBuilder) throws CommandException {
         CommandView cmdView = null;

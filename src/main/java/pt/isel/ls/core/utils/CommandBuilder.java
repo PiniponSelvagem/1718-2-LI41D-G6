@@ -42,8 +42,8 @@ public class CommandBuilder {
     /**
      * Build new command from user input.
      * @param args Command string input.
-     * @param cmdUtils
-     * @throws CommandException
+     * @param cmdUtils CommandUtils
+     * @throws CommandException CommandException
      */
     public CommandBuilder(String[] args, CommandUtils cmdUtils) throws CommandException {
         this.cmdUtils = cmdUtils;
@@ -56,7 +56,7 @@ public class CommandBuilder {
 
     /**
      * Parse path of this command.
-     * @param path
+     * @param path Path string
      */
     private void pathToList(String path) {
         if (path != null)
@@ -65,7 +65,7 @@ public class CommandBuilder {
 
     /**
      * Parse method name of this command.
-     * @param args
+     * @param args String[] containing the command
      */
     private void parseMethod(String[] args) {
         this.methodName = args[0];
@@ -73,7 +73,7 @@ public class CommandBuilder {
 
     /**
      * Parse path to list.
-     * @param args
+     * @param args String[] containing the command
      */
     private void parsePath(String[] args) {
         if (args.length >= 2) {
@@ -83,8 +83,8 @@ public class CommandBuilder {
 
     /**
      * Checks for headers / parameters in the command args.
-     * @param args
-     * @throws CommandException
+     * @param args String[] containing the command
+     * @throws CommandException CommandException
      */
     private void findOptions(String[] args) throws CommandException {
         /*
@@ -122,7 +122,7 @@ public class CommandBuilder {
 
     /**
      * Find, if present, the multiple IDs, save them and replace them with generic information.
-     * @param cmdUtils
+     * @param cmdUtils CommandUtils
      */
     private void findIdsAndReplace(CommandUtils cmdUtils) {
         this.ids = new HashMap<>();
@@ -146,8 +146,8 @@ public class CommandBuilder {
 
     /**
      * Find parameters and organize them for later use.
-     * @param params
-     * @throws CommandException
+     * @param params String of the parameters to be worked with
+     * @throws CommandException when parameters werent found or no value was assigned to the param that is currently checking wasnt found
      */
     private void findParams(String params) throws CommandException {
         if (params == null) throw new CommandException(PARAMETERS__NOT_FOUND);
@@ -175,8 +175,8 @@ public class CommandBuilder {
 
     /**
      * Find headers and organize them for later use.
-     * @param headers
-     * @throws CommandException
+     * @param headers String of headers to be workwd with
+     * @throws CommandException when headers werent found or no value was assigned to the header that is currently checking wasnt found
      */
     private void findHeaders(String headers) throws CommandException {
         if (headers == null) throw new CommandException(HEADERS__NOT_FOUND);
@@ -226,20 +226,29 @@ public class CommandBuilder {
      * Returns the desired parameter, if invalid throws an exception.
      * @param param Parameter name.
      * @return Returns the desired parameter.
-     * @throws CommandException
+     * @throws CommandException check CommandException of {@link #parameterValidator(String)}
      */
     public String getParameter(String param) throws CommandException {
         parameterValidator(param);
         return params.get(param).getFirst();
     }
 
-    //TODO: add comment
+    /**
+     * @param param Parameter key to get
+     * @param i Index of the parameter in the list.
+     * @return Returns the requested parameter value if valid, if indexoutofboundsexception returns null.
+     * @throws CommandException check CommandException of {@link #parameterValidator(String)}
+     */
     public String getParameter(String param, int i) throws CommandException {
         parameterValidator(param);
-        return params.get(param).get(i);
+        return (i < getParameterSize(param)) ? params.get(param).get(i) : null;
     }
 
-    //TODO: add comment
+    /**
+     * @param param Parameter key to check for
+     * @return Returns the size of the list containing multiple parameters with same key.
+     * @throws CommandException check CommandException of {@link #parameterValidator(String)}
+     */
     public int getParameterSize(String param) throws CommandException {
         parameterValidator(param);
         return params.get(param).size();
@@ -248,8 +257,8 @@ public class CommandBuilder {
     /**
      * Throws CommandException if parameter wasnt found or if is not a known parameter.
      * Good to validate user input parameter, and stop the action if its not valid.
-     * @param param
-     * @throws CommandException
+     * @param param Parameter to check
+     * @throws CommandException when param is not valid nor found, telling the one it was checking
      */
     private void parameterValidator(String param) throws CommandException {
         if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
@@ -257,9 +266,8 @@ public class CommandBuilder {
     }
 
     /**
-     * Returns bool if params hashmap has this key.
-     * @param param
-     * @return
+     * @param param Check if this param is present
+     * @return Returns bool if params hashmap has this key.
      */
     public boolean hasParameter(String param) {
         return params != null && params.containsKey(param);
@@ -267,8 +275,8 @@ public class CommandBuilder {
 
     /**
      * Returns the id value for the requested key.
-     * @param id
-     * @return
+     * @param id "key" to get the value
+     * @return Returns the corresponding to this id
      */
     public String getId(String id) {
         return ids.get(ID_PREFIX+id+ID_SUFFIX);
