@@ -164,7 +164,7 @@ public class Cinema_tests {
                 String name = "theater";
                 name += (j + 1);
                 Main.executeBuildedCommand(con, new CommandBuilder(new String[]
-                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&rows=10" + "&seats=" + seats}, new CommandUtils()));
+                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()));
                 seats += 10;
             }
 
@@ -210,7 +210,7 @@ public class Cinema_tests {
                 String name = "theater";
                 name += (j + 1);
                 Main.executeBuildedCommand(con, new CommandBuilder(new String[]
-                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&rows=10" + "&seats=" + seats}, new CommandUtils()));
+                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()));
                 seats += 10;
             }
 
@@ -260,7 +260,7 @@ public class Cinema_tests {
                 String name = "theater";
                 name += (j + 1);
                 Main.executeBuildedCommand(con, new CommandBuilder(new String[]
-                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&rows=10" + "&seats=" + seats}, new CommandUtils()));
+                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()));
                 seats += 10;
             }
 
