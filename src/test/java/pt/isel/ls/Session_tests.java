@@ -319,9 +319,9 @@ public class Session_tests {
             createSession(con);
             int available=12*18, cid=1, idx =0;
             String city="Lisboa";
-            String date= "01/04/2018";
+            String date= "2018-04-01";
 
-            GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 available="+available}, new CommandUtils()));
+            GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()));
             DataContainer data = view.getData();
             Session session;
             for (int i = 0; i < data.size(); i++) {
@@ -331,7 +331,7 @@ public class Session_tests {
                 assertEquals(available, session.getTheater().getAvailableSeats());
             }
 
-            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/01042018 cid="+cid}, new CommandUtils()));
+            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()));
             data = view.getData();
             for (int i = 0; i < data.size(); i++) {
                 session = (Session) data.getData(i);
@@ -342,7 +342,7 @@ public class Session_tests {
 
             PreparedStatement stmt;
             ResultSet rs;
-            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/01042018 city="+city}, new CommandUtils()));
+            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/date/01042018","city="+city}, new CommandUtils()));
             data = view.getData();
             for (int i = 0; i < data.size(); i++) {
                 session = (Session) data.getData(i);
@@ -373,9 +373,8 @@ public class Session_tests {
             con = Sql.getConnection();
             con.setAutoCommit(false);
             createSession(con);
-
-            String date= "01/04/2018";
-            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/01042018"}, new CommandUtils()));
+            String date= "2018-04-01";
+            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/date/01042018"}, new CommandUtils()));
             DataContainer data = view.getData();
             Session session;
             for (int i = 0; i < data.size(); i++) {
