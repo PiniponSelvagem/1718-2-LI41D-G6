@@ -317,13 +317,14 @@ public class Session_tests {
             con = Sql.getConnection();
             con.setAutoCommit(false);
             createSession(con);
+
             int available=12*18, cid=1, idx =0;
             String city="Lisboa";
             String date= "2018-04-01";
+            Session session;
 
             GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()));
             DataContainer data = view.getData();
-            Session session;
             for (int i = 0; i < data.size(); i++) {
                 session = (Session) data.getData(i);
                 assertEquals(movId[idx], session.getMovie().getId());

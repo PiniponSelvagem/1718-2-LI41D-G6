@@ -21,7 +21,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         //                  Comandos de teste
         //POST /movies title=Inception&duration=148&releaseYear=2010
         //POST /cinemas name=City+Campo+Pequeno&city=Lisboa
-        //POST /cinemas/1/theaters name=Sala+VIP&seats=12&rows=10
+        //POST /cinemas/1/theaters name=Sala+VIP&seat=12&row=10
         //POST /cinemas/1/theaters/1/sessions mid=1&date=2018/11/24+21:30
         //POST /cinemas/1/theaters/1/sessions mid=1&date=24/11/2018+22:30 suposto dar not posted
         //POST /cinemas/1/theaters/1/sessions mid=1&date=24/11/2018+23:59
