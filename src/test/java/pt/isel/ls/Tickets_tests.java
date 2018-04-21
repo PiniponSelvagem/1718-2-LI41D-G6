@@ -1,23 +1,27 @@
 package pt.isel.ls;
 
 import org.junit.Test;
+import pt.isel.ls.core.commands.GetCinemaIDTheaterIDSessionIDTickets;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Movie;
+import pt.isel.ls.model.Ticket;
 import pt.isel.ls.sql.Sql;
+import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
+import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
+import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsView;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 
-public class Thickets_tests {
+public class Tickets_tests {
 
     private Connection con = null;
     int cinemaId;
@@ -89,24 +93,19 @@ public class Thickets_tests {
     }
 
     @Test
-    public void insert_thickets() {
+    public void insert_tickets() {
         try {
             con = Sql.getConnection();
             con.setAutoCommit(false);
             createTickets(con);
-
             PreparedStatement stmt = con.prepareStatement("SELECT tk.tkid, tk.sid, t.Rows, t.Seats FROM TICKET AS tk " +
                     "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid INNER JOIN THEATER AS t ON t.tid=s.tid");
             ResultSet rs = stmt.executeQuery();
-            int availables, i=0, j=0, t=0;
+            int i=0;
             while (rs.next()) {
-                if(rs.getInt(2)==sessionsId[1] || rs.getInt(2)==sessionsId[5]) availables=(12*18)-2;
-                else{ availables=(12*18)-1;}
                 assertEquals(rs.getString(1),ticketsId[i]);
                 i++;
             }
-            j=1;
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -122,13 +121,31 @@ public class Thickets_tests {
     }
 
     @Test
-    public void get_thickets() {
+    public void get_tickets() {
         try {
             con = Sql.getConnection();
             con.setAutoCommit(false);
             createTickets(con);
-
-        } catch (SQLException e) {
+            PreparedStatement stmt = con.prepareStatement(
+                    "SELECT tk.tkid, tk.sid, s.tid , t.cid FROM TICKET AS tk " +
+                            "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
+                            "INNER JOIN THEATER AS t ON t.tid=s.tid "
+            );
+            ResultSet rs = stmt.executeQuery();
+            GetCinemaIDTheaterIDSessionIDTicketsView view;
+            DataContainer data;
+            Ticket ticket;
+            while (rs.next()) {
+                view=(GetCinemaIDTheaterIDSessionIDTicketsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/" + rs.getInt(4) +"/theaters/"+rs.getInt(3)+"/sessions/" + rs.getString(2)+"/tickets"}, new CommandUtils()));
+                data=view.getData();
+                for(int i=0; i<data.size() ;i++) {
+                    ticket = (Ticket) data.getData(i);
+                    assertEquals(rs.getInt(2), ticket.getSession().getId());
+                    assertEquals(rs.getInt(3), ticket.getSession().getTheater().getId());
+                    assertEquals(rs.getInt(4), ticket.getSession().getCinemaID());
+                }
+            }
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
             if (con != null) {
@@ -149,8 +166,26 @@ public class Thickets_tests {
             con = Sql.getConnection();
             con.setAutoCommit(false);
             createTickets(con);
+            PreparedStatement stmt = con.prepareStatement(
+                        "SELECT tk.tkid, tk.sid, s.tid , t.cid FROM TICKET AS tk " +
+                            "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
+                            "INNER JOIN THEATER AS t ON t.tid=s.tid "
+            );
+            ResultSet rs = stmt.executeQuery();
+            GetCinemaIDTheaterIDSessionIDTicketIDView sessionIDView;
+            DataContainer data;
+            Ticket ticket;
+            while (rs.next()) {
+                sessionIDView = (GetCinemaIDTheaterIDSessionIDTicketIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/" + rs.getInt(4) +"/theaters/"+rs.getInt(3)+"/sessions/" + rs.getString(2)+"/tickets/" + rs.getString(1)}, new CommandUtils()));
+                data = sessionIDView.getData();
+                ticket = (Ticket)data.getData(0);
+                assertEquals(rs.getString(1), ticket.getId());
+                assertEquals(rs.getInt(2),ticket.getSession().getId());
+                assertEquals(rs.getInt(3),ticket.getSession().getTheater().getId());
+                assertEquals(rs.getInt(4),ticket.getSession().getCinemaID());
+            }
 
-        } catch (SQLException e) {
+        } catch (SQLException | CommandException e) {
             e.printStackTrace();
         }finally {
             if (con != null){
@@ -164,4 +199,31 @@ public class Thickets_tests {
         }
     }
 
+    @Test
+    public void get_available_tickets() {
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            createTickets(con);
+
+            GetCinemaIDTheaterIDSessionIDTicketsAvailableView view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[1]+"/tickets/available"}, new CommandUtils()));
+            DataContainer data = view.getData();
+            if(data.size()==1) assertEquals(data.getData(0),(18*12)-2);
+            view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets/available"}, new CommandUtils()));
+            data = view.getData();
+            if(data.size()==1) assertEquals(data.getData(0),(18*12)-1);
+
+        } catch (SQLException | CommandException e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try {
+                    con.rollback();
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
