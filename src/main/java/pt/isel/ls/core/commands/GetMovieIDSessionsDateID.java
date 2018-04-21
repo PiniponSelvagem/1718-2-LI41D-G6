@@ -139,7 +139,7 @@ public class GetMovieIDSessionsDateID extends Command {
 
                 if(Integer.compare((int)dataAux.getData(0) , Integer.parseInt(cmdBuilder.getParameter(String.valueOf(AVAILABLE)))) >= 0)
                     data.add(new Session(sid, date, new Movie(mid, title, year, duration),
-                        new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid));
+                        new Theater(tid, theaterName, rows, seatsRow, (int)dataAux.getData(0), cid), cid));
             }
 
         } else {
