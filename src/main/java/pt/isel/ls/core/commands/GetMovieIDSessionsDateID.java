@@ -1,13 +1,16 @@
 package pt.isel.ls.core.commands;
 
+import pt.isel.ls.Main;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.model.Ticket;
 import pt.isel.ls.view.command.CommandView;
+import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
 import pt.isel.ls.view.command.GetMovieIDSessionsDateIDView;
 
 import java.sql.*;
@@ -35,7 +38,7 @@ public class GetMovieIDSessionsDateID extends Command {
         Date date1 = Date.valueOf(localDate);
 
 
-        DataContainer data = new DataContainer(cmdBuilder.getHeader());
+        DataContainer data = new DataContainer(cmdBuilder.getHeader()),dataAux;
         int sid = 0, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
         Timestamp date = null;
         String theaterName, title;
@@ -81,7 +84,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
             stmt.setString(1, cmdBuilder.getParameter(String.valueOf(CINEMA_ID)));
-            stmt.setString(2, localDate.toString());
+            stmt.setDate(2, date1);
             stmt.setString(3, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
             ResultSet rs = stmt.executeQuery();
 
@@ -107,13 +110,13 @@ public class GetMovieIDSessionsDateID extends Command {
             PreparedStatement stmt = connection.prepareStatement(
                     "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
-                            "INNER JOIN THEATER AS t ON t.tid=s.tid AND t.SeatsAvailable>=? " +
+                            "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
+                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=? AND t.SeatsAvailable>=?"
             );
-            stmt.setString(1, cmdBuilder.getParameter(String.valueOf(AVAILABLE)));
-            stmt.setString(2, localDate.toString());
-            stmt.setString(3, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
+            stmt.setString(3, cmdBuilder.getParameter(String.valueOf(AVAILABLE)));
+            stmt.setDate(1, date1);
+            stmt.setString(2, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -130,7 +133,12 @@ public class GetMovieIDSessionsDateID extends Command {
                 year = rs.getInt(11);
                 duration = rs.getInt(12);
 
-                data.add(new Session(sid, date, new Movie(mid, title, year, duration),
+
+                GetCinemaIDTheaterIDSessionIDTicketsAvailableView view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) Main.executeBuildedCommand(connection, new CommandBuilder(new String[]{"GET", "/cinemas/" + cid +"/theaters/"+tid+"/sessions/" + sid+"/tickets/available"}, new CommandUtils()));
+                dataAux = view.getData();
+
+                if(Integer.compare((int)dataAux.getData(0) , Integer.parseInt(cmdBuilder.getParameter(String.valueOf(AVAILABLE)))) >= 0)
+                    data.add(new Session(sid, date, new Movie(mid, title, year, duration),
                         new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid));
             }
 
@@ -142,7 +150,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
-            stmt.setString(1, localDate.toString());
+            stmt.setDate(1,date1);
             stmt.setString(2, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
             ResultSet rs = stmt.executeQuery();
 

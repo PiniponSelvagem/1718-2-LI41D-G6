@@ -322,38 +322,42 @@ public class Session_tests {
             String city="Lisboa";
             String date= "2018-04-01";
             Session session;
+            DataContainer data;
 
             GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()));
-            DataContainer data = view.getData();
-            for (int i = 0; i < data.size(); i++) {
-                session = (Session) data.getData(i);
-                assertEquals(movId[idx], session.getMovie().getId());
-                assertEquals(date, session.getDateTime().split(" ")[0]);
-                assertEquals(available, session.getTheater().getAvailableSeats());
+            if(view!=null) {
+                data = view.getData();
+                for (int i = 0; i < data.size(); i++) {
+                    session = (Session) data.getData(i);
+                    assertEquals(movId[idx], session.getMovie().getId());
+                    assertEquals(date, session.getDateTime().split(" ")[0]);
+                    assertEquals(available, session.getTheater().getAvailableSeats());
+                }
             }
-
             view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()));
-            data = view.getData();
-            for (int i = 0; i < data.size(); i++) {
-                session = (Session) data.getData(i);
-                assertEquals(movId[idx], session.getMovie().getId());
-                assertEquals(date, session.getDateTime().split(" ")[0]);
-                assertEquals(cid, session.getCinemaID());
+            if(view!=null) {
+                data = view.getData();
+                for (int i = 0; i < data.size(); i++) {
+                    session = (Session) data.getData(i);
+                    assertEquals(movId[idx], session.getMovie().getId());
+                    assertEquals(date, session.getDateTime().split(" ")[0]);
+                    assertEquals(cid, session.getCinemaID());
+                }
             }
-
             PreparedStatement stmt;
             ResultSet rs;
             view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/date/01042018","city="+city}, new CommandUtils()));
-            data = view.getData();
-            for (int i = 0; i < data.size(); i++) {
-                session = (Session) data.getData(i);
-                assertEquals(movId[idx], session.getMovie().getId());
-                assertEquals(date, session.getDateTime().split(" ")[0]);
-                stmt = con.prepareStatement("SELECT DISTINCT c.City FROM CINEMA WHERE c.cid="+session.getCinemaID());
-                rs = stmt.executeQuery();
-                assertEquals(city,rs.getString(1));
+            if(view!=null) {
+                data = view.getData();
+                for (int i = 0; i < data.size(); i++) {
+                    session = (Session) data.getData(i);
+                    assertEquals(movId[idx], session.getMovie().getId());
+                    assertEquals(date, session.getDateTime().split(" ")[0]);
+                    stmt = con.prepareStatement("SELECT DISTINCT c.City FROM CINEMA WHERE c.cid=" + session.getCinemaID());
+                    rs = stmt.executeQuery();
+                    assertEquals(city, rs.getString(1));
+                }
             }
-
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
         } finally {
