@@ -33,10 +33,11 @@ public class GetCinemaIDSessionsDateID extends Command {
         localDate = LocalDate.parse(str, formatter);
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
+                "SELECT s.sid, s.Date,m.mid,t.tid,SEATS.seats,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                         "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid "+
                         "INNER JOIN THEATER AS t ON t.tid=s.tid "+
                         "INNER JOIN CINEMA AS c ON t.cid=c.cid "+
+                        "INNER JOIN SEATS ON SEATS.sid=s.sid "+
                         "WHERE (CAST(s.Date AS DATE))=? AND c.cid=?"
         );
 

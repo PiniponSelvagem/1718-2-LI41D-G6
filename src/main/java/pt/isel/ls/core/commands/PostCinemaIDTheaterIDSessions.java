@@ -96,6 +96,20 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             int id = 0;
             if (rs.next()) id = rs.getInt(1);
 
+            int seats = 0;
+            stmt = connection.prepareStatement("SELECT THEATER.SeatsAvailable FROM THEATER WHERE THEATER.tid=?");
+            stmt.setString(1, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+            rs = stmt.executeQuery();
+            if(rs.next()) seats = rs.getInt(1);
+
+            stmt = connection.prepareStatement("INSERT INTO SEATS VALUES(?,?,?)");
+            stmt.setInt(1, seats);
+            stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+            stmt.setInt(3, id);
+
+            stmt.executeUpdate();
+
+
             return new PostView<>("Session: ", id);
         }
         else {

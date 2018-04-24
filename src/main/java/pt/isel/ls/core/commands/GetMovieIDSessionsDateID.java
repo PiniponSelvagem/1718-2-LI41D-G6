@@ -45,9 +45,10 @@ public class GetMovieIDSessionsDateID extends Command {
 
         if (cmdBuilder.hasParameter(String.valueOf(CITY))) {
             PreparedStatement stmt = connection.prepareStatement(
-                    "SELECT s.sid, s.Date, m.mid, t.tid, t.SeatsAvailable, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration " +
+                    "SELECT s.sid, s.Date, m.mid, t.tid, SEATS.seats, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration " +
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid " +
+                            "INNER JOIN SEATS ON SEATS.sid = s.sid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.City=? " +
                             "WHERE m.mid=? AND (CAST(s.Date AS DATE))=?"
             );
@@ -77,9 +78,10 @@ public class GetMovieIDSessionsDateID extends Command {
 
         } else if (cmdBuilder.hasParameter(String.valueOf(CINEMA_ID))) {
             PreparedStatement stmt = connection.prepareStatement(
-                    "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
+                    "SELECT s.sid, s.Date,m.mid,t.tid,SEATS.seats,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid " +
+                            "INNER JOIN SEATS ON SEATS.sid=s.sid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.cid = ? " +
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
@@ -108,11 +110,12 @@ public class GetMovieIDSessionsDateID extends Command {
 
         } else if (cmdBuilder.hasParameter(String.valueOf(AVAILABLE))) {
             PreparedStatement stmt = connection.prepareStatement(
-                    "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
+                    "SELECT s.sid, s.Date,m.mid,t.tid,SEATS.seats,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
+                            "INNER JOIN SEATS ON SEATS.sid=s.sid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=? AND t.SeatsAvailable>=?"
+                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=? AND SEATS.seats>=?"
             );
             stmt.setString(3, cmdBuilder.getParameter(String.valueOf(AVAILABLE)));
             stmt.setDate(1, date1);
@@ -134,19 +137,20 @@ public class GetMovieIDSessionsDateID extends Command {
                 duration = rs.getInt(12);
 
 
-                GetCinemaIDTheaterIDSessionIDTicketsAvailableView view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) Main.executeBuildedCommand(connection, new CommandBuilder(new String[]{"GET", "/cinemas/" + cid +"/theaters/"+tid+"/sessions/" + sid+"/tickets/available"}, new CommandUtils()));
-                dataAux = view.getData();
+                /*GetCinemaIDTheaterIDSessionIDTicketsAvailableView view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) Main.executeBuildedCommand(connection, new CommandBuilder(new String[]{"GET", "/cinemas/" + cid +"/theaters/"+tid+"/sessions/" + sid+"/tickets/available"}, new CommandUtils()));
+                dataAux = view.getData();*/
 
-                if(Integer.compare((int)dataAux.getData(0) , Integer.parseInt(cmdBuilder.getParameter(String.valueOf(AVAILABLE)))) >= 0)
+                /*if(Integer.compare((int)dataAux.getData(0) , Integer.parseInt(cmdBuilder.getParameter(String.valueOf(AVAILABLE)))) >= 0)*/
                     data.add(new Session(sid, date, new Movie(mid, title, year, duration),
-                        new Theater(tid, theaterName, rows, seatsRow, (int)dataAux.getData(0), cid), cid));
+                        new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid));
             }
 
         } else {
             PreparedStatement stmt = connection.prepareStatement(
-                    "SELECT s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
+                    "SELECT s.sid, s.Date,m.mid,t.tid,SEATS.seats,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                             "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                             "INNER JOIN THEATER AS t ON t.tid=s.tid " +
+                            "INNER JOIN SEATS ON SEATS.sid=s.sid " +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );

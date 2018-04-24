@@ -22,6 +22,7 @@ public class GetCinemaIDSessionID extends Command {
                 "SELECT * FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
+                "INNER JOIN SEATS ON s.sid=SEATS.sid " +
                 "WHERE cid=? AND s.sid=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         stmt.setString(2, cmdBuilder.getId(String.valueOf(SESSION_ID)));
@@ -38,7 +39,7 @@ public class GetCinemaIDSessionID extends Command {
         dateTime = rs.getTimestamp(2);
         mid = rs.getInt(3);
         tid = rs.getInt(4);
-        availableSeats = rs.getInt(6);
+        availableSeats = rs.getInt(15);
         rows = rs.getInt(7);
         seatsRow = rs.getInt(8);
         theaterName = rs.getString(9);
