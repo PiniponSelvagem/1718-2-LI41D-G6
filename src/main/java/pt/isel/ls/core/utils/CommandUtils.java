@@ -88,6 +88,16 @@ public class CommandUtils {
         );
 
 
+        /* Commands related to CINEMAS->MOVIES */
+        //"GET /cinemas/{cid}/movies/today
+        cmdTree.add(new CommandBuilder(""+
+                GET, ""+
+                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+TODAY,
+                new GetCinemaIDMoviesToday())
+        );
+
+
         /* Commands related to CINEMAS->THEATERS */
         //"POST /cinemas/{cid}/theaters"
         cmdTree.add(new CommandBuilder(""+
