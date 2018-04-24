@@ -65,6 +65,14 @@ public class CommandUtils {
                 DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX,
                 new GetMovieID())
         );
+        //"GET
+        cmdTree.add(new CommandBuilder(""+
+                GET, ""+
+                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                +DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+TODAY,
+                new GetCinemaIDMoviesToday())
+        );
+
 
 
         /* Commands related to CINEMAS */
