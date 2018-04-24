@@ -134,6 +134,12 @@ public class CommandUtils {
                 new GetCinemaIDTheaterIDSessionsToday())
         );
 
+        cmdTree.add(new CommandBuilder(""+
+                GET, ""+
+                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
+                    +DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+TODAY,
+                new GetCinemaIDMoviesToday()));
+
 
         /* Commands related to CINEMAS->SESSIONS */
         //"GET /cinemas/{cid}/sessions"

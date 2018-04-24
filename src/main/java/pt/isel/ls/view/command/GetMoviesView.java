@@ -8,8 +8,16 @@ import pt.isel.ls.model.Movie;
 
 public class GetMoviesView extends CommandView {
 
+    int cid;
+    String tname;
+
     public GetMoviesView(DataContainer data) {
         this.data = data;
+    }
+    public GetMoviesView(DataContainer data, int cid, String tname) {
+        this.data = data;
+        this.cid = cid;
+        this.tname = tname;
     }
 
     @Override
@@ -19,7 +27,7 @@ public class GetMoviesView extends CommandView {
         if (header != null) {
             header.addTitle("Movies");
 
-            String[] tableColumns = {"ID", "Title", "Year", "Duration"};
+            String[] tableColumns = {"ID", "Title", "Year", "Duration", "CinemaID", "Theater Name"};
             String[][] tableData  = new String[data.size()][tableColumns.length];
 
             Movie movie;
@@ -29,6 +37,8 @@ public class GetMoviesView extends CommandView {
                 tableData[y][1] = String.valueOf(movie.getTitle());
                 tableData[y][2] = String.valueOf(movie.getYear());
                 tableData[y][3] = String.valueOf(movie.getDuration());
+                tableData[y][4] = String.valueOf(cid);
+                tableData[y][5] = String.valueOf(tname);
             }
             header.addTable("Movie", tableColumns, tableData);
 
