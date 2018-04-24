@@ -57,4 +57,9 @@ public class GetCinemaIDSessionID extends Command {
 
         return new GetCinemaIDSessionIDView(data);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

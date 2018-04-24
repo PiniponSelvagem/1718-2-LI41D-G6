@@ -26,4 +26,9 @@ public class GetCinemaID extends Command {
 
         return new GetCinemaIDView(data);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

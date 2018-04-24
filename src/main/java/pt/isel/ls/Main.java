@@ -52,44 +52,43 @@ public class Main {
      */
     private static void commandRequest(String[] args) {
         try {
-            if (args.length <= 1) {
-                executeInternalCommand(args);
-            }
-            else if (args.length <= 4) {
-                executeSQLCommand(args);
-            }
-            else
-                throw new CommandException(COMMAND__NOT_FOUND);
+            executeCommand(prepareCommand(args));
         } catch (CommandException  e) {
             System.out.println(e.getMessage());
         }
     }
 
-    /**
-     * Internal command request, dosent open an sql connection.
-     * @param args String[] containing the input command
-     * @throws CommandException CommandException
-     */
-    private static void executeInternalCommand(String[] args) throws CommandException {
-        executeBuildedCommand(new CommandBuilder(args, new CommandUtils())).printAllInfo();
+    //TODO: ADD COMMENT
+    private static CommandBuilder prepareCommand(String[] args) throws CommandException {
+        return new CommandBuilder(args, cmdUtils);
     }
 
     /**
      * External command request, opens an sql connection.
-     * @param args String[] containing the input command
+     * @param cmdBuilder builded command
      * @throws CommandException CommandException
      */
-    private static void executeSQLCommand(String[] args) throws CommandException {
+    private static void executeCommand(CommandBuilder cmdBuilder) throws CommandException {
         Connection con = null;
+
+        Command cmd = cmdBuilder.buildCommand();
+        if (cmd == null)
+            throw new CommandException(COMMAND__NOT_FOUND);
+
         try {
-            con = Sql.getConnection();
-            con.setAutoCommit(false);
-            CommandView cmdView = executeBuildedCommand(con, new CommandBuilder(args, cmdUtils));
-            if (cmdView != null)
-                cmdView.printAllInfo();
-            con.commit();
+            if (cmd.isSQLRequired()) {
+                con = Sql.getConnection();
+                con.setAutoCommit(false);
+                executeView(cmdBuilder, con);
+                con.commit();
+            }
+            else {
+                executeView(cmdBuilder, null);
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            //TODO: Find a better way to handle SQL exceptions!
+            //if possible make it so a "fool" user can understand :D
+            System.out.println("ERROR CODE: "+e.getErrorCode()+" -> "+e.getMessage());
         } finally {
             if (con != null) {
                 try {
@@ -101,53 +100,13 @@ public class Main {
         }
     }
 
+    //TODO: ADD COMMENT
+    public static CommandView executeView(CommandBuilder cmdBuilder, Connection con) throws CommandException, SQLException {
+        CommandView cmdView = cmdBuilder.getCommand().execute(cmdBuilder, con);
 
-    /**
-     * Executes and validates the user core, ONLY INTERNAL COMMANDS.
-     * @param cmdBuilder Builded command ready to be searched.
-     * @return Returns the view for that core.
-     * * @throws CommandException when command was not found
-     */
-    private static CommandView executeBuildedCommand(CommandBuilder cmdBuilder) throws CommandException {
-        Command cmd = cmdBuilder.execute();
-        if (cmd == null)
-            throw new CommandException(COMMAND__NOT_FOUND);
-        return cmd.execute(cmdBuilder);
-    }
+        if (cmdView != null)
+            cmdView.printAllInfo();
 
-    /**
-     * Executes and validates the user core.
-     *
-     * @param cmdBuilder Builded command ready to be searched.
-     * @return Returns the view for that core.
-     * @throws CommandException when command was not found
-     */
-    public static CommandView executeBuildedCommand(Connection con, CommandBuilder cmdBuilder) throws CommandException {
-        CommandView cmdView = null;
-
-        try {
-            Command cmd = cmdBuilder.execute();
-            if (cmd == null)
-                throw new CommandException(COMMAND__NOT_FOUND);
-            cmdView = cmd.execute(cmdBuilder, con);
-
-        } catch(SQLException e) {
-
-            //TODO: Find a better way to handle SQL exceptions!
-            //TODO: Find a better way to handle SQL exceptions!
-            //TODO: Find a better way to handle SQL exceptions!
-            //TODO: Find a better way to handle SQL exceptions!
-            //TODO: Find a better way to handle SQL exceptions!
-
-            System.out.println("ERROR CODE: "+e.getErrorCode()+" -> "+e.getMessage());
-            if (con != null) {
-                try {
-                    con.rollback();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
         return cmdView;
     }
 

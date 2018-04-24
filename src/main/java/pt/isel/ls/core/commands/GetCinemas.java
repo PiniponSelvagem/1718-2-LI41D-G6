@@ -26,4 +26,9 @@ public class GetCinemas extends Command {
 
         return new GetCinemasView(data);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

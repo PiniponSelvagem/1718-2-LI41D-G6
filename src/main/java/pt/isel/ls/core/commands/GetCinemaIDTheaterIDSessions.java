@@ -61,4 +61,9 @@ public class GetCinemaIDTheaterIDSessions extends Command {
                 Integer.parseInt(cmdBuilder.getId(String.valueOf(THEATER_ID)))
         );
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

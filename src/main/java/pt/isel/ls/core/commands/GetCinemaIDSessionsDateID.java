@@ -67,4 +67,9 @@ public class GetCinemaIDSessionsDateID extends Command {
                 date
         );
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

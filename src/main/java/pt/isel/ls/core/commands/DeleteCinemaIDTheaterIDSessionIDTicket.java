@@ -51,4 +51,9 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         
         else return new InfoNotFoundView();
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

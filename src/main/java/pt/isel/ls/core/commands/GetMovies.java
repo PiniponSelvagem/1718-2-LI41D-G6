@@ -26,4 +26,9 @@ public class GetMovies extends Command {
 
         return new GetMoviesView(dataContainer);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

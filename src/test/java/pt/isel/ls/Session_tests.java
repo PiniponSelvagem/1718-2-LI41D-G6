@@ -41,7 +41,7 @@ public class Session_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()));
+                Main.executeView(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con);
             }
             PreparedStatement stmt = con.prepareStatement("SELECT mid FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
@@ -50,12 +50,12 @@ public class Session_tests {
                 movId[i] = rs.getInt(1);
                 i++;
             }
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas", "name=cinema1&city=cidade1"}, new CommandUtils()));
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas", "name=cinema1&city=cidade1"}, new CommandUtils()), con);
             stmt = con.prepareStatement("SELECT cid FROM CINEMA");
             rs = stmt.executeQuery();
             if(rs.next()) cinemaId = rs.getInt(1);
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala1&row=12&seat=18"}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala2&row=12&seat=18"}, new CommandUtils()));
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala1&row=12&seat=18"}, new CommandUtils()), con);
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala2&row=12&seat=18"}, new CommandUtils()), con);
             stmt = con.prepareStatement("SELECT tid FROM THEATER");
             rs = stmt.executeQuery();
             i=0;
@@ -63,12 +63,12 @@ public class Session_tests {
                 theatersId[i] = rs.getInt(1);
                 i++;
             }
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date="+date+"+19:00&mid="+movId[1]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+15:30&mid="+movId[2]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+15:30&mid="+movId[1]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date="+date+"+19:00&mid="+movId[2]}, new CommandUtils()));
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con);
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date="+date+"+19:00&mid="+movId[1]}, new CommandUtils()), con);
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+15:30&mid="+movId[2]}, new CommandUtils()), con);
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con);
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+15:30&mid="+movId[1]}, new CommandUtils()), con);
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date="+date+"+19:00&mid="+movId[2]}, new CommandUtils()), con);
             stmt = con.prepareStatement("SELECT sid FROM CINEMA_SESSION");
             rs = stmt.executeQuery();
             i=0;
@@ -126,8 +126,8 @@ public class Session_tests {
             int size=0;
             while (rs.next()) size++;
 
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+16:00&mid="+movId[2]}, new CommandUtils()));
-            Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:30&mid="+movId[0]}, new CommandUtils()));
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+16:00&mid="+movId[2]}, new CommandUtils()), con);
+            Main.executeView(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:30&mid="+movId[0]}, new CommandUtils()), con);
 
             stmt = con.prepareStatement("SELECT s.sid, s.tid, s.mid FROM CINEMA_SESSION AS s");
             rs = stmt.executeQuery();
@@ -156,7 +156,7 @@ public class Session_tests {
             con.setAutoCommit(false);
 
             createSession(con);
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions"}, new CommandUtils()));
+            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeView(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions"}, new CommandUtils()), con);
             DataContainer data = view.getData();
             Session session;
 
@@ -189,7 +189,7 @@ public class Session_tests {
 
             createSession(con);
             for(int t=0; t<theatersId.length; t++) {
-                GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions"}, new CommandUtils()));
+                GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeView(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions"}, new CommandUtils()), con);
                 DataContainer data = view.getData();
                 Session session;
                 for (int i = 0; i < data.size(); i++) {
@@ -222,7 +222,7 @@ public class Session_tests {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id=rs.getInt(1);
-                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/sessions/" + id}, new CommandUtils()));
+                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) Main.executeView(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/sessions/" + id}, new CommandUtils()), con);
                 DataContainer data = sessionIDView.getData();
                 Session session = (Session)data.getData(0);
                 assertEquals(id, session.getId());
@@ -252,7 +252,7 @@ public class Session_tests {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()));
+            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) Main.executeView(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con);
             DataContainer data = view.getData();
             Session session;
             for (int i = 0; i < data.size(); i++) {
@@ -288,7 +288,7 @@ public class Session_tests {
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
             for(int t=0;t<theatersId.length;t++) {
-                GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions/today"}, new CommandUtils()));
+                GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) Main.executeView(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions/today"}, new CommandUtils()), con);
                 DataContainer data = view.getData();
                 Session session;
                 for (int i = 0; i < data.size(); i++) {
@@ -324,7 +324,7 @@ public class Session_tests {
             Session session;
             DataContainer data;
 
-            GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()));
+            GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) Main.executeView(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()), con);
             if(view!=null) {
                 data = view.getData();
                 for (int i = 0; i < data.size(); i++) {
@@ -334,7 +334,7 @@ public class Session_tests {
                     assertEquals(available, session.getTheater().getAvailableSeats());
                 }
             }
-            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()));
+            view = (GetMovieIDSessionsDateIDView) Main.executeView(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()), con);
             if(view!=null) {
                 data = view.getData();
                 for (int i = 0; i < data.size(); i++) {
@@ -346,7 +346,7 @@ public class Session_tests {
             }
             PreparedStatement stmt;
             ResultSet rs;
-            view = (GetMovieIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/date/01042018","city="+city}, new CommandUtils()));
+            view = (GetMovieIDSessionsDateIDView) Main.executeView(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/date/01042018","city="+city}, new CommandUtils()), con);
             if(view!=null) {
                 data = view.getData();
                 for (int i = 0; i < data.size(); i++) {
@@ -379,7 +379,7 @@ public class Session_tests {
             con.setAutoCommit(false);
             createSession(con);
             String date= "2018-04-01";
-            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) Main.executeBuildedCommand(con, new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/date/01042018"}, new CommandUtils()));
+            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) Main.executeView(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/date/01042018"}, new CommandUtils()), con);
             DataContainer data = view.getData();
             Session session;
             for (int i = 0; i < data.size(); i++) {

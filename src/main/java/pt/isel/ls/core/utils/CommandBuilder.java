@@ -25,6 +25,7 @@ public class CommandBuilder {
     private LinkedList<String> pathHeaders;
     private HashMap<String, String> headers;
     private Header header;
+    private Command buildedCommand;
 
 
     /**
@@ -296,7 +297,7 @@ public class CommandBuilder {
      *         add default header "HTML". If it has, create the correct header and its options.
      *         Search the command in the commands tree and return it.
      */
-    public Command execute() throws CommandException {
+    public Command buildCommand() throws CommandException {
         if (headers != null) {
             try {
                 header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);
@@ -316,6 +317,19 @@ public class CommandBuilder {
         else {
             header = new Html();
         }
-        return (Command) cmdUtils.getCmdTree().search(path, methodName);
+        buildedCommand = (Command) cmdUtils.getCmdTree().search(path, methodName);
+        return buildedCommand;
+    }
+
+    /**
+     * @return Returns the builded command, if its currently null, tries to build it (in case buildCommand() didnt run)
+     * @throws CommandException CommandException
+     */
+    public Command getCommand() throws CommandException {
+        //TODO: this if looks stupid and a better way to work around it should be found
+        //its basically because in Main before calling a execute, buildCommand is allways called first, but when testing it should be all at once
+        if (buildedCommand == null)
+            buildCommand();
+        return buildedCommand;
     }
 }

@@ -63,4 +63,9 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
 
         return new GetCinemaIDTheaterIDSessionIDTicketIDView(data);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

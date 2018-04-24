@@ -30,4 +30,9 @@ public class GetCinemaIDTheaters extends Command {
 
         return new GetCinemaIDTheatersView(data, Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))));
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

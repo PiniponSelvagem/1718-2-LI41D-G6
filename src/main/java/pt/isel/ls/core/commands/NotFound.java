@@ -11,12 +11,12 @@ import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
 public class NotFound extends Command {
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder) throws CommandException {
+    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException {
         throw new CommandException(COMMAND__NOT_FOUND);
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException {
-        throw new CommandException(COMMAND__NOT_FOUND);
+    public boolean isSQLRequired() {
+        return false;
     }
 }

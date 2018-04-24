@@ -29,4 +29,9 @@ public class PostCinemaIDTheaters extends Command {
 
         return new PostView<>("Theater ID: ", id);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

@@ -105,4 +105,9 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             return new PostView<>("Session: ", "NOT POSTED!");
         }
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

@@ -45,4 +45,9 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
 */
         return new PostView<>("Ticket ID: ", id);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }

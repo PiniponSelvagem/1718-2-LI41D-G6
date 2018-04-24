@@ -50,10 +50,10 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
         stmt1.setString(1, aux);
         rs = stmt1.executeQuery();
         if(rs.next()) availableSeats = availableSeats-rs.getInt(1);*/
+    }
 
-
-
-
-
+    @Override
+    public boolean isSQLRequired() {
+        return true;
     }
 }

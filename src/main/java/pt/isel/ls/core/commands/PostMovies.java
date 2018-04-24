@@ -25,4 +25,9 @@ public class PostMovies extends Command {
 
         return new PostView<>("Movie ID = ", id);
     }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
+    }
 }
