@@ -20,25 +20,18 @@ public class GetCinemaIDSessionsDateID extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
-        //TODO:
-        /*
-           GET /cinemas/{cid}/sessions/date/{d} - return a list with the sessions in cinema cid in the day of the year d.
-        */
-
-        //O comando não é reconhecido
-
         LocalDate localDate;
         String str = cmdBuilder.getId(String.valueOf(DATE_ID));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
         localDate = LocalDate.parse(str, formatter);
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, s.Date,m.mid,t.tid,SEATS.seats,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
-                        "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid "+
-                        "INNER JOIN THEATER AS t ON t.tid=s.tid "+
-                        "INNER JOIN CINEMA AS c ON t.cid=c.cid "+
-                        "INNER JOIN SEATS ON SEATS.sid=s.sid "+
-                        "WHERE (CAST(s.Date AS DATE))=? AND c.cid=?"
+                "SELECT s.sid, s.Date,m.mid,t.tid,SEATS.seats,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration "+
+                "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid "+
+                "INNER JOIN THEATER AS t ON t.tid=s.tid "+
+                "INNER JOIN CINEMA AS c ON t.cid=c.cid "+
+                "INNER JOIN SEATS ON SEATS.sid=s.sid "+
+                "WHERE (CAST(s.Date AS DATE))=? AND c.cid=?"
         );
 
         stmt.setString(1, localDate.toString());

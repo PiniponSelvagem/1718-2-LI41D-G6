@@ -8,7 +8,6 @@ import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.*;
 
-import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID;
 import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID;
 import static pt.isel.ls.core.strings.CommandEnum.THEATER_ID;
 
@@ -17,10 +16,6 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
-        //TODO:
-        /*
-            GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available - returns the number of available tickets for a session.
-        */
         int availableSeats;
         String sid =cmdBuilder.getId(String.valueOf(SESSION_ID));
         String tid = cmdBuilder.getId(String.valueOf(THEATER_ID));

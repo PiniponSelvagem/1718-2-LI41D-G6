@@ -9,8 +9,6 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDSessionsView;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 
@@ -22,10 +20,10 @@ public class GetCinemaIDSessionsToday extends Command {
 
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT * FROM CINEMA_SESSION AS s " +
-                        "INNER JOIN THEATER AS t ON t.tid=s.tid " +
-                        "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                        "INNER JOIN SEATS ON SEATS.sid = s.sid " +
-                        "WHERE cid=? AND (CAST(s.Date AS DATE))=?");
+                "INNER JOIN THEATER AS t ON t.tid=s.tid " +
+                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
+                "INNER JOIN SEATS ON SEATS.sid = s.sid " +
+                "WHERE cid=? AND (CAST(s.Date AS DATE))=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         stmt.setDate(2, date);
         ResultSet rs = stmt.executeQuery();

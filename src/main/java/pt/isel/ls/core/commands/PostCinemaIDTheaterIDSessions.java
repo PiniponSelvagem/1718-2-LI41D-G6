@@ -6,31 +6,21 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.PostView;
 
 import java.sql.*;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.ExceptionEnum.DATE_INVALID_FORMAT;
 
 public class PostCinemaIDTheaterIDSessions extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
-        //                  Comandos de teste
-        //POST /movies title=Inception&duration=148&releaseYear=2010
-        //POST /cinemas name=City+Campo+Pequeno&city=Lisboa
-        //POST /cinemas/1/theaters name=Sala+VIP&seat=12&row=10
-        //POST /cinemas/1/theaters/1/sessions mid=1&date=2018/11/24+21:30
-        //POST /cinemas/1/theaters/1/sessions mid=1&date=24/11/2018+22:30 suposto dar not posted
-        //POST /cinemas/1/theaters/1/sessions mid=1&date=24/11/2018+23:59
-        //POST /cinemas/1/theaters/1/sessions mid=1&date=2018/11/24+23:59 suposto dar not posted
 
         SimpleDateFormat sdf1= new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //format 1
         SimpleDateFormat sdf2= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format 2
-        //Calendar aux = Calendar.getInstance();
-        Date date, newDate, event = null;
+        Date date, newDate, event;
         Timestamp timestamp;
         PreparedStatement stmt;
         ResultSet rs;
@@ -48,7 +38,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 sdf2.setLenient(false);
                 event = sdf2.parse(check.trim());
             } catch (ParseException ex) {
-                System.out.println("Please enter a valid date!");
+                throw new CommandException(DATE_INVALID_FORMAT);
             }
         }
 
@@ -108,7 +98,6 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             stmt.setInt(3, id);
 
             stmt.executeUpdate();
-
 
             return new PostView<>("Session: ", id);
         }

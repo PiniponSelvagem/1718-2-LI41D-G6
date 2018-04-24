@@ -19,12 +19,6 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
-
-        //TODO:
-        /*
-            GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid} - returns the detailed information of the ticket, includes session information.
-        */
-
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT tk.seat, tk.row,s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
                 "FROM TICKET AS tk " +

@@ -13,7 +13,9 @@ public enum ExceptionEnum {
     HEADERS__NOT_FOUND("Header not found. Check available headers at: "+OPTIONS),
     HEADERS__NO_VALUE_ASSIGNED("Header { %s } doesn't have an assigned value."),
     HEADERS__EXPECTED("Header not found. Input headers was: %s"),
-    HEADERS__INVALID("Header with invalid syntax. More info at: "+OPTIONS);
+    HEADERS__INVALID("Header with invalid syntax. More info at: "+OPTIONS),
+
+    DATE_INVALID_FORMAT("Invalid date format. [dd/MM/yyyy HH:mm] & [yyyy/MM/dd HH:mm]");
 
     private final String str;
     ExceptionEnum(String str) {

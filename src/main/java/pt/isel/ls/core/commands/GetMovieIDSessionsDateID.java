@@ -24,13 +24,6 @@ public class GetMovieIDSessionsDateID extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException, CommandException {
 
-        /*
-            GET /movies/{mid}/sessions/date/{d} - returns a list with the sessions for the movie identified by mid in the day of the year d given one of the following optional parameters:
-                city - the city name;
-                cid - the cinema identifier;
-                available- the minimum number of available seats.
-        */
-
         LocalDate localDate;
         String str = cmdBuilder.getId(String.valueOf(DATE_ID));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
