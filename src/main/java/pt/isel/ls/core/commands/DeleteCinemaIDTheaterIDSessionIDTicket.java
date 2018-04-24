@@ -52,6 +52,9 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         stmt.executeUpdate();
 
         if(rs != null) return new DeleteView();
+
+
+        
         else return new InfoNotFoundView();
     }
 }
