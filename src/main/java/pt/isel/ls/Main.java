@@ -47,31 +47,28 @@ public class Main {
     }
 
     /**
-     * Checks which type of command is being requested, internal or sql and prepares it.
+     * First phase of the command request.
+     * Here it creates the CommandBuilder and creates the command making it ready to be executed.
      * @param args {method, path, header, parameters} or {method, path, header, parameters}
      */
     private static void commandRequest(String[] args) {
         try {
-            executeCommand(prepareCommand(args));
+            commandRequest2ndPhase(new CommandBuilder(args, cmdUtils));
         } catch (CommandException  e) {
             System.out.println(e.getMessage());
         }
     }
 
-    //TODO: ADD COMMENT
-    private static CommandBuilder prepareCommand(String[] args) throws CommandException {
-        return new CommandBuilder(args, cmdUtils);
-    }
-
     /**
-     * External command request, opens an sql connection.
+     * Second phase of the command request.
+     * After the first phase that created the command based on the user input and made it ready for the command
+     * to be executed, here it check if the command requires a SQL connection and executes the command accordingly.
      * @param cmdBuilder builded command
      * @throws CommandException CommandException
      */
-    private static void executeCommand(CommandBuilder cmdBuilder) throws CommandException {
+    private static void commandRequest2ndPhase(CommandBuilder cmdBuilder) throws CommandException {
         Connection con = null;
-
-        Command cmd = cmdBuilder.buildCommand();
+        Command cmd = cmdBuilder.getCommand();
         if (cmd == null)
             throw new CommandException(COMMAND__NOT_FOUND);
 
@@ -79,11 +76,11 @@ public class Main {
             if (cmd.isSQLRequired()) {
                 con = Sql.getConnection();
                 con.setAutoCommit(false);
-                executeView(cmdBuilder, con);
+                executeCommand(cmdBuilder, con);
                 con.commit();
             }
             else {
-                executeView(cmdBuilder, null);
+                executeCommand(cmdBuilder, null);
             }
         } catch (SQLException e) {
             //TODO: Find a better way to handle SQL exceptions!
@@ -100,8 +97,15 @@ public class Main {
         }
     }
 
-    //TODO: ADD COMMENT
-    public static CommandView executeView(CommandBuilder cmdBuilder, Connection con) throws CommandException, SQLException {
+    /**
+     * Executes the command and prints the output.
+     * @param cmdBuilder CommandBuilder containing the builded command to be executed.
+     * @param con SQL connection, can be NULL for internal commands that dont require it.
+     * @return Returns the CommandView in case its needed to debug the DATA that this command requested from: example the database.
+     * @throws CommandException CommandException
+     * @throws SQLException SQLException
+     */
+    public static CommandView executeCommand(CommandBuilder cmdBuilder, Connection con) throws CommandException, SQLException {
         CommandView cmdView = cmdBuilder.getCommand().execute(cmdBuilder, con);
 
         if (cmdView != null)

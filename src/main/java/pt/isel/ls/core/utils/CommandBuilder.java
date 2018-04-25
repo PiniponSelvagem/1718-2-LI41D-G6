@@ -52,6 +52,7 @@ public class CommandBuilder {
         parsePath(args);
         findIdsAndReplace(this.cmdUtils);
         findOptions(args);
+        buildCommand();
     }
 
 
@@ -203,6 +204,46 @@ public class CommandBuilder {
             throw new CommandException(String.valueOf(HEADERS__INVALID));
     }
 
+    /**
+     * Throws CommandException if parameter wasnt found or if is not a known parameter.
+     * Good to validate user input parameter, and stop the action if its not valid.
+     * @param param Parameter to check
+     * @throws CommandException when param is not valid nor found, telling the one it was checking
+     */
+    private void parameterValidator(String param) throws CommandException {
+        if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
+            throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
+    }
+
+    /**
+     *  If the command that is being requested to execute dosent have headers,
+     *  add default header "HTML". If it has, create the correct header and its options.
+     *  Search the command in the commands tree.
+     */
+    private void buildCommand() throws CommandException {
+        if (headers != null) {
+            try {
+                header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);
+                if (header != null) {
+                    header = header.getClass().newInstance();
+                    header.fileName = headers.get(String.valueOf(FILE_NAME));
+                }
+                else {
+                    throw new CommandException(HEADERS__INVALID);
+                }
+            } catch (InstantiationException | IllegalAccessException e) {
+                System.out.println("ERROR: THIS SHOULD NOT HAPPEN! UNABLE TO CREATE HEADER!");
+                System.out.println("       Falling back to default header creation...");
+                header = new Html();
+            }
+        }
+        else {
+            header = new Html();
+        }
+        buildedCommand = (Command) cmdUtils.getCmdTree().search(path, methodName);
+    }
+
+
 
     /**
      * @return Returns this command METHOD.
@@ -226,7 +267,9 @@ public class CommandBuilder {
     }
 
     /**
-     * Returns the desired parameter, if invalid throws an exception.
+     * Used when theres only one parameter for this key.
+     * If its used when theres multiple parameters for same key (WHICH IT SHOULDNT, AND IF YOU DOING THAT ITS BAD PRACTICE!!!),
+     * it will only return the first one.
      * @param param Parameter name.
      * @return Returns the desired parameter.
      * @throws CommandException check CommandException of {@link #parameterValidator(String)}
@@ -237,6 +280,7 @@ public class CommandBuilder {
     }
 
     /**
+     * Used when theres multiple parameters with same key.
      * @param param Parameter key to get
      * @param i Index of the parameter in the list.
      * @return Returns the requested parameter value if valid, if indexoutofboundsexception returns null.
@@ -255,17 +299,6 @@ public class CommandBuilder {
     public int getParameterSize(String param) throws CommandException {
         parameterValidator(param);
         return params.get(param).size();
-    }
-
-    /**
-     * Throws CommandException if parameter wasnt found or if is not a known parameter.
-     * Good to validate user input parameter, and stop the action if its not valid.
-     * @param param Parameter to check
-     * @throws CommandException when param is not valid nor found, telling the one it was checking
-     */
-    private void parameterValidator(String param) throws CommandException {
-        if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
-            throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
     }
 
     /**
@@ -293,43 +326,9 @@ public class CommandBuilder {
     }
 
     /**
-     * @return If the command that is being requested to execute dosent have headers,
-     *         add default header "HTML". If it has, create the correct header and its options.
-     *         Search the command in the commands tree and return it.
+     * @return Returns the builded command.
      */
-    public Command buildCommand() throws CommandException {
-        if (headers != null) {
-            try {
-                header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);
-                if (header != null) {
-                    header = header.getClass().newInstance();
-                    header.fileName = headers.get(String.valueOf(FILE_NAME));
-                }
-                else {
-                    throw new CommandException(HEADERS__INVALID);
-                }
-            } catch (InstantiationException | IllegalAccessException e) {
-                System.out.println("ERROR: THIS SHOULD NOT HAPPEN! UNABLE TO CREATE HEADER!");
-                System.out.println("       Falling back to default header creation...");
-                header = new Html();
-            }
-        }
-        else {
-            header = new Html();
-        }
-        buildedCommand = (Command) cmdUtils.getCmdTree().search(path, methodName);
-        return buildedCommand;
-    }
-
-    /**
-     * @return Returns the builded command, if its currently null, tries to build it (in case buildCommand() didnt run)
-     * @throws CommandException CommandException
-     */
-    public Command getCommand() throws CommandException {
-        //TODO: this if looks stupid and a better way to work around it should be found
-        //its basically because in Main before calling a execute, buildCommand is allways called first, but when testing it should be all at once
-        if (buildedCommand == null)
-            buildCommand();
+    public Command getCommand() {
         return buildedCommand;
     }
 }

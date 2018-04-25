@@ -45,7 +45,7 @@ public class Movies_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                Main.executeView(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con);
+                Main.executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con);
             }
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
@@ -79,7 +79,7 @@ public class Movies_tests {
             con.setAutoCommit(false);
 
             createMovie(con);
-            GetMoviesView view = (GetMoviesView) Main.executeView(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con);
+            GetMoviesView view = (GetMoviesView) Main.executeCommand(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con);
             DataContainer data;
             data = view.getData();
             Movie movie;
@@ -118,7 +118,7 @@ public class Movies_tests {
             }
 
             int id = movies.getFirst().getId();
-            GetMovieIDView movieIDView = (GetMovieIDView) Main.executeView(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con);
+            GetMovieIDView movieIDView = (GetMovieIDView) Main.executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con);
             DataContainer data;
             data = movieIDView.getData();
             Movie movie = (Movie) data.getData(0);

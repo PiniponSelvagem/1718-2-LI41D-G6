@@ -6,7 +6,6 @@ import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
-import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.*;
@@ -44,7 +43,7 @@ public class Cinema_tests {
 
             for(int i = 0; i < 3; i++) {
                 String name = "nameTest" + (i + 1);
-                Main.executeView(new CommandBuilder(new String[]
+                Main.executeCommand(new CommandBuilder(new String[]
                         {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, new CommandUtils()), con);
             }
 
@@ -81,7 +80,7 @@ public class Cinema_tests {
             create_cinemas(con);
 
 
-            GetCinemasView view = (GetCinemasView) Main.executeView(new CommandBuilder(new String[]
+            GetCinemasView view = (GetCinemasView) Main.executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas"}, new CommandUtils()), con);
 
             DataContainer data;
@@ -124,7 +123,7 @@ public class Cinema_tests {
                 i++;
             }
 
-            GetCinemaIDView view = (GetCinemaIDView) Main.executeView(new CommandBuilder(new String[]
+            GetCinemaIDView view = (GetCinemaIDView) Main.executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[1]}, new CommandUtils()), con);
             DataContainer data;
             data = view.getData();
@@ -163,7 +162,7 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                Main.executeView(new CommandBuilder(new String[]
+                Main.executeCommand(new CommandBuilder(new String[]
                         {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
                         con);
                 seats += 10;
@@ -210,13 +209,13 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                Main.executeView(new CommandBuilder(new String[]
+                Main.executeCommand(new CommandBuilder(new String[]
                         {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
                         con);
                 seats += 10;
             }
 
-            GetCinemaIDTheatersView view = (GetCinemaIDTheatersView) Main.executeView(new CommandBuilder(new String[]
+            GetCinemaIDTheatersView view = (GetCinemaIDTheatersView) Main.executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[0] + "/theaters"}, new CommandUtils()), con);
             DataContainer data;
             data = view.getData();
@@ -261,7 +260,7 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                Main.executeView(new CommandBuilder(new String[]
+                Main.executeCommand(new CommandBuilder(new String[]
                         {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
                         con);
                 seats += 10;
@@ -276,7 +275,7 @@ public class Cinema_tests {
                 k++;
             }
 
-            GetCinemaIDTheatersIDView view = (GetCinemaIDTheatersIDView) Main.executeView(new CommandBuilder(new String[]
+            GetCinemaIDTheatersIDView view = (GetCinemaIDTheatersIDView) Main.executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()), con);
             DataContainer data;
             data = view.getData();
