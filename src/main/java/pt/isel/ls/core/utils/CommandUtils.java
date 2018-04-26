@@ -32,17 +32,25 @@ public class CommandUtils {
      * Fills the cmdTree with all the possible commands available.
      */
     private void initializeCommandsTree() {
+        /* TESTING COMMAND */
+        //"TEST"
+        cmdTree.add(new CommandBuilder(""+
+                TEST, ""+
+                DIR_SEPARATOR,
+                new Test())
+        );
+
         /* Internal commands */
         //"OPTIONS"
         cmdTree.add(new CommandBuilder(""+
-                OPTIONS,
-                null,
+                OPTIONS, ""+
+                DIR_SEPARATOR,
                 new Options())
         );
         //"EXIT"
         cmdTree.add(new CommandBuilder(""+
-                EXIT,
-                null,
+                EXIT, ""+
+                DIR_SEPARATOR,
                 new Exit())
         );
 
@@ -231,8 +239,8 @@ public class CommandUtils {
         dirID.put(String.valueOf(MOVIES),   String.valueOf(ID_PREFIX)+String.valueOf(MOVIE_ID)+String.valueOf(ID_SUFFIX));
         dirID.put(String.valueOf(THEATERS), String.valueOf(ID_PREFIX)+String.valueOf(THEATER_ID)+String.valueOf(ID_SUFFIX));
         dirID.put(String.valueOf(SESSIONS), String.valueOf(ID_PREFIX)+String.valueOf(SESSION_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(DATE), String.valueOf(ID_PREFIX)+String.valueOf(DATE_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(TICKETS), String.valueOf(ID_PREFIX)+String.valueOf(TICKET_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(String.valueOf(DATE),     String.valueOf(ID_PREFIX)+String.valueOf(DATE_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(String.valueOf(TICKETS),  String.valueOf(ID_PREFIX)+String.valueOf(TICKET_ID)+String.valueOf(ID_SUFFIX));
     }
 
     /**

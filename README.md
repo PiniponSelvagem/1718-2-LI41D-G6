@@ -1,8 +1,8 @@
-# 1718-2-common
-Public repository for the summer semester 2017/2018, LI41D Group6.
+# 1718-2-LI41D-G6
+Repository for the summer semester 2017/2018, LI41D Group6.
 
 ## Group 6
 
-* **Rodrigo Silva** - *ISEL A41429* - [PiniponSelvagem](https://github.com/PiniponSelvagem)
-* **Pedro Raminhos** - *ISEL A41457* - [Twigz57](https://github.com/Twigz57)
-* **Nuno Faião** - *ISEL A41566* - [PTTANK](https://github.com/PTTANK)
+* **41429** - Rodrigo Silva - [PiniponSelvagem](https://github.com/PiniponSelvagem)
+* **41457** - Pedro Raminhos - [Twigz57](https://github.com/Twigz57)
+* **41566** - Nuno Faião - [PTTANK](https://github.com/PTTANK)

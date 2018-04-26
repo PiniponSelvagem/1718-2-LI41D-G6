@@ -15,6 +15,7 @@ public enum CommandEnum {
     HEADERS_EQUALTO(":"),
 
     //Methods
+    TEST("TEST"),
     OPTIONS("OPTIONS"),
     EXIT("EXIT"),
     POST("POST"),

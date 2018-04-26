@@ -16,13 +16,13 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import static pt.isel.ls.core.strings.CommandEnum.ARGS_SEPARATOR;
-import static pt.isel.ls.core.strings.CommandEnum.EXIT;
 import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
 
 public class Main {
     private final static String FILE_NAME_WELCOME = "welcome_message",
                                 WAIT_INPUT = "> ";
     private final static CommandUtils cmdUtils = new CommandUtils();
+    private static boolean close = false;
 
     public static void main(String[] args) {
         if (args.length != 0)
@@ -43,7 +43,7 @@ public class Main {
             args = in.nextLine().split(String.valueOf(ARGS_SEPARATOR));
             commandRequest(args);
 
-        } while(!args[0].equals(String.valueOf(EXIT)));
+        } while(!close);
     }
 
     /**
@@ -131,5 +131,12 @@ public class Main {
         } catch (NullPointerException | IOException e) {
             System.out.println("WARNING: ["+FILE_NAME_WELCOME+"] not found.");
         }
+    }
+
+    /**
+     * When this method is called, changes the "close" variable to true so when in interactive mode knows when to stop.
+     */
+    public static void close() {
+        close = true;
     }
 }

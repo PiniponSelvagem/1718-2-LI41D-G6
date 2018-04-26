@@ -20,7 +20,6 @@ public class CommandBuilder {
     private LinkedList<String> path = new LinkedList<>();
     private HashMap<String, LinkedList<String>> params;
     private HashMap<String, String> ids;
-
     private String headerName;
     private LinkedList<String> pathHeaders;
     private HashMap<String, String> headers;
@@ -57,15 +56,6 @@ public class CommandBuilder {
 
 
     /**
-     * Parse path of this command.
-     * @param path Path string
-     */
-    private void pathToList(String path) {
-        if (path != null)
-            this.path.addAll(Arrays.asList(path.substring(1).split(String.valueOf(DIR_SEPARATOR))));
-    }
-
-    /**
      * Parse method name of this command.
      * @param args String[] containing the command
      */
@@ -77,10 +67,23 @@ public class CommandBuilder {
      * Parse path to list.
      * @param args String[] containing the command
      */
-    private void parsePath(String[] args) {
-        if (args.length >= 2) {
+    private void parsePath(String[] args) throws CommandException {
+        if (args.length <= 2 && args[1].subSequence(0, DIR_SEPARATOR.toString().length())
+                .equals(DIR_SEPARATOR.toString())) {
             pathToList(args[1]);
         }
+        else {
+            throw new CommandException(PATH__NOT_FOUND);
+        }
+    }
+
+    /**
+     * Parse path of this command.
+     * @param path Path string
+     */
+    private void pathToList(String path) {
+        if (path != null)
+            this.path.addAll(Arrays.asList(path.substring(1).split(String.valueOf(DIR_SEPARATOR))));
     }
 
     /**

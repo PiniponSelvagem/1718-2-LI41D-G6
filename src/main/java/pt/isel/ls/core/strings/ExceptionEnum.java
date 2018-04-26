@@ -1,10 +1,13 @@
 package pt.isel.ls.core.strings;
 
+import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.OPTIONS;
 
 public enum ExceptionEnum {
 
     COMMAND__NOT_FOUND("Command not found. Check available commands at: "+OPTIONS),
+
+    PATH__NOT_FOUND("Path not found, or didnt start with \'"+DIR_SEPARATOR+"\'. Syntax: {method} {path}"),
 
     PARAMETERS__NOT_FOUND("This command requires parameters and they weren't found. More info at: "+OPTIONS),
     PARAMETERS__NO_VALUE_ASSIGNED("Parameter { %s } doesn't have an assigned value."),
