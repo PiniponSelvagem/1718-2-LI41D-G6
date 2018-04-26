@@ -13,7 +13,7 @@ import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.strings.ExceptionEnum.*;
 
 public class CommandBuilder {
-    private Object method;
+    private Object method;          //can be used for Commands and Headers
     private CommandUtils cmdUtils;
 
     private String methodName;
@@ -68,7 +68,7 @@ public class CommandBuilder {
      * @param args String[] containing the command
      */
     private void parsePath(String[] args) throws CommandException {
-        if (args.length <= 2 && args[1].subSequence(0, DIR_SEPARATOR.toString().length())
+        if (args.length >= 2 && args[1].subSequence(0, DIR_SEPARATOR.toString().length())
                 .equals(DIR_SEPARATOR.toString())) {
             pathToList(args[1]);
         }
@@ -112,17 +112,12 @@ public class CommandBuilder {
         }
         else {
             if (args.length == 4) {
-                if (args[3].contains(String.valueOf(PARAMS_EQUALTO))) {
-                    findParams(args[3]);
-                    findHeaders(args[2]);
-                }
-                else {
-                    findHeaders(args[3]);
-                    findParams(args[2]);
-                }
+                findHeaders(args[2]);
+                findParams(args[3]);
             }
         }
     }
+
 
 
     /**
