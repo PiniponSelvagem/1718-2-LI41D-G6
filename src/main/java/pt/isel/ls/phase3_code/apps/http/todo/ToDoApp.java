@@ -1,11 +1,11 @@
-package pt.isel.ls.apps.http.todo;
+package pt.isel.ls.phase3_code.apps.http.todo;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 
-import pt.isel.ls.todo.InMemoryToDoRepository;
-import pt.isel.ls.todo.ToDo;
-import pt.isel.ls.todo.ToDoRepository;
+import pt.isel.ls.phase3_code.todo.InMemoryToDoRepository;
+import pt.isel.ls.phase3_code.todo.ToDo;
+import pt.isel.ls.phase3_code.todo.ToDoRepository;
 
 
 public class ToDoApp {

@@ -1,4 +1,4 @@
-package pt.isel.ls.apps.http;
+package pt.isel.ls.phase3_code.apps.http;
 
 import java.io.IOException;
 import java.io.OutputStream;

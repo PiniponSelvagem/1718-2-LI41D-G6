@@ -1,16 +1,16 @@
-package pt.isel.ls.apps.http.todo;
+package pt.isel.ls.phase3_code.apps.http.todo;
 
-import pt.isel.ls.http.FormUrlEncoded;
-import pt.isel.ls.http.HttpResponse;
-import pt.isel.ls.http.HttpStatusCode;
+import pt.isel.ls.phase3_code.http.FormUrlEncoded;
+import pt.isel.ls.phase3_code.http.HttpResponse;
+import pt.isel.ls.phase3_code.http.HttpStatusCode;
 
 import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import pt.isel.ls.todo.ToDo;
-import pt.isel.ls.todo.ToDoRepository;
+import pt.isel.ls.phase3_code.todo.ToDo;
+import pt.isel.ls.phase3_code.todo.ToDoRepository;
 
 public class ToDoController {
 

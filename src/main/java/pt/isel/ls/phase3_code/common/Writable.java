@@ -1,4 +1,4 @@
-package pt.isel.ls.common;
+package pt.isel.ls.phase3_code.common;
 import java.io.IOException;
 import java.io.Writer;
 

@@ -1,7 +1,7 @@
-package pt.isel.ls.apps.http.todo;
+package pt.isel.ls.phase3_code.apps.http.todo;
 
-import pt.isel.ls.http.HttpResponse;
-import pt.isel.ls.http.HttpStatusCode;
+import pt.isel.ls.phase3_code.http.HttpResponse;
+import pt.isel.ls.phase3_code.http.HttpStatusCode;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pt.isel.ls.todo.ToDoRepository;
+import pt.isel.ls.phase3_code.todo.ToDoRepository;
 
 @SuppressWarnings("serial")
 public class ToDoServlet extends HttpServlet {

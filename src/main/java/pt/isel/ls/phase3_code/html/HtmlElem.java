@@ -1,4 +1,4 @@
-package pt.isel.ls.html;
+package pt.isel.ls.phase3_code.html;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.isel.ls.common.Writable;
+import pt.isel.ls.phase3_code.common.Writable;
 
 public class HtmlElem implements Writable {
 

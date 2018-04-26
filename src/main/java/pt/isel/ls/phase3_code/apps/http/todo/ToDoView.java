@@ -1,7 +1,7 @@
-package pt.isel.ls.apps.http.todo;
+package pt.isel.ls.phase3_code.apps.http.todo;
 
-import pt.isel.ls.html.HtmlPage;
-import pt.isel.ls.todo.ToDo;
+import pt.isel.ls.phase3_code.html.HtmlPage;
+import pt.isel.ls.phase3_code.todo.ToDo;
 
 public class ToDoView extends HtmlPage {
     

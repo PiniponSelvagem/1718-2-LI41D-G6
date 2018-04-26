@@ -1,11 +1,11 @@
-package pt.isel.ls.html;
+package pt.isel.ls.phase3_code.html;
 
 import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-import pt.isel.ls.common.Writable;
+import pt.isel.ls.phase3_code.common.Writable;
 
 public class HtmlText implements Writable {
 

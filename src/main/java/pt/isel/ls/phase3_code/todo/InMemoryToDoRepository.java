@@ -1,4 +1,4 @@
-package pt.isel.ls.todo;
+package pt.isel.ls.phase3_code.todo;
 
 import java.util.HashMap;
 import java.util.Map;

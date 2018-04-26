@@ -1,14 +1,11 @@
-package pt.isel.ls.http;
+package pt.isel.ls.phase3_code.http;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-import com.sun.net.httpserver.HttpExchange;
 
 public class FormUrlEncoded {
 

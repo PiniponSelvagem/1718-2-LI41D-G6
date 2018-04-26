@@ -1,4 +1,4 @@
-package pt.isel.ls.http;
+package pt.isel.ls.phase3_code.http;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;

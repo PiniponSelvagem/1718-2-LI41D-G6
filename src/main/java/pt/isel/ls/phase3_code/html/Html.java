@@ -1,12 +1,12 @@
-package pt.isel.ls.html;
+package pt.isel.ls.phase3_code.html;
 
-import pt.isel.ls.http.HttpContent;
+import pt.isel.ls.phase3_code.http.HttpContent;
 
 import java.io.IOException;
 import java.io.Writer;
 
-import pt.isel.ls.common.CompositeWritable;
-import pt.isel.ls.common.Writable;
+import pt.isel.ls.phase3_code.common.CompositeWritable;
+import pt.isel.ls.phase3_code.common.Writable;
 
 public class Html implements HttpContent {
 
