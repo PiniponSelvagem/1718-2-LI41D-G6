@@ -43,8 +43,8 @@ file-name:<name.extension>          : Write to file the information
 --------------------------------------------------------------------------------------------
 COMMANDS:
 
-OPTIONS                             : Display this help message
-EXIT                                : Terminates this application.
+OPTIONS /                           : Display this help message
+EXIT /                              : Terminates this application.
 
 
  - Movie management -

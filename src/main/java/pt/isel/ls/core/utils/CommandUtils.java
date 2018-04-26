@@ -32,14 +32,6 @@ public class CommandUtils {
      * Fills the cmdTree with all the possible commands available.
      */
     private void initializeCommandsTree() {
-        /* TESTING COMMAND */
-        //"TEST"
-        cmdTree.add(new CommandBuilder(""+
-                TEST, ""+
-                DIR_SEPARATOR,
-                new Test())
-        );
-
         /* Internal commands */
         //"OPTIONS"
         cmdTree.add(new CommandBuilder(""+
