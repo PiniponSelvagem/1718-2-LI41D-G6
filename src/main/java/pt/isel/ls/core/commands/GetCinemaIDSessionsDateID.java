@@ -26,39 +26,37 @@ public class GetCinemaIDSessionsDateID extends Command {
         localDate = LocalDate.parse(str, formatter);
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, s.Date,m.mid,t.tid,SEATS.seats,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration "+
-                "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid "+
-                "INNER JOIN THEATER AS t ON t.tid=s.tid "+
-                "INNER JOIN CINEMA AS c ON t.cid=c.cid "+
-                "INNER JOIN SEATS ON SEATS.sid=s.sid "+
-                "WHERE (CAST(s.Date AS DATE))=? AND c.cid=?"
+                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, st.seats, s.Date, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
+                "INNER JOIN THEATER AS t ON t.tid=s.tid " +
+                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
+                "INNER JOIN SEATS AS st ON st.sid = s.sid " +
+                "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
         );
 
-        stmt.setString(1, localDate.toString());
-        stmt.setString(2, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+        stmt.setString(2, localDate.toString());
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
-        int sid, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
+        int sid, availableSeats, cid, tid, mid, duration;
         Timestamp date=null;
         String theaterName, title;
 
         while(rs.next()){
             sid = rs.getInt(1);
             date = rs.getTimestamp(2);
-            mid = rs.getInt(3);
-            tid = rs.getInt(4);
-            availableSeats = rs.getInt(5);
-            rows = rs.getInt(6);
-            seatsRow = rs.getInt(7);
-            theaterName = rs.getString(8);
-            cid = rs.getInt(9);
-            title = rs.getString(10);
-            year = rs.getInt(11);
-            duration = rs.getInt(12);
+            title = rs.getString(3);
+            duration = rs.getInt(4);
+            theaterName = rs.getString(5);
+            availableSeats = rs.getInt(6);
+            cid = rs.getInt(7);
+            tid = rs.getInt(8);
+            mid = rs.getInt(9);
 
-            data.add(new Session(sid, date, new Movie(mid, title, year, duration),
-                    new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid));
+            data.add(new Session(sid, date,
+                        new Movie(mid, title, NA, duration),
+                        new Theater(tid, theaterName, NA, NA, availableSeats, cid), cid)
+            );
         }
 
         return new GetCinemaIDSessionsDateIDView(

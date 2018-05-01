@@ -9,6 +9,8 @@ import java.sql.SQLException;
 
 public abstract class Command {
 
+    protected final static int NA = -1;
+
     /**
      * Executes the command and at the end returns CommandView.
      *

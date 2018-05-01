@@ -31,7 +31,7 @@ public class GetMovieIDSessionsDateID extends Command {
         Date date1 = Date.valueOf(localDate);
 
 
-        DataContainer data = new DataContainer(cmdBuilder.getHeader()),dataAux;
+        DataContainer data = new DataContainer(cmdBuilder.getHeader());
         int sid = 0, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
         Timestamp date = null;
         String theaterName, title;

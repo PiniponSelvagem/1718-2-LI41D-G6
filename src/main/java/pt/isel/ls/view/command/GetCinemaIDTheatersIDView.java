@@ -17,7 +17,7 @@ public class GetCinemaIDTheatersIDView extends CommandView {
         if (header != null) {
             Theater theater = (Theater) data.getData(0);
             header.addObject("Theater (ID: " + theater.getId()+") [Cinema ID: " + theater.getCinemaID()+"]",
-                    new String[]{"Name", "Rows", "Seats per row", "Available seats"},
+                    new String[]{"Name", "Rows", "Seats per row", "Total seats"},
                     new String[]{theater.getName(),
                             String.valueOf(theater.getRows()),
                             String.valueOf(theater.getSeatsPerRow()),

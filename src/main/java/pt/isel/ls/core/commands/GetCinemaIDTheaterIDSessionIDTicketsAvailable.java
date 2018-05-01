@@ -32,24 +32,6 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
         }
 
         return new InfoNotFoundView();
-
-        /*PreparedStatement stmt1 = connection.prepareStatement(
-                "SELECT DISTINCT t.SeatsAvailable FROM CINEMA_SESSION AS s " +
-                "INNER JOIN THEATER AS t ON s.tid=t.tid " +
-                "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                "WHERE s.sid=?"// AND c.cid=? AND t.tid=?
-        );
-        stmt1.setString(1,aux );
-        ResultSet rs = stmt1.executeQuery();
-        if(rs.next()) availableSeats = rs.getInt(1);
-
-        stmt1 = connection.prepareStatement(
-                "SELECT DISTINCT COUNT(tk.tkid) FROM TICKET AS tk " +
-                        "WHERE tk.sid=?"// AND c.cid=? AND t.tid=?
-        );
-        stmt1.setString(1, aux);
-        rs = stmt1.executeQuery();
-        if(rs.next()) availableSeats = availableSeats-rs.getInt(1);*/
     }
 
     @Override

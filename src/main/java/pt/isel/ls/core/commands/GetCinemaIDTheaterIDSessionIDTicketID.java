@@ -20,7 +20,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT tk.seat, tk.row,s.sid, s.Date,m.mid,t.tid,t.SeatsAvailable,t.Rows, t.Seats, t.Theater_Name,c.cid, m.Title, m.Release_Year ,m.Duration " +
+                "SELECT tk.row, tk.seat, s.Date, m.Title, m.Duration, t.Theater_Name, c.cid, t.tid, s.sid, m.mid " +
                 "FROM TICKET AS tk " +
                 "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
                 "INNER JOIN THEATER AS t ON s.tid=t.tid " +
@@ -33,7 +33,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
-        int seat, sid, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
+        int seat, sid, tid, cid, mid, duration;
         String row;
         Timestamp date;
         String theaterName, title;
@@ -41,24 +41,22 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         if (!rs.next())
             return new InfoNotFoundView();
 
-        seat = rs.getInt(1);
-        row = rs.getString(2);
-        sid = rs.getInt(3);
-        date = rs.getTimestamp(4);
-        mid = rs.getInt(5);
-        tid = rs.getInt(6);
-        availableSeats = rs.getInt(7);
-        rows = rs.getInt(8);
-        seatsRow = rs.getInt(9);
-        theaterName = rs.getString(10);
-        cid = rs.getInt(11);
-        title = rs.getString(12);
-        year = rs.getInt(13);
-        duration = rs.getInt(14);
+        row = rs.getString(1);
+        seat = rs.getInt(2);
+        date = rs.getTimestamp(3);
+        title = rs.getString(4);
+        duration = rs.getInt(5);
+        theaterName = rs.getString(6);
+        cid = rs.getInt(7);
+        tid = rs.getInt(8);
+        sid = rs.getInt(9);
+        mid = rs.getInt(10);
 
 
-        data.add(new Ticket(row.charAt(0), seat, new Session(sid, date, new Movie(mid, title, year, duration),
-                new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid), cid))
+        data.add(new Ticket(row.charAt(0), seat,
+                    new Session(sid, date,
+                            new Movie(mid, title, NA, duration),
+                            new Theater(tid, theaterName, NA, NA, NA, cid), cid))
         );
 
         return new GetCinemaIDTheaterIDSessionIDTicketIDView(data);

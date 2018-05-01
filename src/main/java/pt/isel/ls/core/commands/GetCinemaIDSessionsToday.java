@@ -19,40 +19,36 @@ public class GetCinemaIDSessionsToday extends Command {
         Date date = new java.sql.Date( new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT * FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, st.seats, s.Date, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "INNER JOIN SEATS ON SEATS.sid = s.sid " +
-                "WHERE cid=? AND (CAST(s.Date AS DATE))=?");
+                "INNER JOIN SEATS AS st ON st.sid = s.sid " +
+                "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
+        );
+
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         stmt.setDate(2, date);
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data =  new DataContainer(cmdBuilder.getHeader());
-        int id, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
+        int id, availableSeats, cid, tid, mid, duration;
         Timestamp dateTime;
         String theaterName, title;
 
         while(rs.next()){
             id = rs.getInt(1);
             dateTime = rs.getTimestamp(2);
-            mid = rs.getInt(3);
-            tid = rs.getInt(4);
-            availableSeats = rs.getInt(15);
-            rows = rs.getInt(7);
-            seatsRow = rs.getInt(8);
-            theaterName = rs.getString(9);
-            cid = rs.getInt(10);
-            title = rs.getString(12);
-            year = rs.getInt(13);
-            duration = rs.getInt(14);
+            title = rs.getString(3);
+            duration = rs.getInt(4);
+            theaterName = rs.getString(5);
+            availableSeats = rs.getInt(6);
+            cid = rs.getInt(7);
+            tid = rs.getInt(8);
+            mid = rs.getInt(9);
 
-            data.add(
-                    new Session(id, dateTime,
-                            new Movie(mid, title, year, duration),
-                            new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid),
-                            cid
-                    )
+            data.add(new Session(id, dateTime,
+                        new Movie(mid, title, NA, duration),
+                        new Theater(tid, theaterName, NA, NA, availableSeats, cid), cid)
             );
         }
 

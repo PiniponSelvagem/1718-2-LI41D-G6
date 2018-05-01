@@ -17,39 +17,35 @@ public class GetCinemaIDTheaterIDSessions extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT * FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, s.Date, m.Title, m.Duration, st.seats, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "INNER JOIN SEATS ON SEATS.sid=s.sid " +
+                "INNER JOIN SEATS AS st ON st.sid=s.sid " +
                 "WHERE cid=? AND t.tid=?");
         stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
         stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
-        int id, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
+        int id, tid, availableSeats, cid, mid, duration;
         Timestamp dateSession;
-        String theaterName, title;
+        String title;
 
 
         while(rs.next()){
             id = rs.getInt(1);
             dateSession = rs.getTimestamp(2);
-            mid = rs.getInt(3);
-            tid = rs.getInt(4);
-            availableSeats = rs.getInt(15);
-            rows = rs.getInt(7);
-            seatsRow = rs.getInt(8);
-            theaterName = rs.getString(9);
-            cid = rs.getInt(10);
-            title = rs.getString(12);
-            year = rs.getInt(13);
-            duration = rs.getInt(14);
+            title = rs.getString(3);
+            duration = rs.getInt(4);
+            availableSeats = rs.getInt(5);
+            cid = rs.getInt(6);
+            tid = rs.getInt(7);
+            mid = rs.getInt(8);
 
             data.add(
                     new Session(id, dateSession,
-                            new Movie(mid, title, year, duration),
-                            new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid),
+                            new Movie(mid, title, NA, duration),
+                            new Theater(tid, null, NA, NA, availableSeats, cid),
                             cid
                     )
             );
