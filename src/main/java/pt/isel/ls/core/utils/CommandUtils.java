@@ -45,6 +45,12 @@ public class CommandUtils {
                 DIR_SEPARATOR,
                 new Exit())
         );
+        //"LISTEN"
+        cmdTree.add(new CommandBuilder(""+
+                LISTEN, ""+
+                DIR_SEPARATOR,
+                new Listen())
+        );
 
         /* Commands related to MOVIES */
         //"POST /movies"

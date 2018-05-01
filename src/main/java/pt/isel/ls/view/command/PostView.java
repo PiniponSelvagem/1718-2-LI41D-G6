@@ -11,8 +11,8 @@ public class PostView<T> extends CommandView {
     }
 
     @Override
-    public void printAllInfo() {
-        System.out.println("Information posted with success.");
-        System.out.println(type + " " + uniqueId);
+    protected void allInfo() {
+        infoString = "Information posted with success." + System.lineSeparator()
+                + type + " " + uniqueId;
     }
 }

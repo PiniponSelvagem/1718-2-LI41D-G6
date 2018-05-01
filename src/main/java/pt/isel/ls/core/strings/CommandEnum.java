@@ -17,6 +17,7 @@ public enum CommandEnum {
     //Methods
     OPTIONS("OPTIONS"),
     EXIT("EXIT"),
+    LISTEN("LISTEN"),
     POST("POST"),
     GET("GET"),
     DELETE("DELETE"),
@@ -52,7 +53,8 @@ public enum CommandEnum {
     DURATION("duration"),
     ROWS("row"),
     SEATS_ROW("seat"),
-    DATE_PARAM("date");
+    DATE_PARAM("date"),
+    SERVER_PORT("port");
 
 
     private final String str;

@@ -11,14 +11,14 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailableView extends CommandVi
     }
 
     @Override
-    public void printAllInfo() {
-
+    protected void allInfo() {
         Header header = data.getHeader();
+
         if (header != null) {
             header.addTitle("For session "+ sessionId +" there are "+ data.getData(0) +" available seats.");
             header.close();
             header.writeToFile();
-            System.out.println(header.getBuildedString());
+            infoString = header.getBuildedString();
         }
     }
 }

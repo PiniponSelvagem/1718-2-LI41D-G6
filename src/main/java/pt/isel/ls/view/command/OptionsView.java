@@ -7,16 +7,18 @@ public class OptionsView extends CommandView {
     private File file = new File(getClass().getClassLoader().getResource(FILE_NAME).getFile());
 
     @Override
-    public void printAllInfo() {
+    protected void allInfo() {
+        StringBuilder strBuilder = new StringBuilder();
         try {
             BufferedReader in = new BufferedReader(new FileReader(file));
             String line = in.readLine();
             while(line != null) {
-                System.out.println(line);
+                strBuilder.append(line).append(System.lineSeparator());
                 line = in.readLine();
             }
         } catch (NullPointerException | IOException e) {
-            System.out.println("WARNING: ["+FILE_NAME+"] not found.");
+            infoString = "WARNING: ["+FILE_NAME+"] not found.";
         }
+        infoString = strBuilder.toString();
     }
 }

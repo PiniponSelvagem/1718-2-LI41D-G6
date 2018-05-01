@@ -3,12 +3,23 @@ package pt.isel.ls.view.command;
 import pt.isel.ls.core.utils.DataContainer;
 
 public abstract class CommandView {
+    protected String infoString;
     protected DataContainer data;
 
     /**
-     * Prints to console all the information it has.
+     * @return String, information ready to be, for example printed to console.
      */
-    public abstract void printAllInfo();
+    protected abstract void allInfo();
+
+    /**
+     * @return String, information ready to be, for example printed to console.
+     */
+    public String getAllInfoString() {
+        if (infoString == null) {
+            allInfo();
+        }
+        return infoString;
+    }
 
     /**
      * Example usage:

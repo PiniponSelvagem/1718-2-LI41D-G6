@@ -17,8 +17,8 @@ public abstract class Header {
     /**
      * @return Returns buildedString.
      */
-    public StringBuilder getBuildedString() {
-        return text;
+    public String getBuildedString() {
+        return text.toString();
     }
 
     /**

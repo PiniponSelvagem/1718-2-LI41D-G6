@@ -14,9 +14,8 @@ public class FirstHttpServer {
      * Standard port for HTTP is 80 but might be already in use
      */
     private static final int LISTEN_PORT = 8080;
-        
-   public static void main(String[] args) throws Exception {
 
+    public static void main(String[] args) throws Exception {
         System.out.println("Starting main...");
 
         String portDef = System.getenv("PORT");

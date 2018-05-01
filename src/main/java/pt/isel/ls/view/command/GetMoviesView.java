@@ -13,7 +13,7 @@ public class GetMoviesView extends CommandView {
     }
 
     @Override
-    public void printAllInfo() {
+    protected void allInfo() {
         Header header = data.getHeader();
 
         if (header != null) {
@@ -35,7 +35,7 @@ public class GetMoviesView extends CommandView {
             header.close();
             header.writeToFile();
 
-            System.out.println(header.getBuildedString());
+            infoString = header.getBuildedString();
         }
     }
 }
