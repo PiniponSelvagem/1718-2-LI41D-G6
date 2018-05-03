@@ -21,6 +21,7 @@ public enum CommandEnum {
     POST("POST"),
     GET("GET"),
     DELETE("DELETE"),
+    TEST("TEST"),
 
     //Directories
     MOVIES("movies"),           MOVIE_ID("mid"),

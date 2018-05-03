@@ -51,6 +51,12 @@ public class CommandUtils {
                 DIR_SEPARATOR,
                 new Listen())
         );
+        //"TEST"
+        cmdTree.add(new CommandBuilder(""+
+                TEST, ""+
+                DIR_SEPARATOR,
+                new Test())
+        );
 
         /* Commands related to MOVIES */
         //"POST /movies"
