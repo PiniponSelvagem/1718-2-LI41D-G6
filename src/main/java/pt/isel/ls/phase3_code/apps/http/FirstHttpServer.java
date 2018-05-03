@@ -18,11 +18,11 @@ public class FirstHttpServer {
     public static void main(String[] args) throws Exception {
         System.out.println("Starting main...");
 
-        String portDef = System.getenv("PORT");
-        int port = portDef != null ? Integer.valueOf(portDef) : LISTEN_PORT;
-        System.out.println("Listening on port " + port);
+        //String portDef = System.getenv("PORT");
+        //int port = portDef != null ? Integer.valueOf(portDef) : LISTEN_PORT;
+        System.out.println("Listening on port " + LISTEN_PORT);
 
-        Server server = new Server(port);
+        Server server = new Server(LISTEN_PORT);
         ServletHandler handler = new ServletHandler();
         server.setHandler(handler);
         handler.addServletWithMapping(new ServletHolder(new TimeServlet()), "/*");

@@ -1,6 +1,5 @@
 package pt.isel.ls.core.commands;
 
-import pt.isel.ls.apps.http.HttpServer;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.phase3_code.apps.http.FirstHttpServer;
