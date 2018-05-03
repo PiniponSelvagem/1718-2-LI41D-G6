@@ -11,7 +11,7 @@ import static pt.isel.ls.core.strings.CommandEnum.*;
 
 public class CommandUtils {
 
-    private String root = String.valueOf(ROOT_DIR);
+    private String root = ROOT_DIR.toString();
     private DirectoryTree cmdTree = new DirectoryTree(new DirectoryNode(root));
     private DirectoryTree headersTree = new DirectoryTree(new DirectoryNode(root));
     private HashMap<String, String> dirID = new HashMap<>();
@@ -239,12 +239,12 @@ public class CommandUtils {
      * continue its way in the directories.
      */
     private void initializeDirID() {
-        dirID.put(String.valueOf(CINEMAS),  String.valueOf(ID_PREFIX)+String.valueOf(CINEMA_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(MOVIES),   String.valueOf(ID_PREFIX)+String.valueOf(MOVIE_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(THEATERS), String.valueOf(ID_PREFIX)+String.valueOf(THEATER_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(SESSIONS), String.valueOf(ID_PREFIX)+String.valueOf(SESSION_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(DATE),     String.valueOf(ID_PREFIX)+String.valueOf(DATE_ID)+String.valueOf(ID_SUFFIX));
-        dirID.put(String.valueOf(TICKETS),  String.valueOf(ID_PREFIX)+String.valueOf(TICKET_ID)+String.valueOf(ID_SUFFIX));
+        dirID.put(CINEMAS.toString(),  ""+ID_PREFIX+CINEMA_ID+ID_SUFFIX);
+        dirID.put(MOVIES.toString(),   ""+ID_PREFIX+MOVIE_ID+ID_SUFFIX);
+        dirID.put(THEATERS.toString(), ""+ID_PREFIX+THEATER_ID+ID_SUFFIX);
+        dirID.put(SESSIONS.toString(), ""+ID_PREFIX+SESSION_ID+ID_SUFFIX);
+        dirID.put(DATE.toString(),     ""+ID_PREFIX+DATE_ID+ID_SUFFIX);
+        dirID.put(TICKETS.toString(),  ""+ID_PREFIX+TICKET_ID+ID_SUFFIX);
     }
 
     /**
@@ -252,24 +252,26 @@ public class CommandUtils {
      * This way, when we can check if its a valid parameter with {@link #validParam(String param)}.
      */
     private void initializeParamsCheck() {
-        putParamsCheck(String.valueOf(CINEMA_ID));
-        putParamsCheck(String.valueOf(NAME));
-        putParamsCheck(String.valueOf(CITY));
+        putParamsCheck(CINEMA_ID.toString());
+        putParamsCheck(NAME.toString());
+        putParamsCheck(CITY.toString());
 
-        putParamsCheck(String.valueOf(MOVIE_ID));
-        putParamsCheck(String.valueOf(TITLE));
-        putParamsCheck(String.valueOf(YEAR));
-        putParamsCheck(String.valueOf(DURATION));
+        putParamsCheck(MOVIE_ID.toString());
+        putParamsCheck(TITLE.toString());
+        putParamsCheck(YEAR.toString());
+        putParamsCheck(DURATION.toString());
 
-        putParamsCheck(String.valueOf(THEATER_ID));
-        putParamsCheck(String.valueOf(ROWS));
-        putParamsCheck(String.valueOf(SEATS_ROW));
+        putParamsCheck(THEATER_ID.toString());
+        putParamsCheck(ROWS.toString());
+        putParamsCheck(SEATS_ROW.toString());
 
-        putParamsCheck(String.valueOf(SESSION_ID));
-        putParamsCheck(String.valueOf(DATE_PARAM));
+        putParamsCheck(SESSION_ID.toString());
+        putParamsCheck(DATE_PARAM.toString());
 
-        putParamsCheck(String.valueOf(TICKET_ID));
-        putParamsCheck(String.valueOf(AVAILABLE));
+        putParamsCheck(TICKET_ID.toString());
+        putParamsCheck(AVAILABLE.toString());
+
+        putParamsCheck(SERVER_PORT.toString());
     }
 
     /**

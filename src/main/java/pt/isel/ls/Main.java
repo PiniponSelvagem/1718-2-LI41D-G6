@@ -32,7 +32,7 @@ public class Main {
         printWelcomeMessage();
         do {
             System.out.print(WAIT_INPUT);
-            args = in.nextLine().split(String.valueOf(ARGS_SEPARATOR));
+            args = in.nextLine().split(ARGS_SEPARATOR.toString());
             new CommandRequest(args, true);
 
         } while(!close);

@@ -22,7 +22,7 @@ public class GetCinemaIDSessions extends Command {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "INNER JOIN SEATS AS st ON s.sid=st.sid " +
                 "WHERE cid=?");
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());

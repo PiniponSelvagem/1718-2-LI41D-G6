@@ -83,7 +83,7 @@ public class CommandBuilder {
      */
     private void pathToList(String path) {
         if (path != null)
-            this.path.addAll(Arrays.asList(path.substring(1).split(String.valueOf(DIR_SEPARATOR))));
+            this.path.addAll(Arrays.asList(path.substring(1).split(DIR_SEPARATOR.toString())));
     }
 
     /**
@@ -103,7 +103,7 @@ public class CommandBuilder {
         */
 
         if (args.length == 3) {
-            if (args[2].contains(String.valueOf(PARAMS_EQUALTO))) {
+            if (args[2].contains(PARAMS_EQUALTO.toString())) {
                 findParams(args[2]);
             }
             else {
@@ -154,18 +154,18 @@ public class CommandBuilder {
     private void findParams(String params) throws CommandException {
         if (params == null) throw new CommandException(PARAMETERS__NOT_FOUND);
         this.params = new HashMap<>();
-        String[] paramsSplit = params.split(String.valueOf(PARAMS_SEPARATOR));
+        String[] paramsSplit = params.split(PARAMS_SEPARATOR.toString());
         String value;
         LinkedList<String> list;
 
         for (String aParamsSplit : paramsSplit) {
-            String[] aux = aParamsSplit.split(String.valueOf(PARAMS_EQUALTO));
+            String[] aux = aParamsSplit.split(PARAMS_EQUALTO.toString());
             if (aux.length != 2) {
-                throw new CommandException(String.format(String.valueOf(PARAMETERS__NO_VALUE_ASSIGNED), aux[0]));
+                throw new CommandException(String.format(PARAMETERS__NO_VALUE_ASSIGNED.toString(), aux[0]));
             }
             value = aux[1].replace(
-                    String.valueOf(PARAMS_VALS_SEPARATOR),
-                    String.valueOf(PARAMS_VALS_SEPERATOR_REPLACEMENT)
+                    PARAMS_VALS_SEPARATOR.toString(),
+                    PARAMS_VALS_SEPERATOR_REPLACEMENT.toString()
             );
 
             list = this.params.get(aux[0]);
@@ -183,23 +183,23 @@ public class CommandBuilder {
     private void findHeaders(String headers) throws CommandException {
         if (headers == null) throw new CommandException(HEADERS__NOT_FOUND);
         this.headers = new HashMap<>();
-        String[] headersSplit = headers.split(String.valueOf(HEADERS_SEPERATOR));
+        String[] headersSplit = headers.split(HEADERS_SEPERATOR.toString());
 
         for (String aHeadersSplit : headersSplit) {
-            String[] aux = aHeadersSplit.split(String.valueOf(HEADERS_EQUALTO));
+            String[] aux = aHeadersSplit.split(HEADERS_EQUALTO.toString());
             if (aux.length != 2)
-                throw new CommandException(String.format(String.valueOf(HEADERS__NO_VALUE_ASSIGNED), aux[0]));
+                throw new CommandException(String.format(HEADERS__NO_VALUE_ASSIGNED.toString(), aux[0]));
             this.headers.put(aux[0], aux[1]);
         }
 
-        if (this.headers.containsKey(String.valueOf(ACCEPT))) {
+        if (this.headers.containsKey(ACCEPT.toString())) {
             this.pathHeaders = new LinkedList<>();
-            this.pathHeaders.addAll(Arrays.asList(this.headers.get(String.valueOf(ACCEPT)).split(String.valueOf(DIR_SEPARATOR))));
+            this.pathHeaders.addAll(Arrays.asList(this.headers.get(ACCEPT.toString()).split(DIR_SEPARATOR.toString())));
             headerName = pathHeaders.getLast();
             this.pathHeaders.removeLast();
         }
         else
-            throw new CommandException(String.valueOf(HEADERS__INVALID));
+            throw new CommandException(HEADERS__INVALID.toString());
     }
 
     /**
@@ -210,7 +210,7 @@ public class CommandBuilder {
      */
     private void parameterValidator(String param) throws CommandException {
         if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
-            throw new CommandException(String.format(String.valueOf(PARAMETERS__EXPECTED), param));
+            throw new CommandException(String.format(PARAMETERS__EXPECTED.toString(), param));
     }
 
     /**
@@ -224,7 +224,7 @@ public class CommandBuilder {
                 header = (Header) cmdUtils.getHeadersTree().search(pathHeaders, headerName);
                 if (header != null) {
                     header = header.getClass().newInstance();
-                    header.fileName = headers.get(String.valueOf(FILE_NAME));
+                    header.fileName = headers.get(FILE_NAME.toString());
                 }
                 else {
                     throw new CommandException(HEADERS__INVALID);

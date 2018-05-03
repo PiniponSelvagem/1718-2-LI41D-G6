@@ -16,7 +16,7 @@ public class GetCinemaIDSessionsToday extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        Date date = new java.sql.Date( new java.util.Date().getTime());
+        Date date = new java.sql.Date(new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, st.seats, s.Date, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
@@ -26,7 +26,7 @@ public class GetCinemaIDSessionsToday extends Command {
                 "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
         );
 
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         stmt.setDate(2, date);
         ResultSet rs = stmt.executeQuery();
 
@@ -46,13 +46,16 @@ public class GetCinemaIDSessionsToday extends Command {
             tid = rs.getInt(8);
             mid = rs.getInt(9);
 
-            data.add(new Session(id, dateTime,
-                        new Movie(mid, title, NA, duration),
-                        new Theater(tid, theaterName, NA, NA, availableSeats, cid), cid)
+            data.add(
+                    new Session(id, dateTime,
+                            new Movie(mid, title, NA, duration),
+                            new Theater(tid, theaterName, NA, NA, availableSeats, cid),
+                            cid
+                    )
             );
         }
 
-        return new GetCinemaIDSessionsView(data, Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))));
+        return new GetCinemaIDSessionsView(data, Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())));
     }
 
     @Override

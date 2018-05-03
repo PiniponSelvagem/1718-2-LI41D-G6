@@ -29,12 +29,12 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         int duration,eventDuration=0;
 
         try {
-            check=cmdBuilder.getParameter((String.valueOf(DATE_PARAM)))+":00";
+            check=cmdBuilder.getParameter(DATE_PARAM.toString())+":00";
             sdf1.setLenient(false);
             event = sdf1.parse(check.trim());
         } catch (ParseException e) {
             try {
-                check=cmdBuilder.getParameter((String.valueOf(DATE_PARAM)))+":00";
+                check=cmdBuilder.getParameter(DATE_PARAM.toString())+":00";
                 sdf2.setLenient(false);
                 event = sdf2.parse(check.trim());
             } catch (ParseException ex) {
@@ -46,7 +46,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 "SELECT m.Duration FROM MOVIE AS m "+
                         "WHERE m.mid=?"
         );
-        stmt.setString(1, cmdBuilder.getParameter(String.valueOf(MOVIE_ID)));
+        stmt.setString(1, cmdBuilder.getParameter(MOVIE_ID.toString()));
         rs = stmt.executeQuery();
 
         if(rs.next())eventDuration=rs.getInt(1);
@@ -57,17 +57,16 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                         "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
                         "WHERE s.tid=?"
         );
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+        stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
         stmt.execute();
-        rs = stmt.executeQuery(); //Todas as datas e durações de sessões
+        rs = stmt.executeQuery();
 
-        while(rs.next()){ //verificar se a data da sessão está em uso
+        while(rs.next()){ //Check if DATE is already in use
             timestamp = rs.getTimestamp(1);
             if (timestamp != null)
                 date = new Date(timestamp.getTime());
             else {date=rs.getDate(1);}
             duration=rs.getInt(2);
-            //aux.setTimeInMillis(date.getTime());
             newDate =new Date(date.getTime() + (duration * 60000));
             if((date.before(event) && newDate.after(event)) || (event.before(date) && newEvent.after(date)) || date.equals(event) || newDate.equals(newEvent) || date.equals(newEvent) || event.equals(newDate)) {
                 flag=false;
@@ -75,11 +74,11 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             }
         }
 
-        if (flag) { //se a data da sessão estiver livre postar a sessão
+        if (flag) { //If DATE free, then POST
             stmt = connection.prepareStatement("INSERT INTO CINEMA_SESSION VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setTimestamp(1,new Timestamp(event.getTime()));
-            stmt.setString(2, cmdBuilder.getParameter((String.valueOf(MOVIE_ID))));
-            stmt.setString(3, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+            stmt.setString(2, cmdBuilder.getParameter(MOVIE_ID.toString()));
+            stmt.setString(3, cmdBuilder.getId(THEATER_ID.toString()));
             stmt.executeUpdate();
 
             rs = stmt.getGeneratedKeys();
@@ -88,13 +87,13 @@ public class PostCinemaIDTheaterIDSessions extends Command {
 
             int seats = 0;
             stmt = connection.prepareStatement("SELECT THEATER.SeatsAvailable FROM THEATER WHERE THEATER.tid=?");
-            stmt.setString(1, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+            stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
             rs = stmt.executeQuery();
             if(rs.next()) seats = rs.getInt(1);
 
             stmt = connection.prepareStatement("INSERT INTO SEATS VALUES(?,?,?)");
             stmt.setInt(1, seats);
-            stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+            stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
             stmt.setInt(3, id);
 
             stmt.executeUpdate();

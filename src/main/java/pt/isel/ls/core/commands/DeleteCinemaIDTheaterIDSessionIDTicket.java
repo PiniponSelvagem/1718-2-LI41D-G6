@@ -21,11 +21,11 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException, CommandException {
 
         StringBuilder sql = new StringBuilder();
-        int paramSize = cmdBuilder.getParameterSize(String.valueOf(TICKET_ID));
+        int paramSize = cmdBuilder.getParameterSize(TICKET_ID.toString());
 
         int i = 0;
         while (i < paramSize) {
-            sql.append("tkid=").append("'").append(cmdBuilder.getParameter(String.valueOf(TICKET_ID), i++)).append("'");
+            sql.append("tkid=").append("'").append(cmdBuilder.getParameter(TICKET_ID.toString(), i++)).append("'");
             if(i < paramSize) sql.append(" OR ");
         }
 
@@ -34,8 +34,8 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
                         "INNER JOIN THEATER ON THEATER.tid = CINEMA_SESSION.tid AND THEATER.tid = ? " +
                         "WHERE " + sql.toString()
         );
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(SESSION_ID)));
-        stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+        stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
+        stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
 
         ResultSet rs = stmt.executeQuery();
 
@@ -43,8 +43,8 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
                                                              "inner join CINEMA_SESSION on CINEMA_SESSION.sid = SEATS.sid " +
                                                              "WHERE THEATER.tid = ? and CINEMA_SESSION.sid = ?"
         );
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(THEATER_ID)));
-        stmt.setString(2, cmdBuilder.getId(String.valueOf(SESSION_ID)));
+        stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
+        stmt.setString(2, cmdBuilder.getId(SESSION_ID.toString()));
         stmt.executeUpdate();
 
         if(rs != null) return new DeleteView();

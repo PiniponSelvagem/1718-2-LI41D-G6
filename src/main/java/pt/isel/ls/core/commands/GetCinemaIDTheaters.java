@@ -18,7 +18,7 @@ public class GetCinemaIDTheaters extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM THEATER AS t WHERE t.cid=?");
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
@@ -28,7 +28,7 @@ public class GetCinemaIDTheaters extends Command {
             ));
         }
 
-        return new GetCinemaIDTheatersView(data, Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))));
+        return new GetCinemaIDTheatersView(data, Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())));
     }
 
     @Override

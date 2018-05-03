@@ -16,7 +16,7 @@ public class GetMovieID extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM MOVIE WHERE mid = ?");
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(MOVIE_ID)));
+        stmt.setString(1, cmdBuilder.getId(MOVIE_ID.toString()));
         ResultSet rs = stmt.executeQuery();
         if (!rs.next())
             return new InfoNotFoundView();

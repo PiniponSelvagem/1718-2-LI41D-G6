@@ -14,8 +14,8 @@ public class PostCinemas extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO CINEMA VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
-        stmt.setString(1, cmdBuilder.getParameter((String.valueOf(NAME))));
-        stmt.setString(2, cmdBuilder.getParameter((String.valueOf(CITY))));
+        stmt.setString(1, cmdBuilder.getParameter(NAME.toString()));
+        stmt.setString(2, cmdBuilder.getParameter(CITY.toString()));
         stmt.executeUpdate();
         ResultSet rs = stmt.getGeneratedKeys();
         int id = 0;

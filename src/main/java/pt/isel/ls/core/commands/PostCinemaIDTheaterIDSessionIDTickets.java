@@ -17,32 +17,20 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO TICKET VALUES(?, ?, ?, ?)");
-        String id = cmdBuilder.getParameter((String.valueOf(ROWS))) + cmdBuilder.getParameter((String.valueOf(SEATS_ROW)));
+        String id = cmdBuilder.getParameter(ROWS.toString()) + cmdBuilder.getParameter(SEATS_ROW.toString());
         stmt.setString(1, id);
-        stmt.setString(2, cmdBuilder.getParameter((String.valueOf(SEATS_ROW))));
-        stmt.setString(3, cmdBuilder.getParameter((String.valueOf(ROWS))));
-        stmt.setString(4, cmdBuilder.getId((String.valueOf(SESSION_ID))));
+        stmt.setString(2, cmdBuilder.getParameter(SEATS_ROW.toString()));
+        stmt.setString(3, cmdBuilder.getParameter(ROWS.toString()));
+        stmt.setString(4, cmdBuilder.getId(SESSION_ID.toString()));
         stmt.executeUpdate();
 
         stmt = connection.prepareStatement("update SEATS SET SEATS.seats = SEATS.seats - 1 from SEATS inner join THEATER on THEATER.tid = Seats.tid " +
                                             "inner join CINEMA_SESSION on CINEMA_SESSION.sid = SEATS.sid " +
                                             "WHERE THEATER.tid = ? and CINEMA_SESSION.sid = ?"
         );
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(THEATER_ID)));
-        stmt.setString(2, cmdBuilder.getId(String.valueOf(SESSION_ID)));
+        stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
+        stmt.setString(2, cmdBuilder.getId(SESSION_ID.toString()));
         stmt.executeUpdate();
-/*
-
-
-        stmt = connection.prepareStatement("UPDATE THEATER INNER JOIN CINEMA_SESSION ON THEATER.tid = CINEMA_SESSION.tid " +
-                                                "INNER JOIN TICKET ON TICKET.sid = CINEMA_SESSION.sid " +
-                                                "SET SeatsAvailable = (SeatsAvailable - 1) " +
-                                                "WHERE TICKET.tkid=?  AND CINEMA_SESSION.sid=?"
-        );
-        stmt.setString(2, cmdBuilder.getId((String.valueOf(SESSION_ID))));
-        stmt.setString(1, id);
-        stmt.executeUpdate();
-*/
         return new PostView<>("Ticket ID: ", id);
     }
 

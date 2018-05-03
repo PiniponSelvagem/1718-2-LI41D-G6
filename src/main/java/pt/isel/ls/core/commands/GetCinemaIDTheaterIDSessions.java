@@ -22,8 +22,8 @@ public class GetCinemaIDTheaterIDSessions extends Command {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "INNER JOIN SEATS AS st ON st.sid=s.sid " +
                 "WHERE cid=? AND t.tid=?");
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
-        stmt.setString(2, cmdBuilder.getId(String.valueOf(THEATER_ID)));
+        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
+        stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
@@ -53,8 +53,8 @@ public class GetCinemaIDTheaterIDSessions extends Command {
 
         return new GetCinemaIDTheaterIDSessionsView(
                 data,
-                Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))),
-                Integer.parseInt(cmdBuilder.getId(String.valueOf(THEATER_ID)))
+                Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),
+                Integer.parseInt(cmdBuilder.getId(THEATER_ID.toString()))
         );
     }
 

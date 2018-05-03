@@ -21,7 +21,7 @@ public class GetCinemaIDSessionsDateID extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
         LocalDate localDate;
-        String str = cmdBuilder.getId(String.valueOf(DATE_ID));
+        String str = cmdBuilder.getId(DATE_ID.toString());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
         localDate = LocalDate.parse(str, formatter);
 
@@ -33,7 +33,7 @@ public class GetCinemaIDSessionsDateID extends Command {
                 "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
         );
 
-        stmt.setString(1, cmdBuilder.getId(String.valueOf(CINEMA_ID)));
+        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         stmt.setString(2, localDate.toString());
         ResultSet rs = stmt.executeQuery();
 
@@ -53,15 +53,18 @@ public class GetCinemaIDSessionsDateID extends Command {
             tid = rs.getInt(8);
             mid = rs.getInt(9);
 
-            data.add(new Session(sid, date,
-                        new Movie(mid, title, NA, duration),
-                        new Theater(tid, theaterName, NA, NA, availableSeats, cid), cid)
+            data.add(
+                    new Session(sid, date,
+                            new Movie(mid, title, NA, duration),
+                            new Theater(tid, theaterName, NA, NA, availableSeats, cid),
+                            cid
+                    )
             );
         }
 
         return new GetCinemaIDSessionsDateIDView(
                 data,
-                Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))),
+                Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),
                 date
         );
     }

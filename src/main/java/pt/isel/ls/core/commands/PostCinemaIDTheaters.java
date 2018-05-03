@@ -13,14 +13,14 @@ public class PostCinemaIDTheaters extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
-        int seats = Integer.parseInt(cmdBuilder.getParameter(String.valueOf(ROWS)))
+        int seats = Integer.parseInt(cmdBuilder.getParameter(ROWS.toString()))
                 * Integer.parseInt(cmdBuilder.getParameter(String.valueOf(SEATS_ROW)));
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO THEATER VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         stmt.setInt(1, seats);
-        stmt.setInt(2, Integer.parseInt(cmdBuilder.getParameter((String.valueOf(ROWS)))));
-        stmt.setInt(3, Integer.parseInt(cmdBuilder.getParameter((String.valueOf(SEATS_ROW)))));
-        stmt.setString(4, cmdBuilder.getParameter((String.valueOf(NAME))));
-        stmt.setInt(5, Integer.parseInt(cmdBuilder.getId(String.valueOf(CINEMA_ID))));
+        stmt.setInt(2, Integer.parseInt(cmdBuilder.getParameter(ROWS.toString())));
+        stmt.setInt(3, Integer.parseInt(cmdBuilder.getParameter(SEATS_ROW.toString())));
+        stmt.setString(4, cmdBuilder.getParameter(NAME.toString()));
+        stmt.setInt(5, Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())));
         stmt.execute();
 
         ResultSet rs = stmt.getGeneratedKeys();

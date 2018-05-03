@@ -18,7 +18,10 @@ public enum ExceptionEnum {
     HEADERS__EXPECTED("Header not found. Input headers was: %s"),
     HEADERS__INVALID("Header with invalid syntax. More info at: "+OPTIONS),
 
-    DATE_INVALID_FORMAT("Invalid date format. [dd/MM/yyyy HH:mm] & [yyyy/MM/dd HH:mm]");
+    DATE_INVALID_FORMAT("Invalid date format. [dd/MM/yyyy HH:mm] & [yyyy/MM/dd HH:mm]"),
+
+    SERVER_PORT_INVALID_FORMAT("Invalid server port number. Trying to open on default port: %s");
+
 
     private final String str;
     ExceptionEnum(String str) {

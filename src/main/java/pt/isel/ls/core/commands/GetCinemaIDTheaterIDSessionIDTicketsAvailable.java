@@ -17,8 +17,8 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
         int availableSeats;
-        String sid =cmdBuilder.getId(String.valueOf(SESSION_ID));
-        String tid = cmdBuilder.getId(String.valueOf(THEATER_ID));
+        String sid =cmdBuilder.getId(SESSION_ID.toString());
+        String tid = cmdBuilder.getId(THEATER_ID.toString());
 
         PreparedStatement stmt = connection.prepareStatement("SELECT SEATS.seats as SeatsAvailable from SEATS where SEATS.sid=? AND SEATS.tid=?");
         stmt.setString(1, sid);
@@ -28,7 +28,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
             availableSeats = rs.getInt(1);
             DataContainer data = new DataContainer(cmdBuilder.getHeader());
             data.add(availableSeats);
-            return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data,Integer.parseInt(cmdBuilder.getId(String.valueOf(SESSION_ID))));
+            return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data,Integer.parseInt(cmdBuilder.getId(SESSION_ID.toString())));
         }
 
         return new InfoNotFoundView();
