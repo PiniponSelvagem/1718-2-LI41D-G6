@@ -33,49 +33,50 @@ public class CommandUtils {
      */
     private void initializeCommandsTree() {
         /* Internal commands */
-        cmdTree.add(new CommandBuilder(new Options()));                 //"OPTIONS"
-        cmdTree.add(new CommandBuilder(new Exit()));                    //"EXIT"
-        cmdTree.add(new CommandBuilder(new Listen()));                  //"LISTEN"
-        cmdTree.add(new CommandBuilder(new Test()));                    //"TEST"
+        cmdTree.add(new Options());                 //"OPTIONS"
+        cmdTree.add(new Exit());                    //"EXIT"
+        cmdTree.add(new Listen());                  //"LISTEN"
+        cmdTree.add(new Test());                    //"TEST"
+
 
         /* Commands related to MOVIES */
-        cmdTree.add(new CommandBuilder(new PostMovies()));              //"POST /movies"
-        cmdTree.add(new CommandBuilder(new GetMovies()));               //"GET /movies"
-        cmdTree.add(new CommandBuilder(new GetMovieID()));              //"GET /movies/{mid}"
+        cmdTree.add(new PostMovies());              //"POST /movies"
+        cmdTree.add(new GetMovies());               //"GET /movies"
+        cmdTree.add(new GetMovieID());              //"GET /movies/{mid}"
 
 
         /* Commands related to CINEMAS */
-        cmdTree.add(new CommandBuilder(new PostCinemas()));             //"POST /cinemas"
-        cmdTree.add(new CommandBuilder(new GetCinemas()));              //"GET /cinemas"
-        cmdTree.add(new CommandBuilder(new GetCinemaID()));             //"GET /cinemas/{cid}"
+        cmdTree.add(new PostCinemas());             //"POST /cinemas"
+        cmdTree.add(new GetCinemas());              //"GET /cinemas"
+        cmdTree.add(new GetCinemaID());             //"GET /cinemas/{cid}"
 
 
         /* Commands related to CINEMAS->THEATERS */
-        cmdTree.add(new CommandBuilder(new PostCinemaIDTheaters()));    //"POST /cinemas/{cid}/theaters"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaters()));     //"GET /cinemas/{cid}/theaters"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDTheatersID()));   //"GET /cinemas/{cid}/theaters/{tid}"
+        cmdTree.add(new PostCinemaIDTheaters());    //"POST /cinemas/{cid}/theaters"
+        cmdTree.add(new GetCinemaIDTheaters());     //"GET /cinemas/{cid}/theaters"
+        cmdTree.add(new GetCinemaIDTheatersID());   //"GET /cinemas/{cid}/theaters/{tid}"
 
 
         /* Commands related to CINEMAS->THEATERS->SESSIONS */
-        cmdTree.add(new CommandBuilder(new PostCinemaIDTheaterIDSessions()));       //"POST /cinemas/{cid}/theaters/{tid}/sessions"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessions()));        //"GET /cinemas/{cid}/theaters/{tid}/sessions"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionsToday()));   //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
+        cmdTree.add(new PostCinemaIDTheaterIDSessions());       //"POST /cinemas/{cid}/theaters/{tid}/sessions"
+        cmdTree.add(new GetCinemaIDTheaterIDSessions());        //"GET /cinemas/{cid}/theaters/{tid}/sessions"
+        cmdTree.add(new GetCinemaIDTheaterIDSessionsToday());   //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
 
 
         /* Commands related to CINEMAS->SESSIONS */
-        cmdTree.add(new CommandBuilder(new GetCinemaIDSessions()));      //"GET /cinemas/{cid}/sessions"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDSessionID()));     //"GET /cinemas/{cid}/sessions/{sid}"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDSessionsToday())); //"GET /cinemas/{cid}/sessions/today"
+        cmdTree.add(new GetCinemaIDSessions());        //"GET /cinemas/{cid}/sessions"
+        cmdTree.add(new GetCinemaIDSessionID());       //"GET /cinemas/{cid}/sessions/{sid}"
+        cmdTree.add(new GetCinemaIDSessionsToday());   //"GET /cinemas/{cid}/sessions/today"
+        cmdTree.add(new GetCinemaIDSessionsDateID());  //"GET /cinemas/{cid}/sessions/date/{dmy}"
+        cmdTree.add(new GetMovieIDSessionsDateID());   //"GET /movies/{mid}/sessions/date/{dmy}"
 
 
         /* Commands related to Tickets */
-        cmdTree.add(new CommandBuilder(new PostCinemaIDTheaterIDSessionIDTickets()));           //"POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionIDTickets()));            //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionIDTicketID()));           //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionIDTicketsAvailable()));   //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available"
-        cmdTree.add(new CommandBuilder(new DeleteCinemaIDTheaterIDSessionIDTicket()));          //"DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdTree.add(new CommandBuilder(new GetCinemaIDSessionsDateID()));                       //"GET /cinemas/{cid}/sessions/date/{dmy}"
-        cmdTree.add(new CommandBuilder(new GetMovieIDSessionsDateID()));                        //"GET /movies/{mid}/sessions/date/{dmy}"
+        cmdTree.add(new PostCinemaIDTheaterIDSessionIDTickets());           //"POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new GetCinemaIDTheaterIDSessionIDTickets());            //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new GetCinemaIDTheaterIDSessionIDTicketID());           //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}"
+        cmdTree.add(new GetCinemaIDTheaterIDSessionIDTicketsAvailable());   //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available"
+        cmdTree.add(new DeleteCinemaIDTheaterIDSessionIDTicket());          //"DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
     }
 
     /**
@@ -125,11 +126,11 @@ public class CommandUtils {
      */
     private void initializeHeadersTree() {
         /* Directory: text */
-        headersTree.add(new CommandBuilder(new Plain()));   //"PLAIN"
-        headersTree.add(new CommandBuilder(new Html()));    //"HTML"
+        headersTree.add(new Plain());   //"PLAIN"
+        headersTree.add(new Html());    //"HTML"
 
         /* Directory: application */
-        headersTree.add(new CommandBuilder(new Json()));    //"JSON"
+        headersTree.add(new Json());    //"JSON"
     }
 
     /**

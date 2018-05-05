@@ -14,7 +14,6 @@ import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.strings.ExceptionEnum.*;
 
 public class CommandBuilder {
-    private Object method;          //can be used for Commands and Headers
     private CommandUtils cmdUtils;
 
     private String methodName;
@@ -26,17 +25,6 @@ public class CommandBuilder {
     private HashMap<String, String> headers;
     private Header header;
     private Command buildedCommand;
-
-
-    /**
-     * Build new command.
-     * @param method Command/Header {@link Command} {@link Header}
-     */
-    public CommandBuilder(CommonCmd method) {
-        this.methodName = method.getMethodName();
-        pathToList(method.getPath());
-        this.method = method;
-    }
 
 
     /**
@@ -70,7 +58,7 @@ public class CommandBuilder {
     private void parsePath(String[] args) throws CommandException {
         if (args.length >= 2 && args[1].subSequence(0, DIR_SEPARATOR.toString().length())
                 .equals(DIR_SEPARATOR.toString())) {
-            pathToList(args[1]);
+            this.path = pathToList(args[1]);
         }
         else {
             throw new CommandException(PATH__NOT_FOUND);
@@ -80,10 +68,15 @@ public class CommandBuilder {
     /**
      * Parse path of this command.
      * @param path Path string
+     * @return LinkedList of String containing the path
      */
-    private void pathToList(String path) {
-        if (path != null)
-            this.path.addAll(Arrays.asList(path.substring(1).split(DIR_SEPARATOR.toString())));
+    public static LinkedList<String> pathToList(String path) {
+        if (path != null) {
+            LinkedList<String> pathList = new LinkedList<>();
+            pathList.addAll(Arrays.asList(path.substring(1).split(DIR_SEPARATOR.toString())));
+            return pathList;
+        }
+        return null;
     }
 
     /**
@@ -98,8 +91,7 @@ public class CommandBuilder {
                      ATM to work around this, its looking for '=' syntax, since its
                      only used for the parameters equals syntax.
 
-        WARNING:     UNTIL A FIX IS FOUND FOR THIS SITUATION, THE args[x].contains
-                     MUST BE DIFFERENT THAN HEADERS_EQUALTO.
+        NOTE:        THE args[x].contains MUST BE DIFFERENT THAN HEADERS_EQUALTO.
         */
 
         if (args.length == 3) {
@@ -248,13 +240,6 @@ public class CommandBuilder {
      */
     public String getMethodName() {
         return methodName;
-    }
-
-    /**
-     * @return Returns this command.
-     */
-    public Object getMethod() {
-        return method;
     }
 
     /**

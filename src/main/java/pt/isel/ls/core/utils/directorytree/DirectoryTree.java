@@ -1,6 +1,7 @@
 package pt.isel.ls.core.utils.directorytree;
 
 
+import pt.isel.ls.core.common.CommonCmd;
 import pt.isel.ls.core.utils.CommandBuilder;
 
 import java.util.LinkedList;
@@ -20,8 +21,8 @@ public class DirectoryTree {
     /**
      * @param cmd Add this object to the Tree.
      */
-    public void add(CommandBuilder cmd) {
-        root.add(cmd.getPath(), cmd.getMethodName(), cmd.getMethod());
+    public void add(CommonCmd cmd) {
+        root.add(CommandBuilder.pathToList(cmd.getPath()), cmd.getMethodName(), cmd);
     }
 
     /**
