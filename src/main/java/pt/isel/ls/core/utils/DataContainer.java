@@ -1,6 +1,6 @@
 package pt.isel.ls.core.utils;
 
-import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.common.headers.Header;
 
 import java.util.LinkedList;
 

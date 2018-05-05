@@ -1,6 +1,6 @@
 package pt.isel.ls.view.command;
 
-import pt.isel.ls.core.headers.Header;
+import pt.isel.ls.core.common.headers.Header;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
 

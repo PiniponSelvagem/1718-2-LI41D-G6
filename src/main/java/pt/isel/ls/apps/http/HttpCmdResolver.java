@@ -28,7 +28,6 @@ public class HttpCmdResolver extends HttpServlet {
         String respBody = "";
         if (cmdReq.getCmdView() != null)
             respBody = cmdReq.getCmdView().getAllInfoString();
-        //String respBody = String.format("Current date and time is %s",new DateTime().toString());
 
         byte[] respBodyBytes = respBody.getBytes(utf8);
 

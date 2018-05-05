@@ -1,9 +1,10 @@
 package pt.isel.ls.core.utils;
 
-import pt.isel.ls.core.commands.Command;
+import pt.isel.ls.core.common.CommonCmd;
+import pt.isel.ls.core.common.commands.Command;
 import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.headers.Header;
-import pt.isel.ls.core.headers.Html;
+import pt.isel.ls.core.common.headers.Header;
+import pt.isel.ls.core.common.headers.Html;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,12 +30,11 @@ public class CommandBuilder {
 
     /**
      * Build new command.
-     * @param path Path to method.
      * @param method Command/Header {@link Command} {@link Header}
      */
-    public CommandBuilder(String methodName, String path, Object method) {
-        this.methodName = methodName;
-        pathToList(path);
+    public CommandBuilder(CommonCmd method) {
+        this.methodName = method.getMethodName();
+        pathToList(method.getPath());
         this.method = method;
     }
 

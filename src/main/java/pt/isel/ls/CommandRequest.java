@@ -1,6 +1,6 @@
 package pt.isel.ls;
 
-import pt.isel.ls.core.commands.Command;
+import pt.isel.ls.core.common.commands.Command;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.sql.Sql;

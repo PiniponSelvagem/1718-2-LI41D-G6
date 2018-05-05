@@ -20,8 +20,9 @@ public enum ExceptionEnum {
 
     DATE_INVALID_FORMAT("Invalid date format. [dd/MM/yyyy HH:mm] & [yyyy/MM/dd HH:mm]"),
 
-    SERVER_PORT_INVALID_FORMAT("Invalid server port number. Trying to open on default port: %s");
+    SERVER_PORT_INVALID_FORMAT("Invalid server port number. Trying to open on default port: %s"),
 
+    ;
 
     private final String str;
     ExceptionEnum(String str) {

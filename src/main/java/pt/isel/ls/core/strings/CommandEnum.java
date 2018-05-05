@@ -55,8 +55,9 @@ public enum CommandEnum {
     ROWS("row"),
     SEATS_ROW("seat"),
     DATE_PARAM("date"),
-    SERVER_PORT("port");
+    SERVER_PORT("port"),
 
+    ;
 
     private final String str;
     CommandEnum(String str) {

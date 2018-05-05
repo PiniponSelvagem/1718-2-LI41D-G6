@@ -26,7 +26,8 @@ public class HttpServer {
         handler.addServletWithMapping(new ServletHolder(new HttpCmdResolver()), "/*");
         server.start();
         System.out.println("Server started");
-        server.join();
+        System.in.read();
+        server.stop();
         System.out.println("Server stopped.");
     }
 }

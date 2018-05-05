@@ -1,6 +1,6 @@
 package pt.isel.ls.core.utils.directorytree;
 
-import pt.isel.ls.core.commands.NotFound;
+import pt.isel.ls.core.common.commands.NotFound;
 
 import java.util.ArrayList;
 import java.util.HashMap;

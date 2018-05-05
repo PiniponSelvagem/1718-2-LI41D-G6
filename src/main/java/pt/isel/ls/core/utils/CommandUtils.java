@@ -1,7 +1,7 @@
 package pt.isel.ls.core.utils;
 
-import pt.isel.ls.core.commands.*;
-import pt.isel.ls.core.headers.*;
+import pt.isel.ls.core.common.commands.*;
+import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.utils.directorytree.DirectoryNode;
 import pt.isel.ls.core.utils.directorytree.DirectoryTree;
 
@@ -33,203 +33,49 @@ public class CommandUtils {
      */
     private void initializeCommandsTree() {
         /* Internal commands */
-        //"OPTIONS"
-        cmdTree.add(new CommandBuilder(""+
-                OPTIONS, ""+
-                DIR_SEPARATOR,
-                new Options())
-        );
-        //"EXIT"
-        cmdTree.add(new CommandBuilder(""+
-                EXIT, ""+
-                DIR_SEPARATOR,
-                new Exit())
-        );
-        //"LISTEN"
-        cmdTree.add(new CommandBuilder(""+
-                LISTEN, ""+
-                DIR_SEPARATOR,
-                new Listen())
-        );
-        //"TEST"
-        cmdTree.add(new CommandBuilder(""+
-                TEST, ""+
-                DIR_SEPARATOR,
-                new Test())
-        );
+        cmdTree.add(new CommandBuilder(new Options()));                 //"OPTIONS"
+        cmdTree.add(new CommandBuilder(new Exit()));                    //"EXIT"
+        cmdTree.add(new CommandBuilder(new Listen()));                  //"LISTEN"
+        cmdTree.add(new CommandBuilder(new Test()));                    //"TEST"
 
         /* Commands related to MOVIES */
-        //"POST /movies"
-        cmdTree.add(new CommandBuilder(""+
-                POST, ""+
-                DIR_SEPARATOR+MOVIES,
-                new PostMovies())
-        );
-        //"GET /movies"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+MOVIES,
-                new GetMovies())
-        );
-        //"GET /movies/{mid}"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX,
-                new GetMovieID())
-        );
+        cmdTree.add(new CommandBuilder(new PostMovies()));              //"POST /movies"
+        cmdTree.add(new CommandBuilder(new GetMovies()));               //"GET /movies"
+        cmdTree.add(new CommandBuilder(new GetMovieID()));              //"GET /movies/{mid}"
 
 
         /* Commands related to CINEMAS */
-        //"POST /cinemas"
-        cmdTree.add(new CommandBuilder(""+
-                POST, ""+
-                DIR_SEPARATOR+CINEMAS,
-                new PostCinemas())
-        );
-        //"GET /cinemas"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS,
-                new GetCinemas())
-        );
-        //"GET /cinemas/{cid}"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX,
-                new GetCinemaID())
-        );
+        cmdTree.add(new CommandBuilder(new PostCinemas()));             //"POST /cinemas"
+        cmdTree.add(new CommandBuilder(new GetCinemas()));              //"GET /cinemas"
+        cmdTree.add(new CommandBuilder(new GetCinemaID()));             //"GET /cinemas/{cid}"
 
 
         /* Commands related to CINEMAS->THEATERS */
-        //"POST /cinemas/{cid}/theaters"
-        cmdTree.add(new CommandBuilder(""+
-                POST, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX+DIR_SEPARATOR+THEATERS,
-                new PostCinemaIDTheaters())
-        );
-        //"GET /cinemas/{cid}/theaters"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX+DIR_SEPARATOR+THEATERS,
-                new GetCinemaIDTheaters())
-        );
-        //"GET /cinemas/{cid}/theaters/{tid}"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX,
-                new GetCinemaIDTheatersID())
-        );
+        cmdTree.add(new CommandBuilder(new PostCinemaIDTheaters()));    //"POST /cinemas/{cid}/theaters"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaters()));     //"GET /cinemas/{cid}/theaters"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDTheatersID()));   //"GET /cinemas/{cid}/theaters/{tid}"
 
 
         /* Commands related to CINEMAS->THEATERS->SESSIONS */
-        //"POST /cinemas/{cid}/theaters/{tid}/sessions"
-        cmdTree.add(new CommandBuilder(""+
-                POST, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
-                new PostCinemaIDTheaterIDSessions())
-        );
-        //"GET /cinemas/{cid}/theaters/{tid}/sessions"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS,
-                new GetCinemaIDTheaterIDSessions())
-        );
-        //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS
-                    +DIR_SEPARATOR+TODAY,
-                new GetCinemaIDTheaterIDSessionsToday())
-        );
+        cmdTree.add(new CommandBuilder(new PostCinemaIDTheaterIDSessions()));       //"POST /cinemas/{cid}/theaters/{tid}/sessions"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessions()));        //"GET /cinemas/{cid}/theaters/{tid}/sessions"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionsToday()));   //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
 
 
         /* Commands related to CINEMAS->SESSIONS */
-        //"GET /cinemas/{cid}/sessions"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS,
-                new GetCinemaIDSessions())
-        );
-        //"GET /cinemas/{cid}/sessions/{sid}"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX,
-                new GetCinemaIDSessionID())
-        );
-        //"GET /cinemas/{cid}/sessions/today"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX+DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+TODAY,
-                new GetCinemaIDSessionsToday())
-        );
+        cmdTree.add(new CommandBuilder(new GetCinemaIDSessions()));      //"GET /cinemas/{cid}/sessions"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDSessionID()));     //"GET /cinemas/{cid}/sessions/{sid}"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDSessionsToday())); //"GET /cinemas/{cid}/sessions/today"
 
 
         /* Commands related to Tickets */
-        //"POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdTree.add(new CommandBuilder(""+
-                POST, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+TICKETS,
-                new PostCinemaIDTheaterIDSessionIDTickets())
-        );
-        //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+TICKETS,
-                new GetCinemaIDTheaterIDSessionIDTickets())
-        );
-        //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+TICKETS+DIR_SEPARATOR+ID_PREFIX+TICKET_ID+ID_SUFFIX,
-                new GetCinemaIDTheaterIDSessionIDTicketID())
-        );
-        //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+TICKETS+DIR_SEPARATOR+AVAILABLE,
-                new GetCinemaIDTheaterIDSessionIDTicketsAvailable())
-        );
-        //"DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdTree.add(new CommandBuilder(""+
-                DELETE, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+TICKETS,
-                new DeleteCinemaIDTheaterIDSessionIDTicket())
-        );
-        //"GET /cinemas/{cid}/sessions/date/{dmy}"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+DATE+DIR_SEPARATOR+ID_PREFIX+DATE_ID+ID_SUFFIX,
-                new GetCinemaIDSessionsDateID())
-        );
-        //"GET /movies/{mid}/sessions/date/{d}"
-        cmdTree.add(new CommandBuilder(""+
-                GET, ""+
-                DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX
-                    +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+DATE+DIR_SEPARATOR+ID_PREFIX+DATE_ID+ID_SUFFIX,
-                new GetMovieIDSessionsDateID())
-        );
+        cmdTree.add(new CommandBuilder(new PostCinemaIDTheaterIDSessionIDTickets()));           //"POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionIDTickets()));            //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionIDTicketID()));           //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDTheaterIDSessionIDTicketsAvailable()));   //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available"
+        cmdTree.add(new CommandBuilder(new DeleteCinemaIDTheaterIDSessionIDTicket()));          //"DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdTree.add(new CommandBuilder(new GetCinemaIDSessionsDateID()));                       //"GET /cinemas/{cid}/sessions/date/{dmy}"
+        cmdTree.add(new CommandBuilder(new GetMovieIDSessionsDateID()));                        //"GET /movies/{mid}/sessions/date/{dmy}"
     }
 
     /**
@@ -279,26 +125,11 @@ public class CommandUtils {
      */
     private void initializeHeadersTree() {
         /* Directory: text */
-        //"plain"
-        headersTree.add(new CommandBuilder(""+
-                PLAIN, ""+
-                DIR_SEPARATOR+TEXT,
-                new Plain())
-        );
-        //""
-        headersTree.add(new CommandBuilder(""+
-                HTML, ""+
-                DIR_SEPARATOR+TEXT,
-                new Html())
-        );
+        headersTree.add(new CommandBuilder(new Plain()));   //"PLAIN"
+        headersTree.add(new CommandBuilder(new Html()));    //"HTML"
 
         /* Directory: application */
-        //"plain"
-        headersTree.add(new CommandBuilder(""+
-                JSON, ""+
-                DIR_SEPARATOR+APPLICATION,
-                new Json())
-        );
+        headersTree.add(new CommandBuilder(new Json()));    //"JSON"
     }
 
     /**
