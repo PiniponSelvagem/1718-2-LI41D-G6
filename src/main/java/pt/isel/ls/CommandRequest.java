@@ -15,6 +15,17 @@ public class CommandRequest {
 
     private CommandView cmdView;
 
+    /**
+     * WARNING: THIS METHOD IS DEPRECATED, it may be used for DEBUG PURPOSES ONLY!!!
+     *          It can be used for the TESTS, but it should never be used for the app.
+     *          Use the constructor that dosent require a SQLConnection in the parameters
+     *          {@link #CommandRequest(String[], boolean)
+     */
+    @Deprecated
+    public CommandRequest() {
+        //This method is useful for the tests ONLY! Call this method "executeCommand" after calling this constructor.
+    }
+
     public CommandRequest(String[] args, boolean printToConsole) {
         commandRequest(args, printToConsole);
     }

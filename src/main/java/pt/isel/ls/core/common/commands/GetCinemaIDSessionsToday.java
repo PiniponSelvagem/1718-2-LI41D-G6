@@ -47,11 +47,11 @@ public class GetCinemaIDSessionsToday extends Command {
 
         while(rs.next()){
             id = rs.getInt(1);
-            dateTime = rs.getTimestamp(2);
-            title = rs.getString(3);
-            duration = rs.getInt(4);
-            theaterName = rs.getString(5);
-            availableSeats = rs.getInt(6);
+            title = rs.getString(2);
+            duration = rs.getInt(3);
+            theaterName = rs.getString(4);
+            availableSeats = rs.getInt(5);
+            dateTime = rs.getTimestamp(6);
             cid = rs.getInt(7);
             tid = rs.getInt(8);
             mid = rs.getInt(9);

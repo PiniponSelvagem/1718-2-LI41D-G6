@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.fail;
 
 
 public class Cinema_tests {
@@ -30,6 +30,7 @@ public class Cinema_tests {
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
+                fail();
             }
         }
     }
@@ -43,8 +44,8 @@ public class Cinema_tests {
 
             for(int i = 0; i < 3; i++) {
                 String name = "nameTest" + (i + 1);
-                Main.executeCommand(new CommandBuilder(new String[]
-                        {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, new CommandUtils()), con);
+                new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                        {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, new CommandUtils()), con, false);
             }
 
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM CINEMA");
@@ -59,6 +60,7 @@ public class Cinema_tests {
             }
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if (con != null) {
                 try {
@@ -80,8 +82,8 @@ public class Cinema_tests {
             create_cinemas(con);
 
 
-            GetCinemasView view = (GetCinemasView) Main.executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas"}, new CommandUtils()), con);
+            GetCinemasView view = (GetCinemasView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas"}, new CommandUtils()), con, false);
 
             DataContainer data;
             data = view.getData();
@@ -94,6 +96,7 @@ public class Cinema_tests {
             }
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if(con != null){
                 try {
@@ -123,14 +126,16 @@ public class Cinema_tests {
                 i++;
             }
 
-            GetCinemaIDView view = (GetCinemaIDView) Main.executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas/" + ids[1]}, new CommandUtils()), con);
+            GetCinemaIDView view = (GetCinemaIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas/" + ids[1]}, new CommandUtils()), con, false);
+
             DataContainer data;
             data = view.getData();
             Cinema cinema = (Cinema)data.getData(0);
             assertEquals(ids[1], cinema.getId());
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if(con != null){
                 try {
@@ -162,9 +167,9 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                Main.executeCommand(new CommandBuilder(new String[]
+                new CommandRequest().executeCommand(new CommandBuilder(new String[]
                         {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
-                        con);
+                        con, false);
                 seats += 10;
             }
 
@@ -178,6 +183,7 @@ public class Cinema_tests {
             }
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if (con != null){
                 try {
@@ -209,14 +215,14 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                Main.executeCommand(new CommandBuilder(new String[]
+                new CommandRequest().executeCommand(new CommandBuilder(new String[]
                         {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
-                        con);
+                        con, false);
                 seats += 10;
             }
 
-            GetCinemaIDTheatersView view = (GetCinemaIDTheatersView) Main.executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas/" + ids[0] + "/theaters"}, new CommandUtils()), con);
+            GetCinemaIDTheatersView view = (GetCinemaIDTheatersView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas/" + ids[0] + "/theaters"}, new CommandUtils()), con, false);
             DataContainer data;
             data = view.getData();
             Theater theater;
@@ -229,6 +235,7 @@ public class Cinema_tests {
             }
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if(con != null){
                 try {
@@ -260,9 +267,9 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                Main.executeCommand(new CommandBuilder(new String[]
+                new CommandRequest().executeCommand(new CommandBuilder(new String[]
                         {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
-                        con);
+                        con, false);
                 seats += 10;
             }
 
@@ -275,8 +282,8 @@ public class Cinema_tests {
                 k++;
             }
 
-            GetCinemaIDTheatersIDView view = (GetCinemaIDTheatersIDView) Main.executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()), con);
+            GetCinemaIDTheatersIDView view = (GetCinemaIDTheatersIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()), con, false);
             DataContainer data;
             data = view.getData();
             Theater theater = (Theater) data.getData(0);
@@ -284,6 +291,7 @@ public class Cinema_tests {
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if (con != null)
                 try {

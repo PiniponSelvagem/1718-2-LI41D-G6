@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class Movies_tests {
@@ -32,6 +33,7 @@ public class Movies_tests {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            fail();
         }
     }
 
@@ -45,7 +47,7 @@ public class Movies_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                Main.executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con);
+                new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con, false);
             }
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
@@ -60,6 +62,7 @@ public class Movies_tests {
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if (con != null) {
                 try {
@@ -79,7 +82,7 @@ public class Movies_tests {
             con.setAutoCommit(false);
 
             createMovie(con);
-            GetMoviesView view = (GetMoviesView) Main.executeCommand(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con);
+            GetMoviesView view = (GetMoviesView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con, false);
             DataContainer data;
             data = view.getData();
             Movie movie;
@@ -90,6 +93,7 @@ public class Movies_tests {
             }
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
+            fail();
         } finally {
             if (con != null) {
                 try {
@@ -118,7 +122,7 @@ public class Movies_tests {
             }
 
             int id = movies.getFirst().getId();
-            GetMovieIDView movieIDView = (GetMovieIDView) Main.executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con);
+            GetMovieIDView movieIDView = (GetMovieIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con,false);
             DataContainer data;
             data = movieIDView.getData();
             Movie movie = (Movie) data.getData(0);
@@ -126,7 +130,8 @@ public class Movies_tests {
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
-        }finally {
+            fail();
+        } finally {
             if (con != null){
                 try {
                     con.rollback();

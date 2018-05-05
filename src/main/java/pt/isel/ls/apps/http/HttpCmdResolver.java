@@ -1,7 +1,7 @@
 package pt.isel.ls.apps.http;
 
-import org.joda.time.DateTime;
 import pt.isel.ls.CommandRequest;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
