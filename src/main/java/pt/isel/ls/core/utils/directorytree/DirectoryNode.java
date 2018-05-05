@@ -1,5 +1,6 @@
 package pt.isel.ls.core.utils.directorytree;
 
+import pt.isel.ls.core.common.CommonCmd;
 import pt.isel.ls.core.common.commands.NotFound;
 
 import java.util.ArrayList;
@@ -10,11 +11,11 @@ import java.util.List;
 public class DirectoryNode {
 
     private List<DirectoryNode> childs;
-    private HashMap<String, Object> methods;
+    private HashMap<String, CommonCmd> methods;
     private String dir;
 
     /**
-     * CommandNode constructor, use {@link #add(LinkedList, String, Object)} (} instead to add a new node.
+     * CommandNode constructor, use {@link #add(LinkedList, String, CommonCmd)} (} instead to add a new node.
      * @param dir This directory.
      */
     public DirectoryNode(String dir) {
@@ -30,7 +31,7 @@ public class DirectoryNode {
      * @param method Method name to add.
      * @param cmd Command to add.
      */
-    public void add(LinkedList<String> path, String method, Object cmd) {
+    public void add(LinkedList<String> path, String method, CommonCmd cmd) {
         if ( path.isEmpty() ) {
             if (!methods.containsKey(method))
                 methods.put(method, cmd);
@@ -70,10 +71,10 @@ public class DirectoryNode {
 
     /**
      * Compare if OBJ directory is equal to this one, this way there will not be duplicated directories.
-     * This gets compared at line: int index = childs.indexOf( currentChild ); {@link #add(LinkedList, String, Object)}
+     * This gets compared at line: int index = childs.indexOf( currentChild ); {@link #add(LinkedList, String, CommonCmd)}
      * @param obj Object to compare its directory with THIS one.
      * @return TRUE if its equal to this directory, FALSE if not and
-     * at {@link #add(LinkedList, String, Object)} create a new directory.
+     * at {@link #add(LinkedList, String, CommonCmd)} create a new directory.
      */
     @Override
     public boolean equals(Object obj) {

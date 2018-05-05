@@ -1,6 +1,5 @@
 package pt.isel.ls.core.utils;
 
-import pt.isel.ls.core.common.CommonCmd;
 import pt.isel.ls.core.common.commands.Command;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.common.headers.Header;
