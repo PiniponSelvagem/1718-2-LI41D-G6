@@ -37,7 +37,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         ResultSet rs;
         String check;
         boolean flag=true;
-        int duration,eventDuration=0;
+        int duration,eventDuration=0, SeatsAvailable=0;
 
         try {
             check=cmdBuilder.getParameter(DATE_PARAM.toString())+":00";
@@ -64,51 +64,51 @@ public class PostCinemaIDTheaterIDSessions extends Command {
         Date newEvent=new Date(event.getTime() + eventDuration * 60000);
 
         stmt = connection.prepareStatement(
-                "SELECT s.Date, m.Duration FROM CINEMA_SESSION AS s " +
+                "SELECT s.Date, m.Duration, t.SeatsAvailable FROM CINEMA_SESSION AS s " +
                         "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
+                        "INNER JOIN THEATER AS t ON t.tid=s.tid "+
                         "WHERE s.tid=?"
         );
         stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
         stmt.execute();
         rs = stmt.executeQuery();
 
-        while(rs.next()){ //Check if DATE is already in use
+        while (rs.next()) { //Check if DATE is already in use
+            if (SeatsAvailable == 0) SeatsAvailable = rs.getInt(3);
             timestamp = rs.getTimestamp(1);
-            if (timestamp != null)
-                date = new Date(timestamp.getTime());
-            else {date=rs.getDate(1);}
-            duration=rs.getInt(2);
-            newDate =new Date(date.getTime() + (duration * 60000));
-            if((date.before(event) && newDate.after(event)) || (event.before(date) && newEvent.after(date)) || date.equals(event) || newDate.equals(newEvent) || date.equals(newEvent) || event.equals(newDate)) {
-                flag=false;
+            if (timestamp != null) date = new Date(timestamp.getTime());
+            else {
+                date = rs.getDate(1);
+            }
+            duration = rs.getInt(2);
+            newDate = new Date(date.getTime() + (duration * 60000));
+            if ((date.before(event) && newDate.after(event)) || (event.before(date) && newEvent.after(date)) || date.equals(event) || newDate.equals(newEvent) || date.equals(newEvent) || event.equals(newDate)) {
+                flag = false;
                 break;
             }
         }
-
+        if(SeatsAvailable==0 && flag){
+            stmt = connection.prepareStatement(
+                    "SELECT t.SeatsAvailable FROM THEATER AS t "+
+                            "WHERE t.tid=?"
+            );
+            stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
+            stmt.execute();
+            rs = stmt.executeQuery();
+            if(rs.next())SeatsAvailable = rs.getInt(1);
+            else{return new PostView<>("Session: NOT POSTED!", "Error: THERE IS NO SUCH THEATER!");}
+        }
         if (flag) { //If DATE free, then POST
-            stmt = connection.prepareStatement("INSERT INTO CINEMA_SESSION VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt = connection.prepareStatement("INSERT INTO CINEMA_SESSION VALUES (?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setTimestamp(1,new Timestamp(event.getTime()));
             stmt.setString(2, cmdBuilder.getParameter(MOVIE_ID.toString()));
             stmt.setString(3, cmdBuilder.getId(THEATER_ID.toString()));
+            stmt.setInt(4, SeatsAvailable);
             stmt.executeUpdate();
 
             rs = stmt.getGeneratedKeys();
             int id = 0;
             if (rs.next()) id = rs.getInt(1);
-
-            int seats = 0;
-            stmt = connection.prepareStatement("SELECT THEATER.SeatsAvailable FROM THEATER WHERE THEATER.tid=?");
-            stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
-            rs = stmt.executeQuery();
-            if(rs.next()) seats = rs.getInt(1);
-
-            stmt = connection.prepareStatement("INSERT INTO SEATS VALUES(?,?,?)");
-            stmt.setInt(1, seats);
-            stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
-            stmt.setInt(3, id);
-
-            stmt.executeUpdate();
-
             return new PostView<>("Session: ", id);
         }
         else {

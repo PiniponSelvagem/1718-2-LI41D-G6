@@ -19,10 +19,9 @@ public class GetMovieIDSessionsDateID extends Command {
 
     private Timestamp date = null;
     private DataContainer data;
-    private static final String COLUMNS = "s.sid, s.Date, m.mid, t.tid, SEATS.seats, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration ";
+    private static final String COLUMNS = "s.sid, s.Date, m.mid, t.tid, s.SeatsAvailable, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration ";
     private static final String FROM = "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid ";
     private static final String INNER_JOIN_THEATER = "INNER JOIN THEATER AS t ON t.tid=s.tid ";
-    private static final String INNER_JOIN_SEATS = "INNER JOIN SEATS ON SEATS.sid=s.sid ";
 
     @Override
     public String getMethodName() {
@@ -51,7 +50,6 @@ public class GetMovieIDSessionsDateID extends Command {
                     "SELECT " + COLUMNS +
                             FROM +
                             INNER_JOIN_THEATER +
-                            INNER_JOIN_SEATS +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.City=? " +
                             "WHERE m.mid=? AND (CAST(s.Date AS DATE))=?"
             );
@@ -65,7 +63,6 @@ public class GetMovieIDSessionsDateID extends Command {
                     "SELECT " +COLUMNS +
                             FROM +
                             INNER_JOIN_THEATER +
-                            INNER_JOIN_SEATS +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.cid=? " +
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );
@@ -79,9 +76,8 @@ public class GetMovieIDSessionsDateID extends Command {
                     "SELECT " + COLUMNS +
                             FROM +
                             INNER_JOIN_THEATER +
-                            INNER_JOIN_SEATS +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=? AND SEATS.seats>=?"
+                            "WHERE (CAST(s.Date AS DATE))=? AND m.mid=? AND s.SeatsAvailable>=?"
             );
             stmt.setDate(1, date1);
             stmt.setString(2, cmdBuilder.getId(MOVIE_ID.toString()));
@@ -93,7 +89,6 @@ public class GetMovieIDSessionsDateID extends Command {
                     "SELECT " + COLUMNS +
                             FROM +
                             INNER_JOIN_THEATER +
-                            INNER_JOIN_SEATS +
                             "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
                             "WHERE (CAST(s.Date AS DATE))=? AND m.mid=?"
             );

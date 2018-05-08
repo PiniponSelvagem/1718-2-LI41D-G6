@@ -41,34 +41,23 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         }
 
         PreparedStatement stmt = connection.prepareStatement(
-                //"DELETE FROM TICKET WHERE TICKET.sid=? AND ("+sql.toString()+")"
-
-
-                "DELETE FROM TICKET FROM TICKET INNER JOIN CINEMA_SESSION ON TICKET.sid = CINEMA_SESSION.sid AND CINEMA_SESSION.sid = ? " +
-                        "INNER JOIN THEATER ON THEATER.tid = CINEMA_SESSION.tid AND THEATER.tid = ? " +
-                        "WHERE " + sql.toString()
-
+                "DELETE FROM TICKET "+
+                        "WHERE TICKET.sid=? AND (" + sql.toString()+")"
         );
         stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
-        stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
 
-        int ret = stmt.executeUpdate();
-
-        for (int x=0; x<i; ++x) {
-            stmt = connection.prepareStatement("update SEATS SET SEATS.seats = SEATS.seats + 1 from SEATS inner join THEATER on THEATER.tid = Seats.tid " +
-                    "inner join CINEMA_SESSION on CINEMA_SESSION.sid = SEATS.sid " +
-                    "WHERE THEATER.tid = ? and CINEMA_SESSION.sid = ?"
+        int test=stmt.executeUpdate();
+        while(paramSize>0) {
+            stmt = connection.prepareStatement("UPDATE CINEMA_SESSION SET CINEMA_SESSION.SeatsAvailable = CINEMA_SESSION.SeatsAvailable + 1 " +
+                    "WHERE CINEMA_SESSION.sid = ?"
             );
-            stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
-            stmt.setString(2, cmdBuilder.getId(SESSION_ID.toString()));
+            stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
             stmt.executeUpdate();
+            paramSize--;
         }
+        if(test != 0) return new DeleteView();
 
-        if(ret != 0) return new DeleteView();
-
-        return new InfoNotFoundView();
-
-        //else return new InfoNotFoundView();
+        else return new InfoNotFoundView();
     }
 
     @Override

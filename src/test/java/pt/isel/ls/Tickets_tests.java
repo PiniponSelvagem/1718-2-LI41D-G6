@@ -1,6 +1,7 @@
 package pt.isel.ls;
 
 import org.junit.Test;
+import pt.isel.ls.core.common.commands.PostCinemaIDTheaterIDSessionIDTickets;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
@@ -10,6 +11,7 @@ import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsView;
+import pt.isel.ls.view.command.PostView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +21,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class Tickets_tests {
 
@@ -57,7 +61,7 @@ public class Tickets_tests {
                 theatersId[i] = rs.getInt(1);
                 i++;
             }
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+String.valueOf(theatersId[0])+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con, false);
             new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date="+date+"+19:00&mid="+movId[1]}, new CommandUtils()), con, false);
             new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+15:30&mid="+movId[2]}, new CommandUtils()), con, false);
             new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con, false);
@@ -70,14 +74,14 @@ public class Tickets_tests {
                 sessionsId[i] = rs.getInt(1);
                 i++;
             }
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets","seat=1&row=a"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[1]+"/tickets","seat=2&row=b"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[2]+"/tickets","seat=3&row=c"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[3]+"/tickets","seat=4&row=d"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[4]+"/tickets","seat=5&row=e"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[5]+"/tickets","seat=6&row=f"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[1]+"/tickets","seat=3&row=b"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[4]+"/tickets","seat=6&row=e"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets","seat=1&row=A"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[1]+"/tickets","seat=2&row=B"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[2]+"/tickets","seat=3&row=C"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[3]+"/tickets","seat=4&row=D"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[4]+"/tickets","seat=5&row=E"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[5]+"/tickets","seat=6&row=F"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[1]+"/tickets","seat=3&row=B"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[1] + "/sessions/" + sessionsId[4]+"/tickets","seat=6&row=E"}, new CommandUtils()), con, false);
 
             stmt = con.prepareStatement("SELECT tkid FROM TICKET");
             rs = stmt.executeQuery();
@@ -207,10 +211,73 @@ public class Tickets_tests {
 
             GetCinemaIDTheaterIDSessionIDTicketsAvailableView view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[1]+"/tickets/available"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
-            if(data.size()==1) assertEquals(data.getData(0),(18*12)-2);
+            if(data.size()==1)
+                assertEquals((18*12)-2,data.getData(0));
             view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets/available"}, new CommandUtils()), con, false);
             data = view.getData();
-            if(data.size()==1) assertEquals(data.getData(0),(18*12)-1);
+            if(data.size()==1)
+                assertEquals((18*12)-1,data.getData(0));
+
+        } catch (SQLException | CommandException e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try {
+                    con.rollback();
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void post_wrong_tickets() {
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            createTickets(con);
+
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets","seat=19&row=A"}, new CommandUtils()), con, false);
+            PreparedStatement stmt = con.prepareStatement(
+                    "SELECT tk.tkid FROM TICKET AS tk " +
+                            "WHERE tk.tkid=? AND tk.sid=? "
+            );
+            stmt.setString(1,"A19");
+            stmt.setInt(2,sessionsId[0]);
+            ResultSet rs = stmt.executeQuery();
+            assertFalse(rs.next());
+
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets","seat=0&row=A"}, new CommandUtils()), con, false);
+            stmt = con.prepareStatement(
+                    "SELECT tk.tkid FROM TICKET AS tk " +
+                            "WHERE tk.tkid=? AND tk.sid=? "
+            );
+            stmt.setString(1,"A0");
+            stmt.setInt(2,sessionsId[0]);
+            rs = stmt.executeQuery();
+            assertFalse(rs.next());
+
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets","seat=17&row=M"}, new CommandUtils()), con, false);
+            stmt = con.prepareStatement(
+                    "SELECT tk.tkid FROM TICKET AS tk " +
+                            "WHERE tk.tkid=? AND tk.sid=? "
+            );
+            stmt.setString(1,"M17");
+            stmt.setInt(2,sessionsId[0]);
+            rs = stmt.executeQuery();
+            assertFalse(rs.next());
+
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets","seat=19&row=M"}, new CommandUtils()), con, false);
+            stmt = con.prepareStatement(
+                    "SELECT tk.tkid FROM TICKET AS tk " +
+                            "WHERE tk.tkid=? AND tk.sid=? "
+            );
+            stmt.setString(1,"L19");
+            stmt.setInt(2,sessionsId[0]);
+            rs = stmt.executeQuery();
+            assertFalse(rs.next());
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();

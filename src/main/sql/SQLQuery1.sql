@@ -37,15 +37,8 @@ CREATE TABLE CINEMA_SESSION(
 	Date DATETIME NOT NULL,
 	mid INT REFERENCES MOVIE(mid),
 	tid INT REFERENCES THEATER(tid),
+	SeatsAvailable INT NOT NULL,
 	PRIMARY KEY (sid)
-);
-
-
-CREATE TABLE SEATS(
-	seats int,
-	tid int references THEATER(tid),
-	sid int references CINEMA_SESSION(sid),
-	primary key(tid, sid)
 );
 
 

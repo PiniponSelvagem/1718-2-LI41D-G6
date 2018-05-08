@@ -32,10 +32,9 @@ public class GetCinemaIDTheaterIDSessionsToday extends Command {
         Date date = new java.sql.Date( new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, s.Date, m.Title, m.Duration, st.seats, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, s.Date, m.Title, m.Duration, s.SeatsAvailable, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "INNER JOIN SEATS AS st ON st.sid=s.sid " +
                 "WHERE cid=? AND t.tid=? AND (CAST(s.Date AS DATE))=?"
         );
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));

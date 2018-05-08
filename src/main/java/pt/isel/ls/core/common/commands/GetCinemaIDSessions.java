@@ -28,10 +28,9 @@ public class GetCinemaIDSessions extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, s.Date, m.Title, m.Duration, t.Theater_Name, st.seats, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, s.Date, m.Title, m.Duration, t.Theater_Name, s.SeatsAvailable, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "INNER JOIN SEATS AS st ON s.sid=st.sid " +
                 "WHERE cid=?");
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         ResultSet rs = stmt.executeQuery();

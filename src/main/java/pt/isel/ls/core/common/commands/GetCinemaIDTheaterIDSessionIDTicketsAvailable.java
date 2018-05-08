@@ -30,19 +30,16 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
 
         int availableSeats;
         String sid =cmdBuilder.getId(SESSION_ID.toString());
-        String tid = cmdBuilder.getId(THEATER_ID.toString());
 
-        PreparedStatement stmt = connection.prepareStatement("SELECT SEATS.seats as SeatsAvailable from SEATS where SEATS.sid=? AND SEATS.tid=?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT CINEMA_SESSION.SeatsAvailable from CINEMA_SESSION where CINEMA_SESSION.sid=?");
         stmt.setString(1, sid);
-        stmt.setString(2, tid);
         ResultSet rs = stmt.executeQuery();
         if(rs.next()){
             availableSeats = rs.getInt(1);
             DataContainer data = new DataContainer(cmdBuilder.getHeader());
             data.add(availableSeats);
-            return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data,Integer.parseInt(cmdBuilder.getId(SESSION_ID.toString())));
+            return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data,Integer.parseInt(sid));
         }
-
         return new InfoNotFoundView();
     }
 
