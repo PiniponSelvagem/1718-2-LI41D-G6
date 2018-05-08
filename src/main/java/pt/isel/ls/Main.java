@@ -2,10 +2,7 @@ package pt.isel.ls;
 
 import pt.isel.ls.core.utils.CommandUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 import static pt.isel.ls.core.strings.CommandEnum.ARGS_SEPARATOR;
@@ -43,9 +40,8 @@ public class Main {
      */
     private static void printWelcomeMessage() {
         try {
-            File file = new File(Main.class.getClassLoader().getResource(FILE_NAME_WELCOME).getFile());
-
-            BufferedReader in = new BufferedReader(new FileReader(file));
+            InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(FILE_NAME_WELCOME);
+            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             String line = in.readLine();
             while(line != null) {
                 System.out.println(line);

@@ -4,13 +4,13 @@ import java.io.*;
 
 public class OptionsView extends CommandView {
     private final static String FILE_NAME = "command_options";
-    private File file = new File(getClass().getClassLoader().getResource(FILE_NAME).getFile());
+    private InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(FILE_NAME);
 
     @Override
     protected void allInfo() {
         StringBuilder strBuilder = new StringBuilder();
         try {
-            BufferedReader in = new BufferedReader(new FileReader(file));
+            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             String line = in.readLine();
             while(line != null) {
                 strBuilder.append(line).append(System.lineSeparator());
