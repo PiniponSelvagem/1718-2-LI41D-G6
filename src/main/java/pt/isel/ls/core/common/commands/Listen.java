@@ -14,7 +14,6 @@ import static pt.isel.ls.core.strings.CommandEnum.SERVER_PORT;
 import static pt.isel.ls.core.strings.ExceptionEnum.SERVER_PORT_INVALID_FORMAT;
 
 public class Listen extends Command {
-    private static final int PORT = 8080;
 
     @Override
     public String getMethodName() {
@@ -28,18 +27,13 @@ public class Listen extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
+        int port;
         try {
-            int port;
-            try {
-                port = Integer.parseInt(cmdBuilder.getParameter(SERVER_PORT.toString()));
-            }
-            catch (NumberFormatException e){
-                //port = PORT;
-                throw new CommandException(String.format(SERVER_PORT_INVALID_FORMAT.toString(), PORT));
-            }
+            port = Integer.parseInt(cmdBuilder.getParameter(SERVER_PORT.toString()));
             new HttpServer(port);
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (NumberFormatException e){
+            throw new CommandException(SERVER_PORT_INVALID_FORMAT.toString());
         }
         return null;
     }
