@@ -1,6 +1,7 @@
 package pt.isel.ls.core.strings;
 
 public enum CommandEnum {
+    NOT_FOUND("NOT_FOUND"),
 
     //Special definitions
     ROOT_DIR("root"),

@@ -7,13 +7,16 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class HttpServer {
     /*
      * TCP port where to listen.
-     * Standard port for HTTP is 80 but might be already in use
      */
     private int listenPort;
 
-    public HttpServer(int listenPort) throws Exception {
+    public HttpServer(int listenPort) {
         this.listenPort = listenPort;
-        run();
+        try {
+            run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void run() throws Exception {

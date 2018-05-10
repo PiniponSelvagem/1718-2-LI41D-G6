@@ -33,6 +33,7 @@ public class CommandBuilder {
      * @throws CommandException CommandException
      */
     public CommandBuilder(String[] args, CommandUtils cmdUtils) throws CommandException {
+        if (args.length == 0) throw new CommandException(COMMAND__NOT_FOUND);
         this.cmdUtils = cmdUtils;
         parseMethod(args);
         parsePath(args);
@@ -55,12 +56,32 @@ public class CommandBuilder {
      * @param args String[] containing the command
      */
     private void parsePath(String[] args) throws CommandException {
-        if (args.length >= 2 && args[1].subSequence(0, DIR_SEPARATOR.toString().length())
-                .equals(DIR_SEPARATOR.toString())) {
-            this.path = pathToList(args[1]);
-        }
-        else {
-            throw new CommandException(PATH__NOT_FOUND);
+        try {
+            if (args.length >= 2 && args[1].subSequence(0, DIR_SEPARATOR.toString().length())
+                    .equals(DIR_SEPARATOR.toString())) {
+                this.path = pathToList(args[1]);
+            } else {
+                throw new CommandException(PATH__NOT_FOUND);
+            }
+        } catch (StringIndexOutOfBoundsException e) {
+            //TODO: THIS IS JUST TEMPORARY TILL EXCEPTIONS REWORK.
+            //TODO: NEXT EXAMPLE THROWS 2 EXCEPTIONS
+            /*
+
+            return null;
+
+             */
+
+            //TODO: IMPORTANT AND CHECK WHY IT GOES HERE IN RARE OCASIONS!
+            /*
+            EXAMPLE COMMAND THAT DOES THIS:
+            return header.getBuildedString();
+            }
+            return null;
+
+             */
+            throw new CommandException("EXCEPTION AT: CommandBuilder.parsePath() when trying to: "+
+                    "args[1].subSequence(0, DIR_SEPARATOR.toString().length()).equals(DIR_SEPARATOR.toString())");
         }
     }
 
@@ -222,8 +243,10 @@ public class CommandBuilder {
                 }
             } catch (InstantiationException | IllegalAccessException e) {
                 System.out.println("ERROR: THIS SHOULD NOT HAPPEN! UNABLE TO CREATE HEADER!");
-                System.out.println("       Falling back to default header creation...");
+                System.out.println("       Falling back to default header creation -> HTML.");
                 header = new Html();
+            } catch (ClassCastException e) {
+                throw new CommandException(HEADERS__NOT_FOUND); //TODO: {@link: DirectoryNode.search(LinkedList<String>, String)
             }
         }
         else {
