@@ -11,9 +11,7 @@ import pt.isel.ls.model.Theater;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.*;
-import static pt.isel.ls.core.strings.CommandEnum.CINEMAS;
-import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
-import static pt.isel.ls.core.strings.CommandEnum.THEATERS;
+import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMAS;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATERS;
@@ -88,36 +86,30 @@ public class GetCinemaIDView extends CommandView {
         Writable[][] td = new Writable[theaters.size()][tableColumns.length];
         Writable[] td_array = new Writable[theaters.size()+1];
         td_array[0] = tr(th);
+        Writable[] li_array = new Writable[theaters.size()];
         Theater theater;
         for (int y=0; y<theaters.size(); ++y) {
             theater = theaters.get(y);
-            td[y][0] = td(
+            /*td[y][0] = td(
                     a(""+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+theater.getId(), theater.getName())
             );
-            td_array[y+1] = tr(td[y]);
+            td_array[y+1] = tr(td[y]);*/
+            li_array[y] = li(a(""+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+theater.getId(), theater.getName()));
         }
 
-        Writable[] li_array = new Writable[2];
+        /*Writable[] li_array = new Writable[2];
         li_array[0] = li(text("test1"));
-        li_array[1] = li(text("test2"));
+        li_array[1] = li(text("test2"));*/
 
         header = new HtmlPage("Cinema" + cinema.getName(),
+                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR, "Cinemas")),
+                h3(a(""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR, "Movies")),
                 h1(text("Cinema" + cinema.getName())),
                 li(text("City: "+ cinema.getCity())),
                 h2(text("Theaters: ")),
                 multipleElems(li_array),
-
-                //h3(text("h3")),
-                //li(text("test")),
-                //text("text"),
-                //a("/cinemas/1", "cinemas 1"),
-                //textInput("textInput"),
-                //ul(text("u1")),
-                //label("to", "text"),
-                //form("method", "/cinemas/1", text("test")),
-                table(td_array)
+                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+DATE+DIR_SEPARATOR+TODAY, "Sessions today"))
         );
-
 
         return header.getBuildedString();
     }
