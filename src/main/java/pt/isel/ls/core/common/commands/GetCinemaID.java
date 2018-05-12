@@ -29,7 +29,8 @@ public class GetCinemaID extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
-        Date date = new java.sql.Date( new java.util.Date().getTime());
+
+        //int na = Integer.parseInt(cmdBuilder.getId(String.valueOf(NA)));  <-- não funciona
         ResultSet rs;
 
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA WHERE cid = ?");
@@ -41,17 +42,12 @@ public class GetCinemaID extends Command {
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
         if(rs.next())
             data.add(new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
-        /*if (!rs.next())
-            return new InfoNotFoundView();*/
-
-
 
 
         //obter nome das salas do cinema com id CINEMA_ID
         PreparedStatement stmt2 = connection.prepareStatement("select t.Theater_Name from THEATER as t inner join CINEMA as c on t.cid = c.cid and c.cid = ?");
         stmt2.setString(1, cmdBuilder.getId((CINEMA_ID.toString())));
         rs = stmt2.executeQuery();
-
         int theaterCount = 0;
         while(rs.next()){
             theaterCount++;
@@ -59,7 +55,8 @@ public class GetCinemaID extends Command {
             data.add(new Theater(0, rs.getString(1), 0, 0, 0, 0));
         }
 
-        //obter informação sobre as sessões no CINEMA_ID para o dia de hoje
+        /*// este código fica em comentário pois pode vir a ser útil
+        obter informação sobre as sessões no CINEMA_ID para o dia de hoje
         PreparedStatement stmt3 = connection.prepareStatement("select t.Theater_Name as salas, m.Title as Movies, cs.Date as Date, cs.SeatsAvailable as Seats_Available from CINEMA as c" +
                 " inner join THEATER as t on t.cid = c.cid" +
                 " inner join CINEMA_SESSION as cs on cs.tid = t.tid" +
@@ -71,29 +68,15 @@ public class GetCinemaID extends Command {
         rs = stmt3.executeQuery();
         if (rs.wasNull())
             return new InfoNotFoundView();
-        /*if (!rs.next())
-            return new InfoNotFoundView();*/
+        *//*if (!rs.next())
+            return new InfoNotFoundView();*//*
         //só quero alguns valores
         while(rs.next()){
             data.add(new Session(0, rs.getTimestamp(3), null, null, 0));
             data.add(new Theater(0, rs.getString(1), 0, 0, 0, 0));
             data.add(new Movie(0, rs.getString(2), 0, 0));
-        }
+        }*/
 
-        //obter os movies disponíveis no CINEMA_ID
-        PreparedStatement stmt4 = connection.prepareStatement("select DISTINCT m.Title as Title, m.Duration as Duration, m.Release_Year as Release_Year" +
-                " from MOVIE as m inner join CINEMA_SESSION as cs on m.mid = cs.mid" +
-                " inner join THEATER as t on t.tid = cs.tid" +
-                " inner join CINEMA as c on c.cid = t.cid" +
-                " WHERE c.cid = ?");
-        stmt4.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
-        rs = stmt4.executeQuery();
-        if (rs.wasNull())
-            return new InfoNotFoundView();
-        /*if (!rs.next())
-            return new InfoNotFoundView();*/
-        //só quero alguns valores
-        while(rs.next()) data.add(new Movie(0, rs.getString(1), rs.getInt(3), rs.getInt(2)));
 
         return new GetCinemaIDView(data, theaterCount);
     }
