@@ -1,6 +1,7 @@
 package pt.isel.ls.view.command;
 
 import pt.isel.ls.core.common.headers.*;
+import pt.isel.ls.core.common.headers.html_utils.HtmlElem;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
@@ -74,7 +75,7 @@ public class GetCinemaIDView extends CommandView {
             form("GET", "/cinemas/1", text("form text")) //dont know what this does atm, but probably will be used for POST
             //table(td_array) //check GetCinemasView for a better example
         );*/
-//---------------------------""-------------------------------------"-"---------
+        //---------------------------""-------------------------------------"-"---------
         Cinema cinema = (Cinema) data.getData(D_CINEMA);
         LinkedList<Theater> theaters = (LinkedList<Theater>) data.getData(D_THEATERS);
         String[] tableColumns = {"Name"};
@@ -93,12 +94,18 @@ public class GetCinemaIDView extends CommandView {
             td[y][0] = td(
                     a(""+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+theater.getId(), theater.getName())
             );
+            td_array[y+1] = tr(td[y]);
         }
+
+        Writable[] li_array = new Writable[2];
+        li_array[0] = li(text("test1"));
+        li_array[1] = li(text("test2"));
 
         header = new HtmlPage("Cinema" + cinema.getName(),
                 h1(text("Cinema" + cinema.getName())),
                 li(text("City: "+ cinema.getCity())),
                 h2(text("Theaters: ")),
+                multipleElems(li_array),
 
                 //h3(text("h3")),
                 //li(text("test")),

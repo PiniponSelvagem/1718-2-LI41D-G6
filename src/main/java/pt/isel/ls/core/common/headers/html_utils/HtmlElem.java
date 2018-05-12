@@ -14,8 +14,14 @@ public class HtmlElem implements Writable {
         _name = name;
         _content.addAll(Arrays.asList(cs));
     }
+
+    public HtmlElem(Writable...cs) {
+        _name = null;
+        _content.addAll(Arrays.asList(cs));
+    }
     
     private final Map<String,String> _attrs = new HashMap<String,String>();
+
     public final HtmlElem withAttr(String name, String value) {
         _attrs.put(name, value);
         return this;
@@ -29,14 +35,18 @@ public class HtmlElem implements Writable {
     
     @Override
     public void writeTo(Writer w) throws IOException {
-        w.write(String.format("<%s",_name));
-        for(Map.Entry<String,String> entry : _attrs.entrySet()) {
-            w.write(String.format(" %s='%s'",entry.getKey(), entry.getValue()));
+        if (_name != null) {
+            w.write(String.format("<%s",_name));
+            for(Map.Entry<String,String> entry : _attrs.entrySet()) {
+                w.write(String.format(" %s='%s'",entry.getKey(), entry.getValue()));
+            }
+            w.write(">");
         }
-        w.write(">");
         for(Writable c : _content) {
             c.writeTo(w);
         }
-        w.write(String.format("</%s>",_name));
+        if (_name != null) {
+            w.write(String.format("</%s>", _name));
+        }
     }
 }
