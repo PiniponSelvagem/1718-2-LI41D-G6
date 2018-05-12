@@ -1,6 +1,7 @@
 package pt.isel.ls.apps.http_server;
 
 import pt.isel.ls.CommandRequest;
+import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+
+import static pt.isel.ls.core.common.headers.Html.*;
 
 public class HttpCmdResolver extends HttpServlet {
 
@@ -24,8 +27,15 @@ public class HttpCmdResolver extends HttpServlet {
         Charset utf8 = Charset.forName("utf-8");
         resp.setContentType(String.format("text/html; charset=%s",utf8.name()));
 
-        CommandRequest cmdReq = new CommandRequest(new String[]{req.getMethod(), req.getRequestURI()}, false);
         String respBody = "";
+        if (req.getRequestURI().equals("/")) {
+            respBody = new HtmlPage("Cinemas Info",
+                    h1(text("Cinemas Info")),
+                    li(a("/cinemas/", "Cinemas")),
+                    li(a("/movies/", "Movies"))
+            ).getBuildedString();
+        }
+        CommandRequest cmdReq = new CommandRequest(new String[]{req.getMethod(), req.getRequestURI()}, false);
         if (cmdReq.getCmdView() != null)
             respBody = cmdReq.getCmdView().getAllInfoString();
 
