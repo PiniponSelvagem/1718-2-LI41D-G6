@@ -1,15 +1,10 @@
-package pt.isel.ls.phase3_code.http;
+package pt.isel.ls.apps.http_server.http;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
 
 public class HttpResponse {
 
@@ -22,7 +17,7 @@ public class HttpResponse {
         this(status,null);
     }
     
-    public HttpResponse(HttpStatusCode status, HttpContent body) {        
+    public HttpResponse(HttpStatusCode status, HttpContent body) {
         _status = status;
         _body = body;
     }

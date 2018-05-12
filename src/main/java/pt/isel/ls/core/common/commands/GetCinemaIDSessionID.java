@@ -12,6 +12,7 @@ import pt.isel.ls.view.command.InfoNotFoundView;
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSION;
 
 
 public class GetCinemaIDSessionID extends Command {
@@ -37,10 +38,11 @@ public class GetCinemaIDSessionID extends Command {
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         stmt.setString(2, cmdBuilder.getId(SESSION_ID.toString()));
         ResultSet rs = stmt.executeQuery();
-        if (!rs.next())
-            return new InfoNotFoundView();
-
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
+
+        if (!rs.next())
+            return new InfoNotFoundView(data);
+
         int id, availableSeats, cid, tid, mid, duration;
         Timestamp dateTime;
         String theaterName, title;
@@ -55,7 +57,7 @@ public class GetCinemaIDSessionID extends Command {
         tid = rs.getInt(8);
         mid = rs.getInt(9);
 
-        data.add(
+        data.add(D_SESSION,
                 new Session(id, dateTime,
                         new Movie(mid, title, NA, duration),
                         new Theater(tid, theaterName, NA, NA, availableSeats, cid),

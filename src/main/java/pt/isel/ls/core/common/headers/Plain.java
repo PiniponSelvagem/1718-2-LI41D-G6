@@ -17,13 +17,12 @@ public class Plain extends Header {
     }
 
 
-    @Override
+
     public void addTitle(String title) {
         text.append(title).append(System.lineSeparator());
     }
 
-    @Override
-    public void addTable(String title, String[] columns, String[][] data) {
+    public void addTable(String[] columns, String[][] data) {
         for (String column : columns) {
             text.append(String.format(tablePadding, column));
         }
@@ -40,8 +39,7 @@ public class Plain extends Header {
         }
     }
 
-    @Override
-    public void addObject(String nameId, String[] fieldName, String[] value) {
+    public void addDetailed(String nameId, String[] fieldName, String[] value) {
         addTitle(nameId+":");
         for (int i=0; i<fieldName.length; ++i) {
             text.append(" > ").append(fieldName[i]).append(": ")
@@ -50,8 +48,7 @@ public class Plain extends Header {
         }
     }
 
-    @Override
-    public void addEmptyLine() {
+    private void addEmptyLine() {
         text.append(System.lineSeparator());
     }
 }

@@ -1,9 +1,24 @@
 package pt.isel.ls.core.common.headers;
 
+import pt.isel.ls.core.common.headers.html_utils.HtmlElem;
+import pt.isel.ls.core.common.headers.html_utils.HtmlText;
+import pt.isel.ls.core.utils.writable.CompositeWritable;
+import pt.isel.ls.core.utils.writable.Writable;
 
-import static pt.isel.ls.core.strings.CommandEnum.*;
+import java.io.*;
+import java.nio.charset.Charset;
+
+import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
+import static pt.isel.ls.core.strings.CommandEnum.HTML;
+import static pt.isel.ls.core.strings.CommandEnum.TEXT;
 
 public class Html extends Header {
+
+    private Writable _content;
+    
+    public Html(Writable... cs) {
+        _content = new CompositeWritable(cs);
+    }
 
     @Override
     public String getMethodName() {
@@ -14,52 +29,58 @@ public class Html extends Header {
     public String getPath() {
         return ""+DIR_SEPARATOR+TEXT;
     }
-
-
-    @Override
-    protected void open() {
-        text.append("<html>")
-                .append("<body>");
+    
+    public static Writable text(String s) { return new HtmlText(s);}
+    public static Writable h1(Writable... c) { return new HtmlElem("h1",c);}
+    public static Writable h2(Writable... c) { return new HtmlElem("h2",c);}
+    public static Writable h3(Writable... c) { return new HtmlElem("h3",c);}
+    public static Writable form(String method, String url, Writable... c) {
+        return new HtmlElem("form",c)
+            .withAttr("method", method)
+            .withAttr("action", url);
+    }
+    public static Writable label(String to, String text) {
+        return new HtmlElem("label", new HtmlText(text))
+            .withAttr("for", to);
+    }
+    public static Writable textInput(String name) {
+        return new HtmlElem("input")
+            .withAttr("type", "text")
+            .withAttr("name", name);            
+    }
+    public static Writable ul(Writable... c) {
+        return new HtmlElem("ul",c);
+    }
+    public static Writable li(Writable...c) {
+        return new HtmlElem("li",c);
+    }
+    public static Writable a(String href, String t) {
+        return new HtmlElem("a", text(t))
+            .withAttr("href", href);
+    }
+    public static Writable table(Writable[] c) {
+        return new HtmlElem("table", c)
+                .withAttr("border", "1");
+    }
+    public static Writable tr(Writable[] c) {
+        return new HtmlElem("tr").withContent(c);
+    }
+    public static Writable th(Writable c) {
+        return new HtmlElem("th").withContent(c);
+    }
+    public static Writable td(Writable c) {
+        return new HtmlElem("td").withContent(c);
     }
 
     @Override
-    public void addTitle(String title) {
-        text.append("<h2>").append(title).append("</h2>");
-    }
-
-    @Override
-    public void addTable(String title, String[] columns, String[][] data) {
-        text.append("<table border = 1>");
-        text.append("<tr>");
-        for (int y=0; y<columns.length; ++y) {
-            text.append("<th>").append(columns[y]).append("</th>");
+    public String getBuildedString() {
+        ByteArrayOutputStream _os = new ByteArrayOutputStream();
+        Charset _charset = Charset.forName("UTF-8");
+        try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(_os, _charset))){
+            _content.writeTo(writer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        text.append("</tr>");
-        for (int y=0; y<data.length; ++y) {
-            text.append("<tr>");
-            for(int x=0; x<data[y].length; ++x){
-                text.append("<td>").append(data[y][x]).append("</td>");
-            }
-            text.append("</tr>");
-        }
-        text.append("</table>");
-    }
-
-    @Override
-    public void addObject(String nameId, String[] fieldName, String[] value) {
-        addTitle(nameId);
-        text.append("<ul>");
-        for (int y=0; y<fieldName.length && y<value.length; ++y) {
-            text.append("<li>")
-                    .append("<b>").append(fieldName[y]).append("</b>").append(": ").append(value[y]);
-            text.append("</li>");
-        }
-        text.append("</ul>");
-    }
-
-    @Override
-    public void close() {
-        text.append("</body>");
-        text.append("</html>");
+        return _os.toString();
     }
 }

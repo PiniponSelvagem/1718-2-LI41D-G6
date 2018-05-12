@@ -1,9 +1,10 @@
 package pt.isel.ls.view.command;
 
-
-import pt.isel.ls.core.common.headers.Header;
+import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Session;
+
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
 
 public class GetCinemaIDSessionIDView extends CommandView {
 
@@ -12,24 +13,37 @@ public class GetCinemaIDSessionIDView extends CommandView {
     }
 
     @Override
-    protected void allInfo() {
-        Header header = data.getHeader();
+    protected String toPlain(Plain header) {
+        Session session = (Session) data.getData(D_SESSIONS);
+        header.addDetailed("Cinema "+session.getCinemaID()+" - Session "+session.getId(),
+                new String[]{"Date", "Title", "Duration", "Theater name", "Available seats"},
+                new String[]{session.getDateTime(),
+                        session.getMovie().getTitle(),
+                        String.valueOf(session.getMovie().getDuration()),
+                        session.getTheater().getName(),
+                        String.valueOf(session.getTheater().getAvailableSeats())}
+        );
 
-        if (header != null) {
-            Session session = (Session) data.getData(0);
-            header.addObject("Cinema "+session.getCinemaID()+" - Session "+session.getId(),
-                    new String[]{"Date", "Title", "Duration", "Theater name", "Available seats"},
-                    new String[]{session.getDateTime(),
-                            session.getMovie().getTitle(),
-                            String.valueOf(session.getMovie().getDuration()),
-                            session.getTheater().getName(),
-                            String.valueOf(session.getTheater().getAvailableSeats())}
-            );
+        return header.getBuildedString();
+    }
 
-            header.close();
-            header.writeToFile();
+    @Override
+    protected String toHtml(Html header) {
+        return super.toHtml(header);
+    }
 
-            infoString = header.getBuildedString();
-        }
+    @Override
+    protected String toJson(Json header) {
+        Session session = (Session) data.getData(D_SESSIONS);
+        header.addObject(
+                new String[]{"Date", "Title", "Duration", "Theater name", "Available seats"},
+                new String[]{session.getDateTime(),
+                        session.getMovie().getTitle(),
+                        String.valueOf(session.getMovie().getDuration()),
+                        session.getTheater().getName(),
+                        String.valueOf(session.getTheater().getAvailableSeats())}
+        );
+
+        return header.getBuildedString();
     }
 }

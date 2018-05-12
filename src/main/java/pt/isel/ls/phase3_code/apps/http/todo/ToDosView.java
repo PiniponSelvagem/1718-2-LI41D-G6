@@ -17,7 +17,7 @@ public class ToDosView extends HtmlPage{
                 label("description","Description: "),
                 textInput("description")
             )
-        );        
+        );
     }
     
     private static Writable todoItems(Iterable<ToDo> list) {

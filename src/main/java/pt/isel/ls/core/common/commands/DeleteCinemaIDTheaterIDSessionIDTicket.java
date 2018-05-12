@@ -2,13 +2,13 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.DeleteView;
 import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
@@ -57,7 +57,7 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
         }
         if(test != 0) return new DeleteView();
 
-        else return new InfoNotFoundView();
+        else return new InfoNotFoundView(new DataContainer(cmdBuilder.getHeader()));
     }
 
     @Override

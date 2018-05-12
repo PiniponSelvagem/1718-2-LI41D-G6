@@ -10,8 +10,10 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsView;
 
 import java.sql.*;
+import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_TICKETS;
 
 public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
 
@@ -49,6 +51,7 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
         Timestamp date;
         String theaterName, title;
 
+        LinkedList<Ticket> tickets = new LinkedList<>();
         while(rs.next()){
             row = rs.getString(1);
             seat = rs.getInt(2);
@@ -61,7 +64,7 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
             sid = rs.getInt(9);
             mid = rs.getInt(10);
 
-            data.add(
+            tickets.add(
                     new Ticket(row.charAt(0), seat,
                             new Session(sid, date,
                                     new Movie(mid, title, NA, duration),
@@ -71,6 +74,7 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
                     )
             );
         }
+        data.add(D_TICKETS, tickets);
 
         return new GetCinemaIDTheaterIDSessionIDTicketsView(data, cid, sid);
     }

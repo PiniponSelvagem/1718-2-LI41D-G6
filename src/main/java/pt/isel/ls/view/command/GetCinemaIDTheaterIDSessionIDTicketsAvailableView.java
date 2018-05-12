@@ -1,7 +1,9 @@
 package pt.isel.ls.view.command;
 
-import pt.isel.ls.core.common.headers.Header;
+import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.utils.DataContainer;
+
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_AVAILABLE_SEATS;
 
 public class GetCinemaIDTheaterIDSessionIDTicketsAvailableView extends CommandView{
     private int sessionId;
@@ -11,14 +13,22 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailableView extends CommandVi
     }
 
     @Override
-    protected void allInfo() {
-        Header header = data.getHeader();
+    protected String toPlain(Plain header) {
+        header.addTitle("For session "+ sessionId +" there are "+ data.getData(D_AVAILABLE_SEATS) +" available seats.");
+        return header.getBuildedString();
+    }
 
-        if (header != null) {
-            header.addTitle("For session "+ sessionId +" there are "+ data.getData(0) +" available seats.");
-            header.close();
-            header.writeToFile();
-            infoString = header.getBuildedString();
-        }
+    @Override
+    protected String toHtml(Html header) {
+        return super.toHtml(header);
+    }
+
+    @Override
+    protected String toJson(Json header) {
+        header.addObject(
+                new String[]{"available_seats"},
+                new String[]{data.getData(D_AVAILABLE_SEATS).toString()});
+
+        return header.getBuildedString();
     }
 }

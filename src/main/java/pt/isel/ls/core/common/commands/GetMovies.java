@@ -10,10 +10,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.GET;
 import static pt.isel.ls.core.strings.CommandEnum.MOVIES;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIES;
 
 public class GetMovies extends Command {
 
@@ -32,13 +34,14 @@ public class GetMovies extends Command {
         PreparedStatement stmt = connection.prepareStatement("SELECT * from MOVIE");
         ResultSet rs = stmt.executeQuery();
 
-        DataContainer dataContainer = new DataContainer(cmdBuilder.getHeader());
-
+        DataContainer data = new DataContainer(cmdBuilder.getHeader());
+        LinkedList<Movie> movies = new LinkedList<>();
         while(rs.next()){
-            dataContainer.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+            movies.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
         }
+        data.add(D_MOVIES, movies);
 
-        return new GetMoviesView(dataContainer);
+        return new GetMoviesView(data);
     }
 
     @Override

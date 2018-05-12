@@ -10,6 +10,7 @@ import pt.isel.ls.view.command.InfoNotFoundView;
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIE;
 
 public class GetMovieID extends Command {
 
@@ -28,11 +29,11 @@ public class GetMovieID extends Command {
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM MOVIE WHERE mid = ?");
         stmt.setString(1, cmdBuilder.getId(MOVIE_ID.toString()));
         ResultSet rs = stmt.executeQuery();
-        if (!rs.next())
-            return new InfoNotFoundView();
-
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
-        data.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+        if (!rs.next())
+            return new InfoNotFoundView(data);
+
+        data.add(D_MOVIE, new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
 
         return new GetMovieIDView(data);
     }

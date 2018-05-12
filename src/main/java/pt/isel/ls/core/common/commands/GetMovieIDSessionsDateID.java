@@ -12,8 +12,10 @@ import pt.isel.ls.view.command.GetMovieIDSessionsDateIDView;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
 
 public class GetMovieIDSessionsDateID extends Command {
 
@@ -117,6 +119,7 @@ public class GetMovieIDSessionsDateID extends Command {
         int sid, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
         String theaterName, title;
 
+        LinkedList<Session> sessions = new LinkedList<>();
         while (rs.next()) {
             sid = rs.getInt(1);
             date = rs.getTimestamp(2);
@@ -131,7 +134,7 @@ public class GetMovieIDSessionsDateID extends Command {
             year = rs.getInt(11);
             duration = rs.getInt(12);
 
-            data.add(
+            sessions.add(
                     new Session(sid, date,
                             new Movie(mid, title, year, duration),
                             new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid),
@@ -139,5 +142,6 @@ public class GetMovieIDSessionsDateID extends Command {
                     )
             );
         }
+        data.add(D_SESSIONS, sessions);
     }
 }

@@ -10,8 +10,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATERS;
 
 public class GetCinemaIDTheaters extends Command {
 
@@ -32,11 +34,13 @@ public class GetCinemaIDTheaters extends Command {
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
+        LinkedList<Theater> theaters = new LinkedList<>();
         while(rs.next()){
-            data.add(
+            theaters.add(
                     new Theater(rs.getInt(1), rs.getString(5), rs.getInt(3), rs.getInt(4), rs.getInt(2), rs.getInt(6)
             ));
         }
+        data.add(D_THEATERS, theaters);
 
         return new GetCinemaIDTheatersView(data, Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())));
     }

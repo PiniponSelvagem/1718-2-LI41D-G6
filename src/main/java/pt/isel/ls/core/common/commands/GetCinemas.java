@@ -10,10 +10,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
-import static pt.isel.ls.core.strings.CommandEnum.CINEMAS;
-import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
-import static pt.isel.ls.core.strings.CommandEnum.GET;
+import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMAS;
 
 public class GetCinemas extends Command {
 
@@ -33,10 +33,11 @@ public class GetCinemas extends Command {
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
-
+        LinkedList<Cinema> cinemas = new LinkedList<>();
         while(rs.next()){
-            data.add(new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            cinemas.add(new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
         }
+        data.add(D_CINEMAS, cinemas);
 
         return new GetCinemasView(data);
     }

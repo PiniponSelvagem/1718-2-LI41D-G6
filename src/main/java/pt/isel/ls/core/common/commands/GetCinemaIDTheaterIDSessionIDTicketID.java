@@ -13,6 +13,7 @@ import pt.isel.ls.view.command.InfoNotFoundView;
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_TICKET;
 
 public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
 
@@ -52,7 +53,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         String theaterName, title;
 
         if (!rs.next())
-            return new InfoNotFoundView();
+            return new InfoNotFoundView(data);
 
         row = rs.getString(1);
         seat = rs.getInt(2);
@@ -65,8 +66,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         sid = rs.getInt(9);
         mid = rs.getInt(10);
 
-
-        data.add(
+        data.add(D_TICKET,
                 new Ticket(row.charAt(0), seat,
                         new Session(sid, date,
                                 new Movie(mid, title, NA, duration),

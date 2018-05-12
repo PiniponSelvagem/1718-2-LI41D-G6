@@ -1,4 +1,4 @@
-package pt.isel.ls.apps.http;
+package pt.isel.ls.apps.http_server;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;

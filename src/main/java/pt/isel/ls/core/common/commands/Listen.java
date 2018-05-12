@@ -1,6 +1,6 @@
 package pt.isel.ls.core.common.commands;
 
-import pt.isel.ls.apps.http.HttpServer;
+import pt.isel.ls.apps.http_server.HttpServer;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.view.command.CommandView;

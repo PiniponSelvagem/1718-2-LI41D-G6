@@ -18,7 +18,7 @@ public class Html implements HttpContent {
            
     @Override
     public void writeTo(Writer w) throws IOException {
-        _content.writeTo(w);        
+        _content.writeTo(w);
     }
     
     @Override
