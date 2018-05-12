@@ -12,7 +12,8 @@ import java.sql.*;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATERS;
 
 public class GetCinemaID extends Command {
 
@@ -29,7 +30,6 @@ public class GetCinemaID extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
-        //int na = Integer.parseInt(cmdBuilder.getId(String.valueOf(NA)));  <-- não funciona
         ResultSet rs;
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA WHERE cid = ?");
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
@@ -41,15 +41,19 @@ public class GetCinemaID extends Command {
 
         if(rs.next())
             data.add(D_CINEMA, new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
+        /*if (!rs.next())
+            return new InfoNotFoundView();*/
+
+
         //Get theater names for cinema id
         PreparedStatement stmt2 = connection.prepareStatement("select t.Theater_Name from THEATER as t inner join CINEMA as c on t.cid = c.cid and c.cid = ?");
         stmt2.setString(1, cmdBuilder.getId((CINEMA_ID.toString())));
         rs = stmt2.executeQuery();
+
         LinkedList<Theater> theaters = new LinkedList<>();
         while(rs.next()){
             theaters.add(new Theater(NA, rs.getString(1), NA, NA, NA, NA));
-        obter informação sobre as sessões no CINEMA_ID para o dia de hoje
-        }*/
+        }
         data.add(D_THEATERS, theaters);
 
         /*
