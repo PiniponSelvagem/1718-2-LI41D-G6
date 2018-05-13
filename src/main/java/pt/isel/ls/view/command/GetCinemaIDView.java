@@ -94,7 +94,9 @@ public class GetCinemaIDView extends CommandView {
                     a(""+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+theater.getId(), theater.getName())
             );
             td_array[y+1] = tr(td[y]);*/
-            li_array[y] = li(a(""+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+theater.getId(), theater.getName()));
+            li_array[y] = li(a(""+
+                    DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+theater.getId(),
+                    theater.getName()));
         }
 
         /*Writable[] li_array = new Writable[2];
@@ -104,7 +106,7 @@ public class GetCinemaIDView extends CommandView {
         header = new HtmlPage("Cinema" + cinema.getName(),
                 h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR, "Cinemas")),
                 h3(a(""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR, "Movies")),
-                h1(text("Cinema" + cinema.getName())),
+                h1(text("Cinema " + cinema.getName())),
                 li(text("City: "+ cinema.getCity())),
                 h2(text("Theaters: ")),
                 multipleElems(li_array),

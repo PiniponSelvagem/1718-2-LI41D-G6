@@ -46,13 +46,13 @@ public class GetCinemaID extends Command {
 
 
         //Get theater names for cinema id
-        PreparedStatement stmt2 = connection.prepareStatement("select t.Theater_Name from THEATER as t inner join CINEMA as c on t.cid = c.cid and c.cid = ?");
+        PreparedStatement stmt2 = connection.prepareStatement("select t.tid, t.Theater_Name from THEATER as t inner join CINEMA as c on t.cid = c.cid and c.cid = ?");
         stmt2.setString(1, cmdBuilder.getId((CINEMA_ID.toString())));
         rs = stmt2.executeQuery();
 
         LinkedList<Theater> theaters = new LinkedList<>();
         while(rs.next()){
-            theaters.add(new Theater(NA, rs.getString(1), NA, NA, NA, NA));
+            theaters.add(new Theater(rs.getInt(1), rs.getString(2), NA, NA, NA, NA));
         }
         data.add(D_THEATERS, theaters);
 

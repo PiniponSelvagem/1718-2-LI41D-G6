@@ -49,17 +49,18 @@ public class GetCinemasView extends CommandView {
         }
 
         header = new HtmlPage("Cinemas",
-            h1(text("Cinemas")),
-            //h2(text("h2")),
-            //h3(text("h3")),
-            //li(text("test")),
-            //text("text"),
-            //a("/cinemas/1", "cinemas 1"),
-            //textInput("textInput"),
-            //ul(text("u1")),
-            //label("to", "text"),
-            //form("method", "/cinemas/1", text("test")),
-            table(td_array)
+                h3(a(DIR_SEPARATOR.toString(), "Main page")),
+                h1(text("Cinemas")),
+                //h2(text("h2")),
+                //h3(text("h3")),
+                //li(text("test")),
+                //text("text"),
+                //a("/cinemas/1", "cinemas 1"),
+                //textInput("textInput"),
+                //ul(text("u1")),
+                //label("to", "text"),
+                //form("method", "/cinemas/1", text("test")),
+                table(td_array)
         );
 
         return header.getBuildedString();
