@@ -3,6 +3,7 @@ package pt.isel.ls.core.common.commands;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
+import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDView;
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIES;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATERS;
 
 public class GetCinemaID extends Command {
@@ -56,10 +58,19 @@ public class GetCinemaID extends Command {
         }
         data.add(D_THEATERS, theaters);
 
-        /*
-        if (data.size() == 0)
+        PreparedStatement stmt4 = connection.prepareStatement("select DISTINCT m.Title as Title, m.Duration as Duration, m.Release_Year as Release_Year" +
+                " from MOVIE as m inner join CINEMA_SESSION as cs on m.mid = cs.mid" +
+                " inner join THEATER as t on t.tid = cs.tid" +
+                " inner join CINEMA as c on c.cid = t.cid" +
+                " WHERE c.cid = ?");
+        stmt4.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
+        rs = stmt4.executeQuery();
+        if (rs.wasNull())
             return new InfoNotFoundView(data);
-            */
+
+        LinkedList<Movie> movies = new LinkedList<>();
+        while(rs.next()) movies.add(new Movie(NA, rs.getString(1), rs.getInt(3), rs.getInt(2)));
+        data.add(D_MOVIES, movies);
 
         return new GetCinemaIDView(data);
     }
