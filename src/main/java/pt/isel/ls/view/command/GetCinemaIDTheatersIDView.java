@@ -41,6 +41,7 @@ public class GetCinemaIDTheatersIDView extends CommandView {
 
     @Override
     protected String toHtml(Html header){
+        Cinema cinema = (Cinema)data.getData(D_CINEMA);
         Theater theater = (Theater)data.getData(D_THEATER);
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
 
@@ -56,14 +57,14 @@ public class GetCinemaIDTheatersIDView extends CommandView {
         for (int j = 0; j < sessions.size(); j++) {
             s = sessions.get(j);
             td[j][0] = td(a(""+
-                    DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+theater.getCinemaID()+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR
+                    DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR
                     +theater.getId()+DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+s.getId(),s.getDateTime()));
             td_array[j+1] = tr(td[j]);
         }
 
         header = new HtmlPage("Theater" + theater.getName(),
-                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+theater.getCinemaID()+DIR_SEPARATOR,
-                        "Cinema:"+theater.getCinemaID())),
+                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR,
+                        "Cinema:"+cinema.getName())),
                 h1(text("Theater " + theater.getName())),
                 h2(text("Available Seats: "+ theater.getAvailableSeats())),
                 h2(text("Sessions: ")),

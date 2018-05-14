@@ -2,6 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
@@ -13,6 +14,7 @@ import java.sql.*;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATER;
 
@@ -31,19 +33,29 @@ public class GetCinemaIDTheatersID extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM THEATER AS t WHERE t.cid=? AND t.tid=?");
+        Movie movie;
+        Cinema cinema;
+        Theater theater;
+
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA AS c WHERE c.cid=?");
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
-        stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
         ResultSet rs = stmt.executeQuery();
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
+        cinema = null;
+        if (rs.next())
+            cinema = new Cinema(rs.getInt(1),rs.getString(2),rs.getString(3));
+        data.add(D_CINEMA, cinema);
+
+        stmt = connection.prepareStatement("SELECT * FROM THEATER AS t WHERE t.tid=?");
+        stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
+        rs = stmt.executeQuery();
 
         if (!rs.next())
             return new InfoNotFoundView(data);
-        Theater theater=new Theater(rs.getInt(1), rs.getString(5), rs.getInt(3), rs.getInt(4), rs.getInt(2),
+        theater=new Theater(rs.getInt(1), rs.getString(5), rs.getInt(3), rs.getInt(4), rs.getInt(2),
                 Integer.parseInt(cmdBuilder.getId(THEATER_ID.toString())));
         data.add(D_THEATER, theater);
 
-        Movie movie;
         stmt = connection.prepareStatement("SELECT * FROM CINEMA_SESSION AS cs WHERE cs.tid=?");
         stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
         rs = stmt.executeQuery();
