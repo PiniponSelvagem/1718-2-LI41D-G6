@@ -13,6 +13,7 @@ import pt.isel.ls.view.command.InfoNotFoundView;
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSION;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_TICKET;
 
 public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
@@ -32,9 +33,11 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
+        Ticket ticket;
+        Session session;
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT tk.row, tk.seat, s.Date, m.Title, m.Duration, t.Theater_Name, c.cid, t.tid, s.sid, m.mid " +
+                "SELECT tk.row, tk.seat, s.Date, m.Title, m.Duration, t.Theater_Name, c.cid, t.tid, s.sid, m.mid, t.Rows, t.Seats " +
                 "FROM TICKET AS tk " +
                 "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
                 "INNER JOIN THEATER AS t ON s.tid=t.tid " +
@@ -65,16 +68,12 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         tid = rs.getInt(8);
         sid = rs.getInt(9);
         mid = rs.getInt(10);
-
-        data.add(D_TICKET,
-                new Ticket(row.charAt(0), seat,
-                        new Session(sid, date,
-                                new Movie(mid, title, NA, duration),
-                                new Theater(tid, theaterName, NA, NA, NA, cid),
-                                cid
-                        )
-                )
-        );
+        session=new Session(sid, date,
+                new Movie(mid, title, NA, duration),
+                new Theater(tid, theaterName,rs.getInt(11), rs.getInt(12), NA, cid), cid);
+        ticket=new Ticket(row.charAt(0), seat, session);
+        data.add(D_SESSION,session);
+        data.add(D_TICKET,ticket);
 
         return new GetCinemaIDTheaterIDSessionIDTicketIDView(data);
     }
