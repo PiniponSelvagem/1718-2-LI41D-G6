@@ -1,10 +1,23 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.CommandRequest;
 import pt.isel.ls.core.common.headers.*;
+import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
+import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.core.utils.writable.Writable;
+import pt.isel.ls.model.Cinema;
+import pt.isel.ls.model.Movie;
+import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATER;
+import java.util.LinkedList;
+
+import static pt.isel.ls.core.common.headers.Html.*;
+import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDTheatersIDView extends CommandView {
 
@@ -27,8 +40,36 @@ public class GetCinemaIDTheatersIDView extends CommandView {
     }
 
     @Override
-    protected String toHtml(Html header) {
-        return super.toHtml(header);
+    protected String toHtml(Html header){
+        Theater theater = (Theater)data.getData(D_THEATER);
+        LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
+
+        String[] tableColumns = new String[]{"Date"};
+        Writable[][] td = new Writable[sessions.size()][tableColumns.length];
+        Writable[] th = new Writable[tableColumns.length];
+        Session s;
+        for (int i = 0; i < tableColumns.length; i++) {
+            th[i] = th(text(tableColumns[i]));
+        }
+        Writable[] td_array = new Writable[sessions.size()+1];
+        td_array[0] = tr(th);
+        for (int j = 0; j < sessions.size(); j++) {
+            s = sessions.get(j);
+            td[j][0] = td(a(""+
+                    DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+theater.getCinemaID()+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR
+                    +theater.getId()+DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+s.getId(),s.getDateTime()));
+            td_array[j+1] = tr(td[j]);
+        }
+
+        header = new HtmlPage("Theater" + theater.getName(),
+                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+theater.getCinemaID()+DIR_SEPARATOR,
+                        "Cinema:"+theater.getCinemaID())),
+                h1(text("Theater " + theater.getName())),
+                h2(text("Available Seats: "+ theater.getAvailableSeats())),
+                h2(text("Sessions: ")),
+                table(td_array)
+        );
+        return header.getBuildedString();
     }
 
     @Override
