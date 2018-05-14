@@ -1,5 +1,7 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.common.commands.GetCinemaID;
+import pt.isel.ls.core.common.commands.GetCinemaIDSessionID;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
@@ -12,7 +14,6 @@ import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.*;
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDTheatersIDView extends CommandView {
@@ -50,19 +51,21 @@ public class GetCinemaIDTheatersIDView extends CommandView {
         }
         Writable[] td_array = new Writable[sessions.size()+1];
         td_array[0] = tr(th);
+
+        String hyperLink = new GetCinemaIDSessionID().getPath()
+                .replace(CINEMA_ID_FULL.toString(), "%d")
+                .replace(SESSION_ID_FULL.toString(), "%d"); //get path and make it ready to add IDs
         for (int j = 0; j < sessions.size(); j++) {
             s = sessions.get(j);
-            td[j][0] = td(a(""+
-                    DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR
-                    +SESSIONS+DIR_SEPARATOR+s.getId(),s.getDateTime()));
+            td[j][0] = td(a(String.format(hyperLink, cinema.getId(), s.getId()), s.getDateTime()));
             td_array[j+1] = tr(td[j]);
         }
 
-        header = new HtmlPage("Theater" + theater.getName(),
-                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR,
-                        "Cinema:"+cinema.getName())),
+        hyperLink = new GetCinemaID().getPath()
+                .replace(CINEMA_ID_FULL.toString(), "%d"); //get path and make it ready to add ID
+        header = new HtmlPage("Theater " + theater.getName(),
+                h3(a(String.format(hyperLink, cinema.getId()), "Cinema: "+cinema.getName())),
                 h1(text("Theater " + theater.getName())),
-                h2(text("Available Seats: "+ theater.getAvailableSeats())),
                 h2(text("Sessions: ")),
                 table(td_array)
         );

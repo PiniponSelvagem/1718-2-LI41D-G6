@@ -20,9 +20,9 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
 
     @Override
     public String getPath() {
-        return ""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX
-                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+ID_PREFIX+THEATER_ID+ID_SUFFIX
-                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+ID_PREFIX+SESSION_ID+ID_SUFFIX
+        return ""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+CINEMA_ID_FULL
+                +DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+THEATER_ID_FULL
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+SESSION_ID_FULL
                 +DIR_SEPARATOR+TICKETS+DIR_SEPARATOR+AVAILABLE;
     }
 
@@ -30,7 +30,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
         int availableSeats;
-        String sid =cmdBuilder.getId(SESSION_ID.toString());
+        String sid = cmdBuilder.getId(SESSION_ID.toString());
 
         PreparedStatement stmt = connection.prepareStatement("SELECT CINEMA_SESSION.SeatsAvailable from CINEMA_SESSION where CINEMA_SESSION.sid=?");
         stmt.setString(1, sid);
@@ -39,7 +39,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
         if(rs.next()){
             availableSeats = rs.getInt(1);
             data.add(D_AVAILABLE_SEATS, availableSeats);
-            return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data,Integer.parseInt(sid));
+            return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data, Integer.parseInt(sid));
         }
         return new InfoNotFoundView(data);
     }

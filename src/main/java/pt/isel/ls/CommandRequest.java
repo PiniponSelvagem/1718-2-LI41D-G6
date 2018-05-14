@@ -26,7 +26,7 @@ public class CommandRequest {
         //This method is useful for the tests ONLY! Call this method "executeCommand" after calling this constructor.
     }
 
-    public CommandRequest(String[] args, boolean printToConsole) {
+    public CommandRequest(String[] args, boolean printToConsole) throws CommandException {
         commandRequest(args, printToConsole);
     }
 
@@ -35,39 +35,35 @@ public class CommandRequest {
      * Then it checks if the command requires a SQL connection and executes the command accordingly.
      * @param args {method, path, header, parameters} or {method, path, header, parameters}
      */
-    private void commandRequest(String[] args, boolean printToConsole) {
-        try {
-            Connection con = null;
-            CommandBuilder cmdBuilder = new CommandBuilder(args, Main.getCmdUtils());
-            Command cmd = cmdBuilder.getCommand();
-            if (cmd == null)
-                throw new CommandException(COMMAND__NOT_FOUND);
+    private void commandRequest(String[] args, boolean printToConsole) throws CommandException {
+        Connection con = null;
+        CommandBuilder cmdBuilder = new CommandBuilder(args, Main.getCmdUtils());
+        Command cmd = cmdBuilder.getCommand();
+        if (cmd == null)
+            throw new CommandException(COMMAND__NOT_FOUND);
 
-            try {
-                if (cmd.isSQLRequired()) {
-                    con = Sql.getConnection();
-                    con.setAutoCommit(false);
-                    executeCommand(cmdBuilder, con, printToConsole);
-                    con.commit();
-                }
-                else {
-                    executeCommand(cmdBuilder, null, printToConsole);
-                }
-            } catch (SQLException e) {
-                //TODO: Find a better way to handle SQL exceptions!
-                //if possible make it so a "fool" user can understand :D
-                System.out.println("ERROR CODE: "+e.getErrorCode()+" -> "+e.getMessage());
-            } finally {
-                if (con != null) {
-                    try {
-                        con.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+        try {
+            if (cmd.isSQLRequired()) {
+                con = Sql.getConnection();
+                con.setAutoCommit(false);
+                executeCommand(cmdBuilder, con, printToConsole);
+                con.commit();
+            }
+            else {
+                executeCommand(cmdBuilder, null, printToConsole);
+            }
+        } catch (SQLException e) {
+            //TODO: Find a better way to handle SQL exceptions!
+            //if possible make it so a "fool" user can understand :D
+            System.out.println("ERROR CODE: "+e.getErrorCode()+" -> "+e.getMessage());
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (CommandException e) {
-            System.out.println(e.getMessage());
         }
     }
 

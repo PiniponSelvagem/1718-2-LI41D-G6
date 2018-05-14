@@ -16,9 +16,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 public class Session_tests {
@@ -162,10 +164,11 @@ public class Session_tests {
             createSession(con);
             GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
+            LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;
 
-            for (int i = 0; i < data.size(); i++) {
-                session = (Session) data.getData(i);
+            for (int i = 0; i < sessions.size(); i++) {
+                session = sessions.get(i);
                 assertEquals(sessionsId[i], session.getId());
                 assertEquals(cinemaId, session.getCinemaID());
                 i++;
@@ -196,9 +199,10 @@ public class Session_tests {
             for(int t=0; t<theatersId.length; t++) {
                 GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions"}, new CommandUtils()), con, false);
                 DataContainer data = view.getData();
+                LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
                 Session session;
-                for (int i = 0; i < data.size(); i++) {
-                    session = (Session) data.getData(i);
+                for (int i = 0; i < sessions.size(); i++) {
+                    session = sessions.get(i);
                     assertEquals(theatersId[t], session.getTheater().getId());
                 }
             }
@@ -230,7 +234,7 @@ public class Session_tests {
                 int id=rs.getInt(1);
                 GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/sessions/" + id}, new CommandUtils()), con, false);
                 DataContainer data = sessionIDView.getData();
-                Session session = (Session)data.getData(0);
+                Session session = (Session) data.getData(D_SESSION);
                 assertEquals(id, session.getId());
             }
 
@@ -261,9 +265,10 @@ public class Session_tests {
             String date= dtf.format(localDate);
             GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
+            LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;
-            for (int i = 0; i < data.size(); i++) {
-                session = (Session) data.getData(i);
+            for (int i = 0; i < sessions.size(); i++) {
+                session = sessions.get(i);
                 assertEquals(cinemaId, session.getCinemaID());
                 assertEquals(date, session.getDateTime().split(" ")[0]);
                 i+=4;
@@ -286,7 +291,6 @@ public class Session_tests {
 
     @Test
     public void get_sessions_today_by_theater(){
-		//line 255 core never identified
         try {
             con = Sql.getConnection();
             con.setAutoCommit(false);
@@ -298,9 +302,10 @@ public class Session_tests {
             for(int t=0;t<theatersId.length;t++) {
                 GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions/today"}, new CommandUtils()), con, false);
                 DataContainer data = view.getData();
+                LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
                 Session session;
-                for (int i = 0; i < data.size(); i++) {
-                    session = (Session) data.getData(i);
+                for (int i = 0; i < sessions.size(); i++) {
+                    session = sessions.get(i);
                     assertEquals(theatersId[t], session.getTheater().getId());
                     assertEquals(date, session.getDateTime().split(" ")[0]);
                 }
@@ -332,12 +337,14 @@ public class Session_tests {
             String date= "2018-04-01";
             Session session;
             DataContainer data;
+            LinkedList<Session> sessions;
 
             GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()), con, false);
             if(view!=null) {
                 data = view.getData();
-                for (int i = 0; i < data.size(); i++) {
-                    session = (Session) data.getData(i);
+                sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
+                for (int i = 0; i < sessions.size(); i++) {
+                    session = sessions.get(i);
                     assertEquals(movId[idx], session.getMovie().getId());
                     assertEquals(date, session.getDateTime().split(" ")[0]);
                     assertEquals(available, session.getTheater().getAvailableSeats());
@@ -346,8 +353,9 @@ public class Session_tests {
             view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()), con, false);
             if(view!=null) {
                 data = view.getData();
-                for (int i = 0; i < data.size(); i++) {
-                    session = (Session) data.getData(i);
+                sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
+                for (int i = 0; i < sessions.size(); i++) {
+                    session = sessions.get(i);
                     assertEquals(movId[idx], session.getMovie().getId());
                     assertEquals(date, session.getDateTime().split(" ")[0]);
                     assertEquals(cid, session.getCinemaID());
@@ -358,8 +366,9 @@ public class Session_tests {
             view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/date/01042018","city="+city}, new CommandUtils()), con, false);
             if(view!=null) {
                 data = view.getData();
-                for (int i = 0; i < data.size(); i++) {
-                    session = (Session) data.getData(i);
+                sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
+                for (int i = 0; i < sessions.size(); i++) {
+                    session = sessions.get(i);
                     assertEquals(movId[idx], session.getMovie().getId());
                     assertEquals(date, session.getDateTime().split(" ")[0]);
                     stmt = con.prepareStatement("SELECT DISTINCT c.City FROM CINEMA WHERE c.cid=" + session.getCinemaID());
@@ -391,9 +400,10 @@ public class Session_tests {
             String date= "2018-04-01";
             GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/date/01042018"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
+            LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;
-            for (int i = 0; i < data.size(); i++) {
-                session = (Session) data.getData(i);
+            for (int i = 0; i < sessions.size(); i++) {
+                session = sessions.get(i);
                 assertEquals(cinemaId, session.getCinemaID());
                 assertEquals(date, session.getDateTime().split(" ")[0]);
             }

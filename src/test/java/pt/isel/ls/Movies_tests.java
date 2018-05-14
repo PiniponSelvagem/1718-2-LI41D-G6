@@ -18,6 +18,7 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 public class Movies_tests {
@@ -83,11 +84,11 @@ public class Movies_tests {
 
             createMovie(con);
             GetMoviesView view = (GetMoviesView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con, false);
-            DataContainer data;
-            data = view.getData();
+            DataContainer data = view.getData();
+            LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
             Movie movie;
-            for(int i = 0; i < data.size(); ){
-                movie =  (Movie) data.getData(i);
+            for(int i = 0; i < movies.size(); ){
+                movie = movies.get(i);
                 assertEquals("TestTitle" + i, movie.getTitle());
                 i++;
             }
@@ -123,9 +124,8 @@ public class Movies_tests {
 
             int id = movies.getFirst().getId();
             GetMovieIDView movieIDView = (GetMovieIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con,false);
-            DataContainer data;
-            data = movieIDView.getData();
-            Movie movie = (Movie) data.getData(0);
+            DataContainer data = movieIDView.getData();
+            Movie movie = (Movie) data.getData(D_MOVIE);
             assertEquals(id, movie.getId());
 
         } catch (SQLException | CommandException e) {

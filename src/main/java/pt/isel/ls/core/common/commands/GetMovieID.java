@@ -21,7 +21,7 @@ public class GetMovieID extends Command {
 
     @Override
     public String getPath() {
-        return ""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX;
+        return ""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+MOVIE_ID_FULL;
     }
 
     @Override

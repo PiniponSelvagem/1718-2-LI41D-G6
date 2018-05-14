@@ -15,10 +15,12 @@ import static pt.isel.ls.core.strings.CommandEnum.TEXT;
 public class Html extends Header {
 
     private Writable _content;
-    
+
     public Html(Writable... cs) {
         _content = new CompositeWritable(cs);
     }
+
+    public Html(){}
 
     @Override
     public String getMethodName() {

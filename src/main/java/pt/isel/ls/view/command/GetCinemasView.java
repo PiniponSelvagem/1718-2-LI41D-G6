@@ -1,10 +1,12 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.common.commands.GetCinemaID;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Cinema;
+import pt.isel.ls.view.command.utils.HtmlViewCommon;
 
 import java.util.LinkedList;
 
@@ -29,20 +31,19 @@ public class GetCinemasView extends CommandView {
     @Override
     protected String toHtml(Html header) {
         String[] tableColumns = {"Name", "City"};
-        Writable[] th = new Writable[tableColumns.length];
-        for (int i=0; i<tableColumns.length; ++i) {
-            th[i] = th(text(tableColumns[i]));
-        }
+        Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
 
         LinkedList<Cinema> cinemas = (LinkedList<Cinema>) data.getData(D_CINEMAS);
         Writable[][] td = new Writable[cinemas.size()][tableColumns.length];
         Writable[] td_array = new Writable[cinemas.size()+1];
         td_array[0] = tr(th);
         Cinema cinema;
+        String hyperLink = new GetCinemaID().getPath()
+                .replace(CINEMA_ID_FULL.toString(), "%d"); //get path and make it ready to add ID
         for (int y=0; y<cinemas.size(); ++y) {
             cinema = cinemas.get(y);
             td[y][0] = td(
-                    a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId(), cinema.getName())
+                    a(String.format(hyperLink, cinema.getId()), cinema.getName())
             );
             td[y][1] = td(text(cinema.getCity()));
             td_array[y+1] = tr(td[y]);
@@ -77,6 +78,8 @@ public class GetCinemasView extends CommandView {
         LinkedList<Cinema> cinemas = (LinkedList<Cinema>) data.getData(D_CINEMAS);
         String[][] tableData  = new String[cinemas.size()][columnNames.length];
         Cinema cinema;
+
+
         for (int y=0; y<cinemas.size(); ++y) {
             cinema = cinemas.get(y);
             tableData[y][0] = String.valueOf(cinema.getId());

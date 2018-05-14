@@ -26,7 +26,7 @@ public class GetCinemaID extends Command {
 
     @Override
     public String getPath() {
-        return ""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX;
+        return ""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+CINEMA_ID_FULL;
     }
 
     @Override
@@ -69,7 +69,9 @@ public class GetCinemaID extends Command {
             return new InfoNotFoundView(data);
 
         LinkedList<Movie> movies = new LinkedList<>();
-        while(rs.next()) movies.add(new Movie(rs.getInt(4), rs.getString(1), rs.getInt(3), rs.getInt(2)));
+        while(rs.next()) {
+            movies.add(new Movie(rs.getInt(4), rs.getString(1), rs.getInt(3), rs.getInt(2)));
+        }
         data.add(D_MOVIES, movies);
 
         return new GetCinemaIDView(data);

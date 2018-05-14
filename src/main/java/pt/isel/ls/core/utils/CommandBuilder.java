@@ -115,7 +115,7 @@ public class CommandBuilder {
         */
 
         if (args.length == 3) {
-            if (args[2].contains(PARAMS_EQUALTO.toString())) {
+            if (args[2] != null && args[2].contains(PARAMS_EQUALTO.toString())) {
                 findParams(args[2]);
             }
             else {
@@ -242,7 +242,8 @@ public class CommandBuilder {
                     throw new CommandException(HEADERS__INVALID);
                 }
             } catch (InstantiationException | IllegalAccessException e) {
-                System.out.println("ERROR: THIS SHOULD NOT HAPPEN! UNABLE TO CREATE HEADER!");
+                //If it came here, it could be because the Header class dosent have a constructor with no parameters
+                System.out.println("ERROR: UNABLE TO CREATE HEADER!");
                 System.out.println("       Falling back to default header creation -> HTML.");
                 header = new Html();
             } catch (ClassCastException e) {
