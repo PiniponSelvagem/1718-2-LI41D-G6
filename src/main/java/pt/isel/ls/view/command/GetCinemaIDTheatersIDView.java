@@ -1,14 +1,10 @@
 package pt.isel.ls.view.command;
 
-import pt.isel.ls.CommandRequest;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
-import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Cinema;
-import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 
@@ -57,8 +53,8 @@ public class GetCinemaIDTheatersIDView extends CommandView {
         for (int j = 0; j < sessions.size(); j++) {
             s = sessions.get(j);
             td[j][0] = td(a(""+
-                    DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR+THEATERS+DIR_SEPARATOR
-                    +theater.getId()+DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+s.getId(),s.getDateTime()));
+                    DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+cinema.getId()+DIR_SEPARATOR
+                    +SESSIONS+DIR_SEPARATOR+s.getId(),s.getDateTime()));
             td_array[j+1] = tr(td[j]);
         }
 

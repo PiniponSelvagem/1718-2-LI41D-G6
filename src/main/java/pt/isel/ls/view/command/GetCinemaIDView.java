@@ -67,7 +67,7 @@ public class GetCinemaIDView extends CommandView {
         for (int j = 0; j < movies.size(); j++) {
             m = movies.get(j);
             td[j][0] = td(a(""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+m.getId(), m.getTitle()));
-            td[j][1] = td(text(m.getTitle()));
+            td[j][1] = td(text(Integer.toString(m.getYear())));
             td[j][2] = td(text(Integer.toString(m.getDuration())));
             td_array[j+1] = tr(td[j]);
         }
