@@ -14,9 +14,7 @@ import java.sql.*;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATER;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDTheatersID extends Command {
 

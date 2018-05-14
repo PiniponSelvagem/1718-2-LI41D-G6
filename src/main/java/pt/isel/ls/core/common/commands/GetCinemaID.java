@@ -58,7 +58,7 @@ public class GetCinemaID extends Command {
         }
         data.add(D_THEATERS, theaters);
 
-        PreparedStatement stmt4 = connection.prepareStatement("select DISTINCT m.Title as Title, m.Duration as Duration, m.Release_Year as Release_Year" +
+        PreparedStatement stmt4 = connection.prepareStatement("select DISTINCT m.Title as Title, m.Duration as Duration, m.Release_Year as Release_Year, m.mid" +
                 " from MOVIE as m inner join CINEMA_SESSION as cs on m.mid = cs.mid" +
                 " inner join THEATER as t on t.tid = cs.tid" +
                 " inner join CINEMA as c on c.cid = t.cid" +
@@ -69,7 +69,7 @@ public class GetCinemaID extends Command {
             return new InfoNotFoundView(data);
 
         LinkedList<Movie> movies = new LinkedList<>();
-        while(rs.next()) movies.add(new Movie(NA, rs.getString(1), rs.getInt(3), rs.getInt(2)));
+        while(rs.next()) movies.add(new Movie(rs.getInt(4), rs.getString(1), rs.getInt(3), rs.getInt(2)));
         data.add(D_MOVIES, movies);
 
         return new GetCinemaIDView(data);
