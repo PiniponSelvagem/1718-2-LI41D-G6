@@ -2,10 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Movie;
-import pt.isel.ls.model.Session;
-import pt.isel.ls.model.Theater;
-import pt.isel.ls.model.Ticket;
+import pt.isel.ls.model.*;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
 import pt.isel.ls.view.command.InfoNotFoundView;
@@ -13,8 +10,7 @@ import pt.isel.ls.view.command.InfoNotFoundView;
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSION;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_TICKET;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
 
@@ -35,9 +31,12 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         Ticket ticket;
         Session session;
+        Theater theater;
+        Movie movie;
+        Cinema cinema;
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT tk.row, tk.seat, s.Date, m.Title, m.Duration, t.Theater_Name, c.cid, t.tid, s.sid, m.mid, t.Rows, t.Seats " +
+                "SELECT tk.row, tk.seat, s.Date, m.Title, m.Duration, t.Theater_Name, c.cid, t.tid, s.sid, m.mid, t.Rows, t.Seats,c.Name " +
                 "FROM TICKET AS tk " +
                 "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
                 "INNER JOIN THEATER AS t ON s.tid=t.tid " +
@@ -68,12 +67,18 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         tid = rs.getInt(8);
         sid = rs.getInt(9);
         mid = rs.getInt(10);
-        session=new Session(sid, date,
-                new Movie(mid, title, NA, duration),
-                new Theater(tid, theaterName,rs.getInt(11), rs.getInt(12), NA, cid), cid);
+
+        cinema=new Cinema(cid,rs.getString(13),null);
+        movie=new Movie(mid, title, NA, duration);
+        theater=new Theater(tid, theaterName,rs.getInt(11), rs.getInt(12), NA, cid);
+        session=new Session(sid, date, movie,theater, cid);
         ticket=new Ticket(row.charAt(0), seat, session);
+
+        data.add(D_MOVIE, movie);
         data.add(D_SESSION,session);
         data.add(D_TICKET,ticket);
+        data.add(D_CINEMA,cinema);
+        data.add(D_THEATER,theater);
 
         return new GetCinemaIDTheaterIDSessionIDTicketIDView(data);
     }
