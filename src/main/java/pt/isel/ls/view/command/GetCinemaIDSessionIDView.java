@@ -8,12 +8,12 @@ import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
+import pt.isel.ls.view.command.utils.HtmlViewCommon;
 
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.*;
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionIDView extends CommandView {
@@ -57,10 +57,10 @@ public class GetCinemaIDSessionIDView extends CommandView {
             for(int j = 0; j < session.getTheater().getSeatsPerRow(); ++j) {
                 tkid=""+(char)((i)+'A')+(j+1);
                 if(tickets.contains(tkid)) {
-                    td[i][j] = td(a(String.format(hyperLink, tkid), tkid));
+                    td[i][j] = tdCustom(a(String.format(hyperLink, tkid), tkid), HtmlPage.COLOR_RED_LIGHT);
                 }
                 else {
-                    td[i][j] = td(text(tkid));
+                    td[i][j] = tdCustom(text(tkid), HtmlPage.COLOR_GREEN_LIGHT);
                 }
             }
             td_array[i] = tr(td[i]);

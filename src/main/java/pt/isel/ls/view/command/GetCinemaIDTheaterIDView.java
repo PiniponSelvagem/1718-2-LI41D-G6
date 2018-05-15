@@ -9,6 +9,7 @@ import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
+import pt.isel.ls.view.command.utils.HtmlViewCommon;
 
 import java.util.LinkedList;
 
@@ -43,18 +44,16 @@ public class GetCinemaIDTheaterIDView extends CommandView {
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
 
         String[] tableColumns = new String[]{"Date"};
+        Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
+
         Writable[][] td = new Writable[sessions.size()][tableColumns.length];
-        Writable[] th = new Writable[tableColumns.length];
-        Session s;
-        for (int i = 0; i < tableColumns.length; i++) {
-            th[i] = th(text(tableColumns[i]));
-        }
         Writable[] td_array = new Writable[sessions.size()+1];
         td_array[0] = tr(th);
 
         String hyperLink = new GetCinemaIDSessionID().getPath()
                 .replace(CINEMA_ID_FULL.toString(), "%d")
                 .replace(SESSION_ID_FULL.toString(), "%d"); //get path and make it ready to add IDs
+        Session s;
         for (int j = 0; j < sessions.size(); j++) {
             s = sessions.get(j);
             td[j][0] = td(a(String.format(hyperLink, cinema.getId(), s.getId()), s.getDateTime()));

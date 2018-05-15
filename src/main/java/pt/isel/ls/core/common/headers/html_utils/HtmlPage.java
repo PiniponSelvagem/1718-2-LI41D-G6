@@ -5,6 +5,9 @@ import pt.isel.ls.core.utils.writable.Writable;
 
 public class HtmlPage extends Html {
 
+    public static final String COLOR_RED_LIGHT = "#ff9999",
+                               COLOR_GREEN_LIGHT = "#99ff99";
+
     public HtmlPage(String title, Writable... c) {
         super(
                 new HtmlElem("html",
@@ -28,13 +31,7 @@ public class HtmlPage extends Html {
 
     //TODO: dosent look pretty
     private static String styleMatrixTable(String tableName) {
-        return ".divTable{display: table;}" +
-                ".divTableRow{display: table-row;}" +
-                ".divTableData{display: table-cell;}" +
-                ".imgBracketTop{width: 14px; height: 7px;}" +
-                ".imgBracketMiddle{width: 14px; height: 100%;}" +
-                ".imgBracketBottom{width: 14px; height: 5px;}" +
-                "."+tableName+"{border-collapse: collapse; text-align: center;}" +
-                "."+tableName+"tableInnerMatrix td{width: 1.4em; height: 1.4em;}";
+        return "."+tableName+"{border-collapse: collapse; text-align: center;}" +
+                "."+tableName+"tableInnerMatrix td{width: 2em; height: 2em;}";
     }
 }

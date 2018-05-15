@@ -79,6 +79,15 @@ public class Html extends Header {
     public static Writable td(Writable c) {
         return new HtmlElem("td").withContent(c);
     }
+    public static Writable tdCustom(Writable c, String color) {
+        return new HtmlElem("td")
+                .withAttr("valign", "middle")
+                .withAttr("height", "38px")
+                .withAttr("width", "38px")
+                .withAttr("align", "center")
+                .withAttr("bgcolor", color)
+                .withContent(c);
+    }
     public static Writable multipleElems(Writable[] c) {
         return new HtmlElem().withContent(c);
     }
