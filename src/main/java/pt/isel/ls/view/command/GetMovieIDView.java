@@ -2,7 +2,6 @@ package pt.isel.ls.view.command;
 
 import pt.isel.ls.core.common.commands.GetCinemaID;
 import pt.isel.ls.core.common.commands.GetCinemaIDSessionID;
-import pt.isel.ls.core.common.commands.GetCinemaIDTheaterIDSessions;
 
 import pt.isel.ls.core.common.headers.Html;
 import pt.isel.ls.core.common.headers.Json;
