@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 public class Session {
     private int id, cid;
     private String dateTime;
+    private String date;
     private Movie movie;
     private Theater theater;
 
@@ -13,6 +14,7 @@ public class Session {
     public Session(int id, Timestamp dateTime, Movie movie, Theater theater, int cid) {
         this.id = id;
         this.dateTime = dateTime.toLocalDateTime().toString().replace('T', ' ');
+        this.date = dateTime.toLocalDateTime().toString().substring(0, dateTime.toLocalDateTime().toString().indexOf('T'));
         this.movie = movie;
         this.theater = theater;
         this.cid = cid;
@@ -24,6 +26,12 @@ public class Session {
 
     public String getDateTime() {
         return dateTime;
+    }
+    public String getDate() {
+        return date;
+    }
+    public String getDateNoSeparators() {
+        return date.replace("-", "");
     }
 
     public Movie getMovie() {

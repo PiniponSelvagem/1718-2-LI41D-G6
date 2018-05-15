@@ -2,8 +2,6 @@ package pt.isel.ls.view.command;
 
 import pt.isel.ls.core.common.commands.GetCinemaID;
 import pt.isel.ls.core.common.commands.GetCinemaIDSessionID;
-import pt.isel.ls.core.common.commands.GetCinemaIDTheaterIDSessions;
-import pt.isel.ls.core.common.commands.GetCinemaIDTheatersID;
 import pt.isel.ls.core.common.headers.Html;
 import pt.isel.ls.core.common.headers.Json;
 import pt.isel.ls.core.common.headers.Plain;
@@ -18,7 +16,6 @@ import java.util.LinkedList;
 import static pt.isel.ls.core.common.headers.Html.*;
 import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID_FULL;
 import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID_FULL;
-import static pt.isel.ls.core.strings.CommandEnum.THEATER_ID_FULL;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetMovieIDView extends CommandView {
