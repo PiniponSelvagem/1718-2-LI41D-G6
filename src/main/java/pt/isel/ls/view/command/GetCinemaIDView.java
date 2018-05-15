@@ -10,6 +10,7 @@ import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Theater;
+import pt.isel.ls.view.command.utils.HtmlViewCommon;
 
 import java.util.LinkedList;
 
@@ -40,10 +41,7 @@ public class GetCinemaIDView extends CommandView {
         LinkedList<Theater> theaters = (LinkedList<Theater>) data.getData(D_THEATERS);
         LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
         String[] tableColumns = {"Name"};
-        Writable[] th = new Writable[tableColumns.length];
-        for (int i=0; i<tableColumns.length; ++i) {
-            th[i] = th(text(tableColumns[i]));
-        }
+        Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
 
         Writable[][] td;
         Writable[] td_array = new Writable[theaters.size()+1];
