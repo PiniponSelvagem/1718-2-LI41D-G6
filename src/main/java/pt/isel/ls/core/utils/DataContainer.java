@@ -27,6 +27,7 @@ public class DataContainer {
     public enum DataEnum {
         D_CINEMAS,
         D_CINEMA,
+        DC_CINEMAS,
 
         D_THEATERS,
         D_THEATER,
