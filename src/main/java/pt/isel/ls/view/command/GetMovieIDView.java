@@ -3,7 +3,7 @@ package pt.isel.ls.view.command;
 import pt.isel.ls.core.common.commands.GetCinemaID;
 import pt.isel.ls.core.common.commands.GetCinemaIDSessionID;
 import pt.isel.ls.core.common.commands.GetCinemaIDTheaterIDSessions;
-import pt.isel.ls.core.common.commands.GetCinemaIDTheatersID;
+
 import pt.isel.ls.core.common.headers.Html;
 import pt.isel.ls.core.common.headers.Json;
 import pt.isel.ls.core.common.headers.Plain;
@@ -13,6 +13,7 @@ import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.*;
 
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.*;
@@ -42,10 +43,11 @@ public class GetMovieIDView extends CommandView {
 
     @Override
     protected String toHtml(Html header) {
+        HashMap<Integer, Cinema> cinemasMap = new HashMap<>();
         Movie movie = (Movie)data.getData(D_MOVIE);
         LinkedList<Cinema> cinemas = (LinkedList<Cinema>) data.getData(D_CINEMAS);
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
-        LinkedList<Cinema> cinemas2 = (LinkedList<Cinema>) data.getData(DC_CINEMAS);
+        //LinkedList<Cinema> cinemas2 = (LinkedList<Cinema>) data.getData(DC_CINEMAS);
 
         String[] tableColumns = {"Name", "City"};
         Writable[] th = new Writable[tableColumns.length];
@@ -60,6 +62,7 @@ public class GetMovieIDView extends CommandView {
                 .replace(CINEMA_ID_FULL.toString(), "%d");
         for (int i = 0; i < cinemas.size(); i++) {
             cinema = cinemas.get(i);
+            cinemasMap.put(cinema.getId(), cinema);
             td1[i][0] = td(a(String.format(hyperLink, cinema.getId()),cinema.getName()));
             td1[i][1] = td(text(cinema.getCity()));
             td_array1[i+1] = tr(td1[i]);
@@ -78,15 +81,13 @@ public class GetMovieIDView extends CommandView {
                 .replace(SESSION_ID_FULL.toString(), "%d");
         for (int i = 0; i < sessions.size(); i++) {
             session = sessions.get(i);
-            cinema = cinemas2.get(i);
+            cinema = cinemasMap.get(session.getCinemaID());
             td2[i][0] = td(a(String.format(hyperLink,cinema.getId(), session.getId()), Integer.toString(session.getId())));
             td2[i][1] = td(text(cinema.getName()));
             td2[i][2] = td(text(cinema.getCity()));
             td2[i][3] = td(text(session.getDateTime()));
             td_array2[i+1] = tr(td2[i]);
         }
-
-
 
         header = new HtmlPage("Movie " + movie.getTitle(),
                 h1(text("Movie " + movie.getTitle())),
