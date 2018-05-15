@@ -15,10 +15,12 @@ import static pt.isel.ls.core.strings.CommandEnum.TEXT;
 public class Html extends Header {
 
     private Writable _content;
-    
+
     public Html(Writable... cs) {
         _content = new CompositeWritable(cs);
     }
+
+    public Html(){}
 
     @Override
     public String getMethodName() {
@@ -29,7 +31,8 @@ public class Html extends Header {
     public String getPath() {
         return ""+DIR_SEPARATOR+TEXT;
     }
-    
+
+    public static Writable style(Writable c) { return new HtmlElem("style", c);}
     public static Writable text(String s) { return new HtmlText(s);}
     public static Writable h1(Writable... c) { return new HtmlElem("h1",c);}
     public static Writable h2(Writable... c) { return new HtmlElem("h2",c);}

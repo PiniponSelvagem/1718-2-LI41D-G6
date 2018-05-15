@@ -1,7 +1,6 @@
 package pt.isel.ls;
 
 import org.junit.Test;
-import pt.isel.ls.core.common.commands.PostCinemaIDTheaterIDSessionIDTickets;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
@@ -11,7 +10,6 @@ import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
 import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsView;
-import pt.isel.ls.view.command.PostView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,10 +17,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class Tickets_tests {
 
@@ -141,8 +140,9 @@ public class Tickets_tests {
             while (rs.next()) {
                 view=(GetCinemaIDTheaterIDSessionIDTicketsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + rs.getInt(4) +"/theaters/"+rs.getInt(3)+"/sessions/" + rs.getString(2)+"/tickets"}, new CommandUtils()), con, false);
                 data=view.getData();
-                for(int i=0; i<data.size() ;i++) {
-                    ticket = (Ticket) data.getData(i);
+                LinkedList<Ticket> tickets = (LinkedList<Ticket>) data.getData(D_TICKETS);
+                for(int i=0; i<tickets.size() ;i++) {
+                    ticket = tickets.get(i);
                     assertEquals(rs.getInt(2), ticket.getSession().getId());
                     assertEquals(rs.getInt(3), ticket.getSession().getTheater().getId());
                     assertEquals(rs.getInt(4), ticket.getSession().getCinemaID());
@@ -181,7 +181,7 @@ public class Tickets_tests {
             while (rs.next()) {
                 sessionIDView = (GetCinemaIDTheaterIDSessionIDTicketIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + rs.getInt(4) +"/theaters/"+rs.getInt(3)+"/sessions/" + rs.getString(2)+"/tickets/" + rs.getString(1)}, new CommandUtils()), con, false);
                 data = sessionIDView.getData();
-                ticket = (Ticket)data.getData(0);
+                ticket = (Ticket) data.getData(D_TICKET);
                 assertEquals(rs.getString(1), ticket.getId());
                 assertEquals(rs.getInt(2),ticket.getSession().getId());
                 assertEquals(rs.getInt(3),ticket.getSession().getTheater().getId());
@@ -211,12 +211,12 @@ public class Tickets_tests {
 
             GetCinemaIDTheaterIDSessionIDTicketsAvailableView view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[1]+"/tickets/available"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
-            if(data.size()==1)
-                assertEquals((18*12)-2,data.getData(0));
+            int availableSeats = (Integer) data.getData(D_AVAILABLE_SEATS);
+            assertEquals((18*12)-2, availableSeats);
             view = (GetCinemaIDTheaterIDSessionIDTicketsAvailableView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/theaters/" + theatersId[0] + "/sessions/" + sessionsId[0]+"/tickets/available"}, new CommandUtils()), con, false);
             data = view.getData();
-            if(data.size()==1)
-                assertEquals((18*12)-1,data.getData(0));
+            availableSeats = (Integer) data.getData(D_AVAILABLE_SEATS);
+            assertEquals((18*12)-1, availableSeats);
 
         } catch (SQLException | CommandException e) {
             e.printStackTrace();

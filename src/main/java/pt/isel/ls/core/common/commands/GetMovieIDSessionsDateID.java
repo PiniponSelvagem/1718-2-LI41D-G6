@@ -32,9 +32,9 @@ public class GetMovieIDSessionsDateID extends Command {
 
     @Override
     public String getPath() {
-        return ""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+ID_PREFIX+MOVIE_ID+ID_SUFFIX
-                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+DATE+DIR_SEPARATOR+ID_PREFIX+DATE_ID+ID_SUFFIX;
-    }
+        return ""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+MOVIE_ID_FULL
+                +DIR_SEPARATOR+SESSIONS+DIR_SEPARATOR+DATE+DIR_SEPARATOR+DATE_ID_FULL;
+}
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException, CommandException {

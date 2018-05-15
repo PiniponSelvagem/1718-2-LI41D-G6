@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 public class Cinema_tests {
@@ -85,11 +86,11 @@ public class Cinema_tests {
             GetCinemasView view = (GetCinemasView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas"}, new CommandUtils()), con, false);
 
-            DataContainer data;
-            data = view.getData();
+            DataContainer data = view.getData();
+            LinkedList<Cinema> cinemas = (LinkedList<Cinema>) data.getData(D_CINEMAS);
             Cinema cinema;
-            for(int i = 0; i < data.size(); i++){
-                cinema = (Cinema) data.getData(i);
+            for(int i = 0; i < cinemas.size(); i++){
+                cinema = cinemas.get(i);
                 String name = "nameTest" + (i + 1);
                 assertEquals(name, cinema.getName());
                 i++;
@@ -131,7 +132,7 @@ public class Cinema_tests {
 
             DataContainer data;
             data = view.getData();
-            Cinema cinema = (Cinema)data.getData(0);
+            Cinema cinema = (Cinema) data.getData(D_CINEMA);
             assertEquals(ids[1], cinema.getId());
         } catch (SQLException | CommandException e) {
             e.printStackTrace();
@@ -223,11 +224,11 @@ public class Cinema_tests {
 
             GetCinemaIDTheatersView view = (GetCinemaIDTheatersView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[0] + "/theaters"}, new CommandUtils()), con, false);
-            DataContainer data;
-            data = view.getData();
+            DataContainer data = view.getData();
             Theater theater;
-            for(int k = 0; k < data.size(); k++){
-                theater = (Theater) data.getData(k);
+            LinkedList<Theater> theaters = (LinkedList<Theater>) data.getData(D_THEATERS);
+            for(int k = 0; k < theaters.size(); k++){
+                theater = theaters.get(k);
                 String name = "theater";
                 name += (k + 1);
                 assertEquals(name, theater.getName());
@@ -284,9 +285,8 @@ public class Cinema_tests {
 
             GetCinemaIDTheatersIDView view = (GetCinemaIDTheatersIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()), con, false);
-            DataContainer data;
-            data = view.getData();
-            Theater theater = (Theater) data.getData(0);
+            DataContainer data = view.getData();
+            Theater theater = (Theater) data.getData(D_THEATER);
             assertEquals("theater1", theater.getName());
 
         } catch (SQLException | CommandException e) {

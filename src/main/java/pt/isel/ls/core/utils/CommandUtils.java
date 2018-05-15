@@ -86,12 +86,12 @@ public class CommandUtils {
      * continue its way in the directories.
      */
     private void initializeDirID() {
-        dirID.put(CINEMAS.toString(),  ""+ID_PREFIX+CINEMA_ID+ID_SUFFIX);
-        dirID.put(MOVIES.toString(),   ""+ID_PREFIX+MOVIE_ID+ID_SUFFIX);
-        dirID.put(THEATERS.toString(), ""+ID_PREFIX+THEATER_ID+ID_SUFFIX);
-        dirID.put(SESSIONS.toString(), ""+ID_PREFIX+SESSION_ID+ID_SUFFIX);
-        dirID.put(DATE.toString(),     ""+ID_PREFIX+DATE_ID+ID_SUFFIX);
-        dirID.put(TICKETS.toString(),  ""+ID_PREFIX+TICKET_ID+ID_SUFFIX);
+        dirID.put(CINEMAS.toString(),  CINEMA_ID_FULL.toString());
+        dirID.put(MOVIES.toString(),   MOVIE_ID_FULL.toString());
+        dirID.put(THEATERS.toString(), THEATER_ID_FULL.toString());
+        dirID.put(SESSIONS.toString(), SESSION_ID_FULL.toString());
+        dirID.put(DATE.toString(),     DATE_ID_FULL.toString());
+        dirID.put(TICKETS.toString(),  TICKET_ID_FULL.toString());
     }
 
     /**

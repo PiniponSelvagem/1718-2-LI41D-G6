@@ -1,5 +1,6 @@
 package pt.isel.ls;
 
+import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandUtils;
 
 import java.io.*;
@@ -14,8 +15,13 @@ public class Main {
     private static boolean close = false;
 
     public static void main(String[] args) {
-        if (args.length != 0)
-            new CommandRequest(args, true);
+        if (args.length != 0) {
+            try {
+                new CommandRequest(args, true);
+            } catch (CommandException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         else
             interactiveMode();
     }
@@ -30,7 +36,11 @@ public class Main {
         do {
             System.out.print(WAIT_INPUT);
             args = in.nextLine().split(ARGS_SEPARATOR.toString());
-            new CommandRequest(args, true);
+            try {
+                new CommandRequest(args, true);
+            } catch (CommandException e) {
+                System.out.println(e.getMessage());
+            }
 
         } while(!close);
     }

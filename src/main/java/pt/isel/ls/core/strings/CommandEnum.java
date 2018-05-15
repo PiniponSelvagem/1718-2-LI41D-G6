@@ -25,13 +25,13 @@ public enum CommandEnum {
     TEST("TEST"),
 
     //Directories
-    MOVIES("movies"),           MOVIE_ID("mid"),
-    CINEMAS("cinemas"),         CINEMA_ID("cid"),
-    THEATERS("theaters"),       THEATER_ID("tid"),
-    SESSIONS("sessions"),       SESSION_ID("sid"),
-    TICKETS("tickets"),         TICKET_ID("tkid"),
+    MOVIES("movies"),           MOVIE_ID("mid"),    MOVIE_ID_FULL(String.format("%s%s%s", ID_PREFIX, MOVIE_ID, ID_SUFFIX)),
+    CINEMAS("cinemas"),         CINEMA_ID("cid"),   CINEMA_ID_FULL(String.format("%s%s%s", ID_PREFIX, CINEMA_ID, ID_SUFFIX)),
+    THEATERS("theaters"),       THEATER_ID("tid"),  THEATER_ID_FULL(String.format("%s%s%s", ID_PREFIX, THEATER_ID, ID_SUFFIX)),
+    SESSIONS("sessions"),       SESSION_ID("sid"),  SESSION_ID_FULL(String.format("%s%s%s", ID_PREFIX, SESSION_ID, ID_SUFFIX)),
+    TICKETS("tickets"),         TICKET_ID("tkid"),  TICKET_ID_FULL(String.format("%s%s%s", ID_PREFIX, TICKET_ID, ID_SUFFIX)),
     AVAILABLE("available"),
-    DATE("date"),               DATE_ID("dmy"),
+    DATE("date"),               DATE_ID("dmy"),     DATE_ID_FULL(String.format("%s%s%s", ID_PREFIX, DATE_ID, ID_SUFFIX)),
     TODAY("today"),
 
     //Headers_Cmds

@@ -18,7 +18,7 @@ public class PostCinemaIDTheaters extends Command {
 
     @Override
     public String getPath() {
-        return ""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+ID_PREFIX+CINEMA_ID+ID_SUFFIX+DIR_SEPARATOR+THEATERS;
+        return ""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+CINEMA_ID_FULL+DIR_SEPARATOR+THEATERS;
     }
 
     @Override
