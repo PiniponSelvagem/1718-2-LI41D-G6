@@ -7,7 +7,7 @@ import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDTheatersIDView;
+import pt.isel.ls.view.command.GetCinemaIDTheaterIDView;
 import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.*;
@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
-public class GetCinemaIDTheatersID extends Command {
+public class GetCinemaIDTheaterID extends Command {
 
     @Override
     public String getMethodName() {
@@ -71,7 +71,7 @@ public class GetCinemaIDTheatersID extends Command {
         data.add(D_SESSIONS, sessions);
 
 
-        return new GetCinemaIDTheatersIDView(data);
+        return new GetCinemaIDTheaterIDView(data);
     }
 
     @Override

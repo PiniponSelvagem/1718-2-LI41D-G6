@@ -31,7 +31,8 @@ public class Html extends Header {
     public String getPath() {
         return ""+DIR_SEPARATOR+TEXT;
     }
-    
+
+    public static Writable style(Writable c) { return new HtmlElem("style", c);}
     public static Writable text(String s) { return new HtmlText(s);}
     public static Writable h1(Writable... c) { return new HtmlElem("h1",c);}
     public static Writable h2(Writable... c) { return new HtmlElem("h2",c);}
@@ -62,6 +63,11 @@ public class Html extends Header {
     }
     public static Writable table(Writable[] c) {
         return new HtmlElem("table", c)
+                .withAttr("border", "1");
+    }
+    public static Writable tableWithName(String name, Writable[] c) {
+        return new HtmlElem("table", c)
+                .withAttr("class", name)
                 .withAttr("border", "1");
     }
     public static Writable tr(Writable[] c) {

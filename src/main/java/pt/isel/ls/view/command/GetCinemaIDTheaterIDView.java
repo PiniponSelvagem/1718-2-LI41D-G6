@@ -16,9 +16,9 @@ import static pt.isel.ls.core.common.headers.Html.*;
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
-public class GetCinemaIDTheatersIDView extends CommandView {
+public class GetCinemaIDTheaterIDView extends CommandView {
 
-    public GetCinemaIDTheatersIDView(DataContainer data) {
+    public GetCinemaIDTheaterIDView(DataContainer data) {
         this.data = data;
     }
 

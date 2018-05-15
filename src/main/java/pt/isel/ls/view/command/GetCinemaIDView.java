@@ -1,7 +1,8 @@
 package pt.isel.ls.view.command;
 
 import pt.isel.ls.core.common.commands.GetCinemaIDSessionsToday;
-import pt.isel.ls.core.common.commands.GetCinemaIDTheatersID;
+import pt.isel.ls.core.common.commands.GetCinemaIDTheaterID;
+import pt.isel.ls.core.common.commands.GetCinemas;
 import pt.isel.ls.core.common.commands.GetMovieID;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
@@ -10,6 +11,7 @@ import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Theater;
+import pt.isel.ls.view.command.utils.HtmlViewCommon;
 
 import java.util.LinkedList;
 
@@ -40,17 +42,14 @@ public class GetCinemaIDView extends CommandView {
         LinkedList<Theater> theaters = (LinkedList<Theater>) data.getData(D_THEATERS);
         LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
         String[] tableColumns = {"Name"};
-        Writable[] th = new Writable[tableColumns.length];
-        for (int i=0; i<tableColumns.length; ++i) {
-            th[i] = th(text(tableColumns[i]));
-        }
+        Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
 
         Writable[][] td;
         Writable[] td_array = new Writable[theaters.size()+1];
         td_array[0] = tr(th);
         Writable[] li_array = new Writable[theaters.size()];
         Theater theater;
-        String hyperLink = new GetCinemaIDTheatersID().getPath()
+        String hyperLink = new GetCinemaIDTheaterID().getPath()
                 .replace(CINEMA_ID_FULL.toString(), "%d")
                 .replace(THEATER_ID_FULL.toString(), "%d"); //get path and make it ready to add IDs
         for (int y=0; y<theaters.size(); ++y) {
@@ -80,8 +79,9 @@ public class GetCinemaIDView extends CommandView {
 
         hyperLink = new GetCinemaIDSessionsToday().getPath()
                 .replace(CINEMA_ID_FULL.toString(), "%d"); //get path and make it ready to add ID
+
         header = new HtmlPage("Cinema " + cinema.getName(),
-                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR, "Cinemas")),
+                h3(a(new GetCinemas().getPath(), "Cinemas")),
                 h1(text("Cinema " + cinema.getName())),
                 li(text("City: "+ cinema.getCity())),
                 h2(text("Theaters: ")),
