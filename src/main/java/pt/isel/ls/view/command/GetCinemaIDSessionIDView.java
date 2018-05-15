@@ -1,12 +1,13 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.common.commands.GetCinemaIDTheaterID;
+import pt.isel.ls.core.common.commands.GetCinemaIDTheaterIDSessionIDTicketID;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
-import pt.isel.ls.model.Ticket;
 
 import java.util.LinkedList;
 
@@ -43,33 +44,38 @@ public class GetCinemaIDSessionIDView extends CommandView {
         LinkedList<String> tickets= (LinkedList<String>)data.getData(D_TICKETS);
         String tkid;
 
-        Writable[][] td = new Writable[session.getTheater().getRows()+1][session.getTheater().getSeatsPerRow()+1];
-        Writable[] td_array = new Writable[session.getTheater().getRows()+1];
-        td[0][0]=td(text("  "));
-        for (int i = 1; i <= session.getTheater().getSeatsPerRow(); i++) {
-            td[0][i] = td(text(""+i));
-        }
-        td_array[0] = tr(td[0]);
-        for (int i = 1; i <= session.getTheater().getRows(); i++) {
-            td[i][0]=td(text(""+(char)((i-1)+'A')));
-            for(int j = 1; j <= session.getTheater().getSeatsPerRow(); j++) {
-                tkid=""+(char)((i-1)+'A')+j;
-                if(tickets.contains(tkid));
-                td[i][j] = td(a("" +
-                        DIR_SEPARATOR + CINEMAS + DIR_SEPARATOR + session.getCinemaID() + DIR_SEPARATOR + THEATERS + DIR_SEPARATOR
-                        + session.getTheater().getId() + DIR_SEPARATOR + SESSIONS + DIR_SEPARATOR + session.getId()
-                        + DIR_SEPARATOR + TICKETS + DIR_SEPARATOR +tkid,tkid ));
+        Writable[][] td = new Writable[session.getTheater().getRows()][session.getTheater().getSeatsPerRow()];
+        Writable[] td_array = new Writable[session.getTheater().getRows()];
+
+        String hyperLink = new GetCinemaIDTheaterIDSessionIDTicketID().getPath()
+                .replace(CINEMA_ID_FULL.toString(), String.valueOf(session.getCinemaID()))
+                .replace(THEATER_ID_FULL.toString(), String.valueOf(session.getTheater().getId()))
+                .replace(SESSION_ID_FULL.toString(), String.valueOf(session.getId()))
+                .replace(TICKET_ID_FULL.toString(), "%s");
+
+        for (int i = 0; i < session.getTheater().getRows(); ++i) {
+            for(int j = 0; j < session.getTheater().getSeatsPerRow(); ++j) {
+                tkid=""+(char)((i)+'A')+(j+1);
+                if(tickets.contains(tkid)) {
+                    td[i][j] = td(a(String.format(hyperLink, tkid), tkid));
+                }
+                else {
+                    td[i][j] = td(text(tkid));
+                }
             }
             td_array[i] = tr(td[i]);
         }
 
-        header = new HtmlPage("Session " + session.getDateTime(),
-                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+session.getCinemaID()+
-                                DIR_SEPARATOR+THEATERS+DIR_SEPARATOR+session.getTheater().getId(),
-                        "Theater: "+theater.getName())),
+        hyperLink = new GetCinemaIDTheaterID().getPath()
+                .replace(CINEMA_ID_FULL.toString(), String.valueOf(session.getCinemaID()))
+                .replace(THEATER_ID_FULL.toString(), String.valueOf(session.getTheater().getId()));
+
+        String ticketsTable = "tickets_table";
+        header = new HtmlPage("Session " + session.getDateTime(), ticketsTable,
+                h3(a(hyperLink, "Theater: "+theater.getName())),
                 h2(text("Available Seats: "+ (int)this.data.getData(D_AVAILABLE_SEATS))),
                 h2(text("Seats Display: ")),
-                table(td_array)
+                tableWithName(ticketsTable, td_array)
         );
         return header.getBuildedString();
     }

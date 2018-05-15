@@ -65,6 +65,11 @@ public class Html extends Header {
         return new HtmlElem("table", c)
                 .withAttr("border", "1");
     }
+    public static Writable tableWithName(String name, Writable[] c) {
+        return new HtmlElem("table", c)
+                .withAttr("class", name)
+                .withAttr("border", "1");
+    }
     public static Writable tr(Writable[] c) {
         return new HtmlElem("tr").withContent(c);
     }

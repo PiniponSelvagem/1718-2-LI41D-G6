@@ -283,7 +283,7 @@ public class Cinema_tests {
                 k++;
             }
 
-            GetCinemaIDTheatersIDView view = (GetCinemaIDTheatersIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
+            GetCinemaIDTheaterIDView view = (GetCinemaIDTheaterIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
                     {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
             Theater theater = (Theater) data.getData(D_THEATER);
