@@ -9,11 +9,15 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDSessionsDateIDView;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_AVAILABLE_SEATS;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
 
 public class GetCinemaIDSessionsDateID extends Command {
@@ -35,10 +39,14 @@ public class GetCinemaIDSessionsDateID extends Command {
         LocalDate localDate;
         String str = cmdBuilder.getId(DATE_ID.toString());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+        //SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatter3 = new SimpleDateFormat("ddMMyyyy");
+        LinkedList<Integer> as = new LinkedList<>();
         localDate = LocalDate.parse(str, formatter);
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, s.SeatsAvailable, s.Date, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.cid, t.tid, m.mid," +
+                        " s.SeatsAvailable FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
@@ -52,7 +60,11 @@ public class GetCinemaIDSessionsDateID extends Command {
         int sid, availableSeats, cid, tid, mid, duration;
         Timestamp date=null;
         String theaterName, title;
-
+        try {
+            date=new Timestamp(formatter3.parse(str).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         LinkedList<Session> sessions = new LinkedList<>();
         while(rs.next()){
             sid = rs.getInt(1);
@@ -64,7 +76,7 @@ public class GetCinemaIDSessionsDateID extends Command {
             cid = rs.getInt(7);
             tid = rs.getInt(8);
             mid = rs.getInt(9);
-
+            as.add(rs.getInt(10));
             sessions.add(
                     new Session(sid, date,
                             new Movie(mid, title, NA, duration),
@@ -73,8 +85,9 @@ public class GetCinemaIDSessionsDateID extends Command {
                     )
             );
         }
+        data.add(D_AVAILABLE_SEATS, as);
         data.add(D_SESSIONS, sessions);
-
+        data.add(D_CINEMA,cmdBuilder.getId(CINEMA_ID.toString()));
         return new GetCinemaIDSessionsDateIDView(
                 data,
                 Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),

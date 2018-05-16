@@ -1,5 +1,6 @@
 package pt.isel.ls.view.command;
 
+import pt.isel.ls.core.common.commands.GetCinemaIDSessionsToday;
 import pt.isel.ls.core.common.commands.GetCinemaIDTheaterID;
 import pt.isel.ls.core.common.commands.GetCinemaIDTheaterIDSessionIDTicketID;
 import pt.isel.ls.core.common.headers.*;
@@ -42,7 +43,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
         Session session=(Session) data.getData(D_SESSION);
         Theater theater= (Theater) data.getData(D_THEATER);
         LinkedList<String> tickets= (LinkedList<String>)data.getData(D_TICKETS);
-        String tkid;
+        String tkid, cinema=(String) data.getData(D_CINEMA);
 
         Writable[][] td = new Writable[session.getTheater().getRows()][session.getTheater().getSeatsPerRow()];
         Writable[] td_array = new Writable[session.getTheater().getRows()];
@@ -65,6 +66,8 @@ public class GetCinemaIDSessionIDView extends CommandView {
             }
             td_array[i] = tr(td[i]);
         }
+        String hl = new GetCinemaIDSessionsToday().getPath()
+                .replace(CINEMA_ID_FULL.toString(), "%d");
 
         hyperLink = new GetCinemaIDTheaterID().getPath()
                 .replace(CINEMA_ID_FULL.toString(), String.valueOf(session.getCinemaID()))
@@ -73,9 +76,13 @@ public class GetCinemaIDSessionIDView extends CommandView {
         String ticketsTable = "tickets_table";
         header = new HtmlPage("Session " + session.getDateTime(), ticketsTable,
                 h3(a(hyperLink, "Theater: "+theater.getName())),
+                h3(a(""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+session.getMovie().getId()
+                        , "Movie: "+session.getMovie().getTitle())),
                 h2(text("Available Seats: "+ (int)this.data.getData(D_AVAILABLE_SEATS))),
                 h2(text("Seats Display: ")),
-                tableWithName(ticketsTable, td_array)
+                tableWithName(ticketsTable, td_array),
+                h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+theater.getCinemaID()+DIR_SEPARATOR+SESSIONS+
+                        DIR_SEPARATOR+TODAY, "Sessions Today"))
         );
         return header.getBuildedString();
     }

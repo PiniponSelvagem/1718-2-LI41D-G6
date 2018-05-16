@@ -6,12 +6,15 @@ import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.view.command.CommandView;
+import pt.isel.ls.view.command.GetCinemaIDSessionsDateIDView;
 import pt.isel.ls.view.command.GetCinemaIDSessionsView;
 
 import java.sql.*;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_AVAILABLE_SEATS;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
 
 public class GetCinemaIDSessionsToday extends Command {
@@ -31,7 +34,8 @@ public class GetCinemaIDSessionsToday extends Command {
         Date date = new java.sql.Date(new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, s.SeatsAvailable, s.Date, t.cid, t.tid, m.mid FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.cid, t.tid, m.mid," +
+                        " s.SeatsAvailable FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
@@ -40,7 +44,7 @@ public class GetCinemaIDSessionsToday extends Command {
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         stmt.setDate(2, date);
         ResultSet rs = stmt.executeQuery();
-
+        LinkedList<Integer> as = new LinkedList<>();
         DataContainer data =  new DataContainer(cmdBuilder.getHeader());
         int id, availableSeats, cid, tid, mid, duration;
         Timestamp dateTime;
@@ -57,18 +61,21 @@ public class GetCinemaIDSessionsToday extends Command {
             cid = rs.getInt(7);
             tid = rs.getInt(8);
             mid = rs.getInt(9);
-
-            sessions.add(
-                    new Session(id, dateTime,
+            as.add(rs.getInt(10));
+            sessions.add( new Session(id, dateTime,
                             new Movie(mid, title, NA, duration),
                             new Theater(tid, theaterName, NA, NA, availableSeats, cid),
-                            cid
-                    )
+                            cid)
             );
         }
+        data.add(D_AVAILABLE_SEATS, as);
         data.add(D_SESSIONS, sessions);
-
-        return new GetCinemaIDSessionsView(data, Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())));
+        data.add(D_CINEMA,cmdBuilder.getId(CINEMA_ID.toString()));
+        return new GetCinemaIDSessionsDateIDView(
+                data,
+                Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),
+                date
+        );
     }
 
     @Override
