@@ -41,6 +41,7 @@ public class GetCinemaIDView extends CommandView {
         Cinema cinema = (Cinema) data.getData(D_CINEMA);
         LinkedList<Theater> theaters = (LinkedList<Theater>) data.getData(D_THEATERS);
         LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
+
         String[] tableColumns = {"Name"};
         Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
 

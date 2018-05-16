@@ -2,8 +2,7 @@ package pt.isel.ls.view.command.utils;
 
 import pt.isel.ls.core.utils.writable.Writable;
 
-import static pt.isel.ls.core.common.headers.Html.text;
-import static pt.isel.ls.core.common.headers.Html.th;
+import static pt.isel.ls.core.common.headers.Html.*;
 
 public class HtmlViewCommon {
 
@@ -14,5 +13,4 @@ public class HtmlViewCommon {
         }
         return th;
     }
-
 }

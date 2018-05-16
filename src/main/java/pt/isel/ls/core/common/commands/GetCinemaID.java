@@ -38,13 +38,10 @@ public class GetCinemaID extends Command {
         rs = stmt.executeQuery();
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
 
-        if (rs.wasNull())
+        if(!rs.next())
             return new InfoNotFoundView(data);
 
-        if(rs.next())
-            data.add(D_CINEMA, new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
-        /*if (!rs.next())
-            return new InfoNotFoundView();*/
+        data.add(D_CINEMA, new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
 
 
         //Get theater names for cinema id

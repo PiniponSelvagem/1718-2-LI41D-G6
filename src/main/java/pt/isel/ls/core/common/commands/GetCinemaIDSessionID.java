@@ -70,6 +70,7 @@ public class GetCinemaIDSessionID extends Command {
         rs = stmt.executeQuery();
         while(rs.next())
             ticketIDs.add(""+rs.getString(3).charAt(0)+rs.getInt(2));
+
         data.add(D_THEATER, theater);
         data.add(D_SESSION, session);
         data.add(D_TICKETS, ticketIDs);
