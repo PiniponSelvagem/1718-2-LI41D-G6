@@ -2,6 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
@@ -9,12 +10,11 @@ import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDSessionsDateIDView;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_AVAILABLE_SEATS;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionsToday extends Command {
 
@@ -33,11 +33,12 @@ public class GetCinemaIDSessionsToday extends Command {
         Date date = new java.sql.Date(new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.cid, t.tid, m.mid," +
-                        " s.SeatsAvailable FROM CINEMA_SESSION AS s " +
-                "INNER JOIN THEATER AS t ON t.tid=s.tid " +
-                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
+                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.tid, m.mid," +
+                        " s.SeatsAvailable, c.cid, c.Name, c.City FROM CINEMA_SESSION AS s " +
+                        "INNER JOIN THEATER AS t ON t.tid=s.tid " +
+                        "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
+                        "INNER JOIN CINEMA AS c ON c.cid = t.cid " +
+                        "WHERE c.cid=? AND (CAST(s.Date AS DATE))=?"
         );
 
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
@@ -46,8 +47,8 @@ public class GetCinemaIDSessionsToday extends Command {
         DataContainer data =  new DataContainer(cmdBuilder.getHeader());
         int id, seats, cid, tid, mid, duration, availableSeats;
         Timestamp dateTime;
-        String theaterName, title;
-
+        String theaterName, title, cinemaName, cinemaCity;
+        HashMap<Integer, Cinema> cinemas = new HashMap<>();
         LinkedList<Session> sessions = new LinkedList<>();
         while(rs.next()){
             id = rs.getInt(1);
@@ -56,10 +57,13 @@ public class GetCinemaIDSessionsToday extends Command {
             theaterName = rs.getString(4);
             seats = rs.getInt(5);
             dateTime = rs.getTimestamp(6);
-            cid = rs.getInt(7);
-            tid = rs.getInt(8);
-            mid = rs.getInt(9);
-            availableSeats = rs.getInt(10);
+            tid = rs.getInt(7);
+            mid = rs.getInt(8);
+            availableSeats = rs.getInt(9);
+            cid = rs.getInt(10);
+            cinemaName = rs.getString(11);
+            cinemaCity = rs.getString(12);
+            cinemas.put(cid, new Cinema(cid, cinemaName, cinemaCity));
             sessions.add(new Session(id, availableSeats, dateTime,
                             new Movie(mid, title, NA, duration),
                             new Theater(tid, theaterName, NA, NA, seats, cid),
@@ -68,6 +72,7 @@ public class GetCinemaIDSessionsToday extends Command {
         }
         data.add(D_SESSIONS, sessions);
         data.add(D_CINEMA,cmdBuilder.getId(CINEMA_ID.toString()));
+        data.add(D_CINEMAS, cinemas);
         return new GetCinemaIDSessionsDateIDView(
                 data,
                 Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),

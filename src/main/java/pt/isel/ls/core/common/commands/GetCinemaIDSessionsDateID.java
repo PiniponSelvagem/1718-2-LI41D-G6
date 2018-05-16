@@ -14,12 +14,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_AVAILABLE_SEATS;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMA;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SESSIONS;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionsDateID extends Command {
 
@@ -45,11 +44,12 @@ public class GetCinemaIDSessionsDateID extends Command {
         localDate = LocalDate.parse(str, formatter);
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.cid, t.tid, m.mid," +
-                        " s.SeatsAvailable FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.tid, m.mid," +
+                        " s.SeatsAvailable, c.cid, c.Name, c.City FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "WHERE cid=? AND (CAST(s.Date AS DATE))=?"
+                "INNER JOIN CINEMA AS c ON c.cid = t.cid " +
+                "WHERE c.cid=? AND (CAST(s.Date AS DATE))=?"
         );
 
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
@@ -59,7 +59,8 @@ public class GetCinemaIDSessionsDateID extends Command {
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
         int sid, seats, cid, tid, mid, duration, availableSeats;
         Timestamp date=null;
-        String theaterName, title;
+        String theaterName, title, cinemaName, cinemaCity;
+        HashMap<Integer, Cinema> cinemas = new HashMap<>();
         try {
             date=new Timestamp(formatter3.parse(str).getTime());
         } catch (ParseException e) {
@@ -73,10 +74,13 @@ public class GetCinemaIDSessionsDateID extends Command {
             theaterName = rs.getString(4);
             seats = rs.getInt(5);
             date = rs.getTimestamp(6);
-            cid = rs.getInt(7);
-            tid = rs.getInt(8);
-            mid = rs.getInt(9);
-            availableSeats = rs.getInt(10);
+            tid = rs.getInt(7);
+            mid = rs.getInt(8);
+            availableSeats = rs.getInt(9);
+            cid = rs.getInt(10);
+            cinemaName = rs.getString(11);
+            cinemaCity = rs.getString(12);
+            cinemas.put(cid, new Cinema(cid, cinemaName, cinemaCity));
             sessions.add(
                     new Session(sid, availableSeats, date,
                             new Movie(mid, title, NA, duration),
@@ -86,6 +90,7 @@ public class GetCinemaIDSessionsDateID extends Command {
             );
         }
         data.add(D_SESSIONS, sessions);
+        data.add(D_CINEMAS, cinemas);
         return new GetCinemaIDSessionsDateIDView(
                 data,
                 Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),

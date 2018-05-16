@@ -1,18 +1,17 @@
 package pt.isel.ls.view.command;
 
-import pt.isel.ls.core.common.commands.GetCinemaIDSessionID;
-import pt.isel.ls.core.common.commands.GetCinemaIDSessionsDateID;
-import pt.isel.ls.core.common.commands.GetCinemaIDTheaterID;
-import pt.isel.ls.core.common.commands.GetMovieID;
+import pt.isel.ls.core.common.commands.*;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
+import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.view.command.utils.HtmlViewCommon;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.*;
@@ -41,7 +40,8 @@ public class GetCinemaIDSessionsDateIDView extends CommandView {
     @Override
     protected String toHtml(Html header) {
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
-        String[] tableColumns = {"Time", "Theater", "Movie", "Number Of Seats", "Available Seats"};
+        HashMap<Integer, Cinema> cinemas = (HashMap<Integer, Cinema>) data.getData(D_CINEMAS);
+        String[] tableColumns = {"Session Time", "Cinema", "Theater", "Movie", "Number Of Seats", "Available Seats"};
         Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
 
         Writable[][] td = new Writable[sessions.size()+1][tableColumns.length];
@@ -56,17 +56,20 @@ public class GetCinemaIDSessionsDateIDView extends CommandView {
                 .replace(CINEMA_ID_FULL.toString(), "%d")
                 .replace(THEATER_ID_FULL.toString(), "%d");
         String hyperlink_movie = new GetMovieID().getPath().replace(MOVIE_ID_FULL.toString(), "%d");
+        String hyperlink_cinema = new GetCinemaID().getPath().replace(CINEMA_ID_FULL.toString(), "%d");
+
         for (int i = 0; i < sessions.size(); ++i) {
             session = sessions.get(i);
             td[i][0] = td(a(String.format(hyperlink_date, session.getTheater().getCinemaID(), session.getId()),
                     session.getTime())
             );
-            td[i][1] = td(a(String.format(hyperlink_theater, session.getTheater().getCinemaID(), session.getTheater().getId()),
+            td[i][1] = td(a(String.format(hyperlink_cinema, session.getCinemaID()), cinemas.get(session.getCinemaID()).getName()));
+            td[i][2] = td(a(String.format(hyperlink_theater, session.getTheater().getCinemaID(), session.getTheater().getId()),
                     session.getTheater().getName())
             );
-            td[i][2] = td(a(String.format(hyperlink_movie, session.getMovie().getId()), session.getMovie().getTitle()));
-            td[i][3] = td(text(String.valueOf(session.getTheater().getSeats())));
-            td[i][4] = td(text(String.valueOf(session.getAvailableSeats())));
+            td[i][3] = td(a(String.format(hyperlink_movie, session.getMovie().getId()), session.getMovie().getTitle()));
+            td[i][4] = td(text(String.valueOf(session.getTheater().getSeats())));
+            td[i][5] = td(text(String.valueOf(session.getAvailableSeats())));
             td_array[i+1] = tr(td[i]);
         }
 
@@ -81,6 +84,7 @@ public class GetCinemaIDSessionsDateIDView extends CommandView {
                 .replace(DATE_ID_FULL.toString(), "%s");
 
         header = new HtmlPage("Sessions for date: " + sdf_withSep.format(this.date),
+                h1(text("Sessions for date: " + sdf_withSep.format(this.date))),
                 table(td_array),
                 h2(a(String.format(hyperlink_dateNavigator, yesterday),"Yesterday's Sessions")),
                 h2(a(String.format(hyperlink_dateNavigator, tomorrow),"Tomorrow's Sessions"))
