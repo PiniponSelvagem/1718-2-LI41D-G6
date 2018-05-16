@@ -47,7 +47,7 @@ public class GetCinemaIDTheatersView extends CommandView {
             tableData[y][1] = theater.getName();
             tableData[y][2] = String.valueOf(theater.getRows());
             tableData[y][3] = String.valueOf(theater.getSeatsPerRow());
-            tableData[y][4] = String.valueOf(theater.getAvailableSeats());
+            tableData[y][4] = String.valueOf(theater.getSeats());
         }
         return tableData;
     }

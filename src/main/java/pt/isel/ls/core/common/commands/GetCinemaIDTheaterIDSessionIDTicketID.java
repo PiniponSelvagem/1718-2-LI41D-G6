@@ -68,11 +68,11 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         sid = rs.getInt(9);
         mid = rs.getInt(10);
 
-        cinema=new Cinema(cid,rs.getString(13),null);
-        movie=new Movie(mid, title, NA, duration);
-        theater=new Theater(tid, theaterName,rs.getInt(11), rs.getInt(12), NA, cid);
-        session=new Session(sid, date, movie,theater, cid);
-        ticket=new Ticket(row.charAt(0), seat, session);
+        cinema = new Cinema(cid,rs.getString(13),null);
+        movie = new Movie(mid, title, NA, duration);
+        theater = new Theater(tid, theaterName,rs.getInt(11), rs.getInt(12), NA, cid);
+        session = new Session(sid, NA, date, movie,theater, cid);
+        ticket = new Ticket(row.charAt(0), seat, session);
 
         data.add(D_MOVIE, movie);
         data.add(D_SESSION,session);

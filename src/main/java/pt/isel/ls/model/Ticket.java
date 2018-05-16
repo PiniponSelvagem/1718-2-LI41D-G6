@@ -1,10 +1,10 @@
 package pt.isel.ls.model;
 
 public class Ticket {
-    private char row;
-    private int seat;
-    private String id;
-    private Session session;
+    private final char row;
+    private final int seat;
+    private final String id;
+    private final Session session;
 
 
     public Ticket(char row, int seat, Session session) {

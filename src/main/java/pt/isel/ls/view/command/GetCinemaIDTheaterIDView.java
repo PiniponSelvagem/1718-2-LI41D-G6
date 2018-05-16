@@ -31,7 +31,7 @@ public class GetCinemaIDTheaterIDView extends CommandView {
                 new String[]{theater.getName(),
                         String.valueOf(theater.getRows()),
                         String.valueOf(theater.getSeatsPerRow()),
-                        String.valueOf(theater.getAvailableSeats())}
+                        String.valueOf(theater.getSeats())}
         );
 
         return header.getBuildedString();
@@ -39,8 +39,8 @@ public class GetCinemaIDTheaterIDView extends CommandView {
 
     @Override
     protected String toHtml(Html header){
-        Cinema cinema = (Cinema)data.getData(D_CINEMA);
-        Theater theater = (Theater)data.getData(D_THEATER);
+        Cinema cinema = (Cinema) data.getData(D_CINEMA);
+        Theater theater = (Theater) data.getData(D_THEATER);
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
 
         String[] tableColumns = new String[]{"Date"};
@@ -79,7 +79,7 @@ public class GetCinemaIDTheaterIDView extends CommandView {
                 new String[]{theater.getName(),
                         String.valueOf(theater.getRows()),
                         String.valueOf(theater.getSeatsPerRow()),
-                        String.valueOf(theater.getAvailableSeats())}
+                        String.valueOf(theater.getSeats())}
         );
 
         return header.getBuildedString();

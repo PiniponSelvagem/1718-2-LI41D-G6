@@ -1,8 +1,8 @@
 package pt.isel.ls.model;
 
 public class Cinema {
-    private int id;
-    private String name, city;
+    private final int id;
+    private final String name, city;
 
     public Cinema(int id, String name, String city) {
         this.id = id;

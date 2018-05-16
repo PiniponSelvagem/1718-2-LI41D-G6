@@ -4,17 +4,24 @@ package pt.isel.ls.model;
 import java.sql.Timestamp;
 
 public class Session {
-    private int id, cid;
-    private String dateTime;
-    private String date;
-    private Movie movie;
-    private Theater theater;
+    private final int id, availableSeats, cid;
+    private final String dateTime, date, time;
+    private final Movie movie;
+    private final Theater theater;
 
 
-    public Session(int id, Timestamp dateTime, Movie movie, Theater theater, int cid) {
+    public Session(int id, int availableSeats, Timestamp dateTime, Movie movie, Theater theater, int cid) {
         this.id = id;
+        this.availableSeats = availableSeats;
         this.dateTime = dateTime.toLocalDateTime().toString().replace('T', ' ');
-        this.date = dateTime.toLocalDateTime().toString().substring(0, dateTime.toLocalDateTime().toString().indexOf('T'));
+        this.date = dateTime.toLocalDateTime().toString().substring(
+                0,
+                dateTime.toLocalDateTime().toString().indexOf('T')
+        );
+        this.time = dateTime.toLocalDateTime().toString().substring(
+                dateTime.toLocalDateTime().toString().indexOf('T')+1,
+                dateTime.toLocalDateTime().toString().length()
+        );
         this.movie = movie;
         this.theater = theater;
         this.cid = cid;
@@ -30,6 +37,9 @@ public class Session {
     public String getDate() {
         return date;
     }
+    public String getTime() {
+        return time;
+    }
     public String getDateNoSeparators() {
         return date.replace("-", "");
     }
@@ -44,5 +54,9 @@ public class Session {
 
     public int getCinemaID() {
         return cid;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
     }
 }

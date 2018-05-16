@@ -55,9 +55,9 @@ public class GetCinemaIDSessions extends Command {
             mid = rs.getInt(9);
 
             sessions.add(
-                    new Session(id, dateTime,
+                    new Session(id, availableSeats, dateTime,
                             new Movie(mid, title, NA, duration),
-                            new Theater(tid, theaterName, NA, NA, availableSeats, cid),
+                            new Theater(tid, theaterName, NA, NA, NA, cid),
                             cid
                     )
             );

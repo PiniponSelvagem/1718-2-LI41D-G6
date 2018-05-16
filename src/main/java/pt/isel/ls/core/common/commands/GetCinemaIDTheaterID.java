@@ -31,45 +31,65 @@ public class GetCinemaIDTheaterID extends Command {
 
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        Movie movie;
-        Cinema cinema;
-        Theater theater;
 
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA AS c WHERE c.cid=?");
+        PreparedStatement stmt = connection.prepareStatement(
+                "SELECT t.tid, t.Theater_Name, t.SeatsAvailable, c.cid, c.Name, c.City " +
+                "FROM THEATER AS t " +
+                "INNER JOIN CINEMA AS c ON c.cid=? " +
+                "WHERE t.tid=?"
+        );
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
+        stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
         ResultSet rs = stmt.executeQuery();
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
-        cinema = null;
-        if (rs.next())
-            cinema = new Cinema(rs.getInt(1),rs.getString(2),rs.getString(3));
-        data.add(D_CINEMA, cinema);
-
-        stmt = connection.prepareStatement("SELECT * FROM THEATER AS t WHERE t.tid=?");
-        stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
-        rs = stmt.executeQuery();
 
         if (!rs.next())
             return new InfoNotFoundView(data);
-        theater=new Theater(rs.getInt(1), rs.getString(5), rs.getInt(3), rs.getInt(4), rs.getInt(2),
-                Integer.parseInt(cmdBuilder.getId(THEATER_ID.toString())));
-        data.add(D_THEATER, theater);
 
-        stmt = connection.prepareStatement("SELECT * FROM CINEMA_SESSION AS cs WHERE cs.tid=?");
-        stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
+        int cid = rs.getInt(4);
+        data.add(D_CINEMA, new Cinema(cid, rs.getString(5), rs.getString(6)));
+        data.add(D_THEATER, new Theater(rs.getInt(1), rs.getString(2), NA, NA, rs.getInt(3), cid));
+
+
+
+
+        stmt = connection.prepareStatement(
+                "SELECT s.sid, s.Date, s.SeatsAvailable, m.mid, m.Title, m.Duration, m.Release_Year " +
+                "FROM CINEMA_SESSION AS s " +
+                "INNER JOIN CINEMA AS c ON c.cid=? " +
+                "INNER JOIN THEATER AS t ON t.tid=? " +
+                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
+                "WHERE t.tid=s.tid"
+        );
+        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
+        stmt.setString(2, cmdBuilder.getId(THEATER_ID.toString()));
         rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
-        while (rs.next()) {
-            stmt = connection.prepareStatement("SELECT * FROM MOVIE AS m WHERE m.mid=?");
-            stmt.setInt(1, rs.getInt(3));
-            ResultSet mrs = stmt.executeQuery();
-            movie=null;
-            if(mrs.next())
-                movie=new Movie(mrs.getInt(1),mrs.getString(2),mrs.getInt(3),mrs.getInt(4));
-            sessions.add(new Session(rs.getInt(1),rs.getTimestamp(2),
-                    movie,theater,rs.getInt(5)));
+
+        int sid, mid, availableSeats, duration, year;
+        Timestamp dateTime;
+        String title;
+
+        if (!rs.next())
+            return new InfoNotFoundView(data);
+
+        while(rs.next()){
+            sid = rs.getInt(1);
+            dateTime = rs.getTimestamp(2);
+            availableSeats = rs.getInt(3);
+            mid = rs.getInt(4);
+            title = rs.getString(5);
+            duration = rs.getInt(6);
+            year = rs.getInt(7);
+
+            sessions.add(
+                    new Session(sid, availableSeats, dateTime,
+                            new Movie(mid, title, year, duration),
+                            null,
+                            cid)
+            );
         }
         data.add(D_SESSIONS, sessions);
-
 
         return new GetCinemaIDTheaterIDView(data);
     }

@@ -2,6 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
@@ -41,7 +42,6 @@ public class GetCinemaIDSessionsDateID extends Command {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
         //SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat formatter3 = new SimpleDateFormat("ddMMyyyy");
-        LinkedList<Integer> as = new LinkedList<>();
         localDate = LocalDate.parse(str, formatter);
 
         PreparedStatement stmt = connection.prepareStatement(
@@ -57,7 +57,7 @@ public class GetCinemaIDSessionsDateID extends Command {
         ResultSet rs = stmt.executeQuery();
 
         DataContainer data=new DataContainer(cmdBuilder.getHeader());
-        int sid, availableSeats, cid, tid, mid, duration;
+        int sid, seats, cid, tid, mid, duration, availableSeats;
         Timestamp date=null;
         String theaterName, title;
         try {
@@ -71,23 +71,21 @@ public class GetCinemaIDSessionsDateID extends Command {
             title = rs.getString(2);
             duration = rs.getInt(3);
             theaterName = rs.getString(4);
-            availableSeats = rs.getInt(5);
+            seats = rs.getInt(5);
             date = rs.getTimestamp(6);
             cid = rs.getInt(7);
             tid = rs.getInt(8);
             mid = rs.getInt(9);
-            as.add(rs.getInt(10));
+            availableSeats = rs.getInt(10);
             sessions.add(
-                    new Session(sid, date,
+                    new Session(sid, availableSeats, date,
                             new Movie(mid, title, NA, duration),
-                            new Theater(tid, theaterName, NA, NA, availableSeats, cid),
+                            new Theater(tid, theaterName, NA, NA, seats, cid),
                             cid
                     )
             );
         }
-        data.add(D_AVAILABLE_SEATS, as);
         data.add(D_SESSIONS, sessions);
-        data.add(D_CINEMA,cmdBuilder.getId(CINEMA_ID.toString()));
         return new GetCinemaIDSessionsDateIDView(
                 data,
                 Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),

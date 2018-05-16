@@ -21,7 +21,7 @@ public class GetMovieIDSessionsDateID extends Command {
 
     private Timestamp date = null;
     private DataContainer data;
-    private static final String COLUMNS = "s.sid, s.Date, m.mid, t.tid, s.SeatsAvailable, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration ";
+    private static final String COLUMNS = "s.sid, s.Date, m.mid, t.tid, s.SeatsAvailable, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration, t.SeatsAvailable  ";
     private static final String FROM = "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid ";
     private static final String INNER_JOIN_THEATER = "INNER JOIN THEATER AS t ON t.tid=s.tid ";
 
@@ -116,7 +116,7 @@ public class GetMovieIDSessionsDateID extends Command {
      * @param rs ResultSet
      */
     private void fillData(ResultSet rs) throws SQLException {
-        int sid, mid, tid, availableSeats, rows, seatsRow, cid, year, duration;
+        int sid, mid, tid, availableSeats, rows, seatsRow, cid, year, duration, seats;
         String theaterName, title;
 
         LinkedList<Session> sessions = new LinkedList<>();
@@ -133,11 +133,12 @@ public class GetMovieIDSessionsDateID extends Command {
             title = rs.getString(10);
             year = rs.getInt(11);
             duration = rs.getInt(12);
+            seats = rs.getInt(13);
 
             sessions.add(
-                    new Session(sid, date,
+                    new Session(sid, availableSeats, date,
                             new Movie(mid, title, year, duration),
-                            new Theater(tid, theaterName, rows, seatsRow, availableSeats, cid),
+                            new Theater(tid, theaterName, rows, seatsRow, seats, cid),
                             cid
                     )
             );

@@ -5,7 +5,6 @@ import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
-import pt.isel.ls.model.Ticket;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDSessionIDView;
 import pt.isel.ls.view.command.InfoNotFoundView;
@@ -18,7 +17,6 @@ import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 public class GetCinemaIDSessionID extends Command {
-    // ligação com theatersID (link no nome), sessionsToday (link in today's sessions), ticketsID (link in list of tickets)
 
     @Override
     public String getMethodName() {
@@ -38,7 +36,7 @@ public class GetCinemaIDSessionID extends Command {
         LinkedList<String> ticketIDs= new LinkedList<String>();
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT s.sid, s.Date, m.Title, m.Duration, t.Theater_Name, s.SeatsAvailable, t.cid, t.tid, m.mid, t.Rows,t.Seats, s.SeatsAvailable FROM CINEMA_SESSION AS s " +
+                "SELECT s.sid, s.Date, m.Title, m.Duration, t.Theater_Name, s.SeatsAvailable, t.cid, t.tid, m.mid, t.Rows, t.Seats, t.SeatsAvailable FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE cid=? AND s.sid=?");
@@ -50,7 +48,7 @@ public class GetCinemaIDSessionID extends Command {
         if (!rs.next())
             return new InfoNotFoundView(data);
 
-        int id, availableSeats, cid, tid, mid, duration, SeatsAvailable;
+        int id, availableSeats, cid, tid, mid, duration, seats;
         Timestamp dateTime;
         String theaterName, title;
 
@@ -63,15 +61,15 @@ public class GetCinemaIDSessionID extends Command {
         cid = rs.getInt(7);
         tid = rs.getInt(8);
         mid = rs.getInt(9);
-        SeatsAvailable=rs.getInt(12);
-        theater= new Theater(tid, theaterName, rs.getInt(10), rs.getInt(11), availableSeats, cid);
-        session= new Session(id, dateTime,new Movie(mid, title, NA, duration),theater, cid);
+        seats = rs.getInt(12);
+        theater= new Theater(tid, theaterName, rs.getInt(10), rs.getInt(11), seats, cid);
+        session= new Session(id, availableSeats, dateTime,new Movie(mid, title, NA, duration),theater, cid);
         stmt = connection.prepareStatement(
                 "SELECT * FROM TICKET AS tk WHERE tk.sid=?");
         stmt.setInt(1, id);
         rs = stmt.executeQuery();
-        while(rs.next()) ticketIDs.add(""+rs.getString(3).charAt(0)+rs.getInt(2));
-        data.add(D_AVAILABLE_SEATS,SeatsAvailable);
+        while(rs.next())
+            ticketIDs.add(""+rs.getString(3).charAt(0)+rs.getInt(2));
         data.add(D_THEATER, theater);
         data.add(D_SESSION, session);
         data.add(D_TICKETS, ticketIDs);

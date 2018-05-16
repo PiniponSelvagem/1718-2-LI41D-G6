@@ -57,16 +57,13 @@ public class GetMovieID extends Command {
         stmt3.setString(1, cmdBuilder.getId(MOVIE_ID.toString()));
         rs = stmt3.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
-        //LinkedList<Cinema> cinemas2 = new LinkedList<>();
         while(rs.next()){
-            sessions.add(new Session(rs.getInt(1), rs.getTimestamp(2),
+            sessions.add(new Session(rs.getInt(1), rs.getInt(5),rs.getTimestamp(2),
                     new Movie(rs.getInt(3), rs.getString(16), rs.getInt(17), rs.getInt(18)),
-                    new Theater(rs.getInt(4), rs.getString(10), rs.getInt(8), rs.getInt(9), rs.getInt(5), rs.getInt(11)),
+                    new Theater(rs.getInt(4), rs.getString(10), rs.getInt(8), rs.getInt(9), rs.getInt(5), rs.getInt(7)),
                     rs.getInt(11)));
-            //cinemas2.add(new Cinema(rs.getInt(12), rs.getString(13), rs.getString(14)));
         }
         data.add(D_SESSIONS, sessions);
-        //data.add(DC_CINEMAS, cinemas2);
         return new GetMovieIDView(data);
     }
 

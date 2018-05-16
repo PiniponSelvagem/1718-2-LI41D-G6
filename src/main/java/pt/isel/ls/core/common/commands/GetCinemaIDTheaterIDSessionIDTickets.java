@@ -66,7 +66,7 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
 
             tickets.add(
                     new Ticket(row.charAt(0), seat,
-                            new Session(sid, date,
+                            new Session(sid, NA, date,
                                     new Movie(mid, title, NA, duration),
                                     new Theater(tid, theaterName, NA, NA, NA, cid),
                                     cid

@@ -48,7 +48,7 @@ public class GetCinemaIDSessionsView extends CommandView {
             tableData[y][2] = String.valueOf(session.getMovie().getTitle());
             tableData[y][3] = String.valueOf(session.getMovie().getDuration());
             tableData[y][4] = String.valueOf(session.getTheater().getName());
-            tableData[y][5] = String.valueOf(session.getTheater().getAvailableSeats());
+            tableData[y][5] = String.valueOf(session.getAvailableSeats());
         }
         return tableData;
     }

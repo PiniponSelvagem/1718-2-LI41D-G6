@@ -9,7 +9,6 @@ import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
-import pt.isel.ls.view.command.utils.HtmlViewCommon;
 
 import java.util.LinkedList;
 
@@ -32,7 +31,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
                         session.getMovie().getTitle(),
                         String.valueOf(session.getMovie().getDuration()),
                         session.getTheater().getName(),
-                        String.valueOf(session.getTheater().getAvailableSeats())}
+                        String.valueOf(session.getAvailableSeats())}
         );
 
         return header.getBuildedString();
@@ -43,7 +42,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
         Session session=(Session) data.getData(D_SESSION);
         Theater theater= (Theater) data.getData(D_THEATER);
         LinkedList<String> tickets= (LinkedList<String>)data.getData(D_TICKETS);
-        String tkid, cinema=(String) data.getData(D_CINEMA);
+        String tkid;
 
         Writable[][] td = new Writable[session.getTheater().getRows()][session.getTheater().getSeatsPerRow()];
         Writable[] td_array = new Writable[session.getTheater().getRows()];
@@ -78,7 +77,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
                 h3(a(hyperLink, "Theater: "+theater.getName())),
                 h3(a(""+DIR_SEPARATOR+MOVIES+DIR_SEPARATOR+session.getMovie().getId()
                         , "Movie: "+session.getMovie().getTitle())),
-                h2(text("Available Seats: "+ (int)this.data.getData(D_AVAILABLE_SEATS))),
+                h2(text("Available Seats: "+session.getAvailableSeats())),
                 h2(text("Seats Display: ")),
                 tableWithName(ticketsTable, td_array),
                 h3(a(""+DIR_SEPARATOR+CINEMAS+DIR_SEPARATOR+theater.getCinemaID()+DIR_SEPARATOR+SESSIONS+
@@ -96,7 +95,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
                         session.getMovie().getTitle(),
                         String.valueOf(session.getMovie().getDuration()),
                         session.getTheater().getName(),
-                        String.valueOf(session.getTheater().getAvailableSeats())}
+                        String.valueOf(session.getAvailableSeats())}
         );
 
         return header.getBuildedString();
