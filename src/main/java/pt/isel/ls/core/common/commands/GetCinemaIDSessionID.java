@@ -68,8 +68,12 @@ public class GetCinemaIDSessionID extends Command {
                 "SELECT * FROM TICKET AS tk WHERE tk.sid=?");
         stmt.setInt(1, id);
         rs = stmt.executeQuery();
-        while(rs.next())
+        if (!rs.next())
+            return new InfoNotFoundView(data);
+
+        do {
             ticketIDs.add(""+rs.getString(3).charAt(0)+rs.getInt(2));
+        } while(rs.next());
 
         data.add(D_THEATER, theater);
         data.add(D_SESSION, session);

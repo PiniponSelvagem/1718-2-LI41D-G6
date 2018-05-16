@@ -120,7 +120,7 @@ public class GetMovieIDSessionsDateID extends Command {
         String theaterName, title;
 
         LinkedList<Session> sessions = new LinkedList<>();
-        while (rs.next()) {
+        do {
             sid = rs.getInt(1);
             date = rs.getTimestamp(2);
             mid = rs.getInt(3);
@@ -142,7 +142,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             cid
                     )
             );
-        }
+        } while(rs.next());
         data.add(D_SESSIONS, sessions);
     }
 }

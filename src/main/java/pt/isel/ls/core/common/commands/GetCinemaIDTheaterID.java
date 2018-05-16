@@ -73,7 +73,7 @@ public class GetCinemaIDTheaterID extends Command {
         if (!rs.next())
             return new InfoNotFoundView(data);
 
-        while(rs.next()){
+        do {
             sid = rs.getInt(1);
             dateTime = rs.getTimestamp(2);
             availableSeats = rs.getInt(3);
@@ -88,7 +88,7 @@ public class GetCinemaIDTheaterID extends Command {
                             null,
                             cid)
             );
-        }
+        } while(rs.next());
         data.add(D_SESSIONS, sessions);
 
         return new GetCinemaIDTheaterIDView(data);

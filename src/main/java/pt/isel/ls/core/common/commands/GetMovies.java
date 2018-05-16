@@ -33,9 +33,9 @@ public class GetMovies extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("SELECT * from MOVIE");
         ResultSet rs = stmt.executeQuery();
-
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
         LinkedList<Movie> movies = new LinkedList<>();
+
         while(rs.next()){
             movies.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
         }

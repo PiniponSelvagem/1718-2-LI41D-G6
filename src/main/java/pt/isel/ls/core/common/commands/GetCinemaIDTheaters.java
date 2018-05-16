@@ -32,9 +32,9 @@ public class GetCinemaIDTheaters extends Command {
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM THEATER AS t WHERE t.cid=?");
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         ResultSet rs = stmt.executeQuery();
-
         DataContainer data = new DataContainer(cmdBuilder.getHeader());
         LinkedList<Theater> theaters = new LinkedList<>();
+
         while(rs.next()){
             theaters.add(
                     new Theater(rs.getInt(1), rs.getString(5), rs.getInt(3), rs.getInt(4), rs.getInt(2), rs.getInt(6)

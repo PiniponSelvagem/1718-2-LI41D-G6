@@ -45,10 +45,14 @@ public class GetMovieID extends Command {
                                 "group by c.cid, c.Name, c.City");
         stmt2.setString(1, cmdBuilder.getId(MOVIE_ID.toString()));
         rs = stmt2.executeQuery();
+
+        if (!rs.next())
+            return new InfoNotFoundView(data);
+
         LinkedList<Cinema> cinemas = new LinkedList<>();
-        while(rs.next()){
+        do {
             cinemas.add(new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
-        }
+        } while(rs.next());
         data.add(D_CINEMAS, cinemas);
 
         PreparedStatement stmt3 = connection.prepareStatement("select * from CINEMA_SESSION as cs INNER JOIN THEATER as t on cs.tid = t.tid " +
@@ -56,13 +60,17 @@ public class GetMovieID extends Command {
                                 "inner join MOVIE as m on m.mid = cs.mid and m.mid = ? ");
         stmt3.setString(1, cmdBuilder.getId(MOVIE_ID.toString()));
         rs = stmt3.executeQuery();
+
+        if (!rs.next())
+            return new InfoNotFoundView(data);
+
         LinkedList<Session> sessions = new LinkedList<>();
-        while(rs.next()){
+        do {
             sessions.add(new Session(rs.getInt(1), rs.getInt(5),rs.getTimestamp(2),
                     new Movie(rs.getInt(3), rs.getString(16), rs.getInt(17), rs.getInt(18)),
                     new Theater(rs.getInt(4), rs.getString(10), rs.getInt(8), rs.getInt(9), rs.getInt(5), rs.getInt(7)),
                     rs.getInt(11)));
-        }
+        } while(rs.next());
         data.add(D_SESSIONS, sessions);
         return new GetMovieIDView(data);
     }

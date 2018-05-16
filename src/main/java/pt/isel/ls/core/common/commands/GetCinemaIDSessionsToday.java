@@ -45,10 +45,10 @@ public class GetCinemaIDSessionsToday extends Command {
         stmt.setDate(2, date);
         ResultSet rs = stmt.executeQuery();
         DataContainer data =  new DataContainer(cmdBuilder.getHeader());
-        int id, seats, cid, tid, mid, duration, availableSeats;
+        int id, seats, cid = Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())), tid, mid, duration, availableSeats;
         Timestamp dateTime;
-        String theaterName, title, cinemaName, cinemaCity;
-        HashMap<Integer, Cinema> cinemas = new HashMap<>();
+        String theaterName, title;
+        Cinema cinema = null;
         LinkedList<Session> sessions = new LinkedList<>();
         while(rs.next()){
             id = rs.getInt(1);
@@ -60,10 +60,12 @@ public class GetCinemaIDSessionsToday extends Command {
             tid = rs.getInt(7);
             mid = rs.getInt(8);
             availableSeats = rs.getInt(9);
-            cid = rs.getInt(10);
-            cinemaName = rs.getString(11);
-            cinemaCity = rs.getString(12);
-            cinemas.put(cid, new Cinema(cid, cinemaName, cinemaCity));
+
+            if (cinema==null) {
+                cid = rs.getInt(10);
+                cinema = new Cinema(rs.getInt(10), rs.getString(11), rs.getString(12));
+                data.add(D_CINEMA, cinema);
+            }
             sessions.add(new Session(id, availableSeats, dateTime,
                             new Movie(mid, title, NA, duration),
                             new Theater(tid, theaterName, NA, NA, seats, cid),
@@ -71,8 +73,6 @@ public class GetCinemaIDSessionsToday extends Command {
             );
         }
         data.add(D_SESSIONS, sessions);
-        data.add(D_CINEMA,cmdBuilder.getId(CINEMA_ID.toString()));
-        data.add(D_CINEMAS, cinemas);
         return new GetCinemaIDSessionsDateIDView(
                 data,
                 Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())),
