@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -37,13 +38,17 @@ public class GetCinemaIDSessionsDateID extends Command {
     @Override
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
+        DataContainer data=new DataContainer(cmdBuilder.getHeader());
         LocalDate localDate;
         String str = cmdBuilder.getId(DATE_ID.toString());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
         //SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat formatter3 = new SimpleDateFormat("ddMMyyyy");
-        localDate = LocalDate.parse(str, formatter);
-
+        try {
+            localDate = LocalDate.parse(str, formatter);
+        }catch(DateTimeParseException e){
+            return new InfoNotFoundView(data);
+        }
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT * FROM CINEMA " +
                 "WHERE cid=?"
@@ -51,7 +56,7 @@ public class GetCinemaIDSessionsDateID extends Command {
 
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         ResultSet rs = stmt.executeQuery();
-        DataContainer data=new DataContainer(cmdBuilder.getHeader());
+
         if (!rs.next()) {
             return new InfoNotFoundView(data);
         }
