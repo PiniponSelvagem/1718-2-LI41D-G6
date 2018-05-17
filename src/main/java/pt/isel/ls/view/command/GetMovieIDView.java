@@ -3,6 +3,7 @@ package pt.isel.ls.view.command;
 import pt.isel.ls.core.common.commands.GetCinemaID;
 import pt.isel.ls.core.common.commands.GetCinemaIDSessionID;
 
+import pt.isel.ls.core.common.commands.GetMovies;
 import pt.isel.ls.core.common.headers.Html;
 import pt.isel.ls.core.common.headers.Json;
 import pt.isel.ls.core.common.headers.Plain;
@@ -18,6 +19,7 @@ import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.*;
 import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID_FULL;
+import static pt.isel.ls.core.strings.CommandEnum.MOVIE_ID_FULL;
 import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID_FULL;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
@@ -75,6 +77,8 @@ public class GetMovieIDView extends CommandView {
         String hyperLink_session = new GetCinemaIDSessionID().getPath()
                 .replace(CINEMA_ID_FULL.toString(), "%d")
                 .replace(SESSION_ID_FULL.toString(), "%d");
+        String hyperLink_movies = new GetMovies().getPath()
+                .replace(MOVIE_ID_FULL.toString(), "%d");
         for (int i = 0; i < sessions.size(); i++) {
             session = sessions.get(i);
             cinema = cinemasMap.get(session.getCinemaID());
@@ -86,6 +90,7 @@ public class GetMovieIDView extends CommandView {
         }
 
         header = new HtmlPage("Movie " + movie.getTitle(),
+                h3(a(hyperLink_movies, "Movies")),
                 h1(text("Movie " + movie.getTitle())),
                 li(text("Release year: "+Integer.toString(movie.getYear()))),
                 li(text("Duration: "+Integer.toString(movie.getDuration())+" minutes")),
