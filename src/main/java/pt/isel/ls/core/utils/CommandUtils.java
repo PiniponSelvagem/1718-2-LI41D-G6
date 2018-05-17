@@ -36,7 +36,6 @@ public class CommandUtils {
         cmdTree.add(new Options());                 //"OPTIONS"
         cmdTree.add(new Exit());                    //"EXIT"
         cmdTree.add(new Listen());                  //"LISTEN"
-        cmdTree.add(new Test());                    //"TEST"
 
 
         /* Commands related to MOVIES */

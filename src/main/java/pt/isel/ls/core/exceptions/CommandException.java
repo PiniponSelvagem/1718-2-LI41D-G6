@@ -10,8 +10,8 @@ public class CommandException extends Exception {
         this.msg = String.valueOf(msg);
     }
 
-    public CommandException(String msg) {
-        this.msg = msg;
+    public CommandException(ExceptionEnum msg, String replace) {
+        this.msg = String.format(msg.toString(), replace);
     }
 
     public String getMessage() {

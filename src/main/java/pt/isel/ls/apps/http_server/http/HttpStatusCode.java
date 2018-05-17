@@ -1,13 +1,14 @@
 package pt.isel.ls.apps.http_server.http;
 
 public enum HttpStatusCode {
-    Ok(200),
-    Created(201),
-    SeeOther(303),
-    BadRequest(400),
-    NotFound(404),
-    MethodNotAllowed(405), 
-    InternalServerError(500),
+    OK(200),
+    CREATED(201),
+    NO_CONTENT(204),
+    SEE_OTHER(303),
+    BAD_REQUEST(400),
+    NOT_FOUND(404),
+    METHOD_NOT_ALLOWED(405),
+    INTERNAL_SERVER_ERROR(500),
     ;
     
     private final int _code;

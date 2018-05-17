@@ -33,7 +33,7 @@ public class Listen extends Command {
             new HttpServer(port);
         }
         catch (NumberFormatException e){
-            throw new CommandException(SERVER_PORT_INVALID_FORMAT.toString());
+            throw new CommandException(SERVER_PORT_INVALID_FORMAT);
         }
         return null;
     }
