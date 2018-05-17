@@ -57,9 +57,9 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
             );
             stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
             stmt.executeUpdate();
-            return new PostView<>("Ticket ID: ", id);
+            return new PostView<>(true, "Ticket ID: ", id);
         }
-        return new PostView<>("Ticket ", "NOT POSTED!");
+        return new PostView<>(false, "Ticket ", "NOT POSTED!");
     }
 
     @Override

@@ -2,17 +2,21 @@ package pt.isel.ls.view.command;
 
 public class PostView<T> extends CommandView {
 
-    private T uniqueId;
-    private String type;
+    private final T uniqueId;
+    private final String type;
+    private final boolean success;
 
-    public PostView(String type, T uniqueId){
+    public PostView(boolean success, String type, T uniqueId){
+        this.success = success;
         this.type = type;
         this.uniqueId = uniqueId;
     }
 
     @Override
     protected void allInfo() {
-        infoString = "Information posted with success." + System.lineSeparator()
-                + type + " " + uniqueId;
+        if (success)
+            infoString = "Information posted with success." + System.lineSeparator() + type + " " + uniqueId;
+        else
+            infoString = "Information posted failed." + System.lineSeparator() + type + " " + uniqueId;
     }
 }

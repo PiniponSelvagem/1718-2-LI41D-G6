@@ -33,7 +33,7 @@ public class PostMovies extends Command {
         ResultSet rs = stmt.getGeneratedKeys();
         if(rs.next()) id = rs.getInt(1);
 
-        return new PostView<>("Movie ID = ", id);
+        return new PostView<>(true, "Movie ID = ", id);
     }
 
     @Override
