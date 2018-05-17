@@ -22,7 +22,6 @@ public enum CommandEnum {
     POST("POST"),
     GET("GET"),
     DELETE("DELETE"),
-    TEST("TEST"),
 
     //Directories
     MOVIES("movies"),           MOVIE_ID("mid"),    MOVIE_ID_FULL(String.format("%s%s%s", ID_PREFIX, MOVIE_ID, ID_SUFFIX)),

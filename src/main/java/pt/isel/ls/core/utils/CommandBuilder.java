@@ -80,8 +80,7 @@ public class CommandBuilder {
             return null;
 
              */
-            throw new CommandException("EXCEPTION AT: CommandBuilder.parsePath() when trying to: "+
-                    "args[1].subSequence(0, DIR_SEPARATOR.toString().length()).equals(DIR_SEPARATOR.toString())");
+            throw new CommandException(DEBUG__EXCEPTION);
         }
     }
 
@@ -173,7 +172,7 @@ public class CommandBuilder {
         for (String aParamsSplit : paramsSplit) {
             String[] aux = aParamsSplit.split(PARAMS_EQUALTO.toString());
             if (aux.length != 2) {
-                throw new CommandException(String.format(PARAMETERS__NO_VALUE_ASSIGNED.toString(), aux[0]));
+                throw new CommandException(PARAMETERS__NO_VALUE_ASSIGNED, aux[0]);
             }
             value = aux[1].replace(
                     PARAMS_VALS_SEPARATOR.toString(),
@@ -200,7 +199,7 @@ public class CommandBuilder {
         for (String aHeadersSplit : headersSplit) {
             String[] aux = aHeadersSplit.split(HEADERS_EQUALTO.toString());
             if (aux.length != 2)
-                throw new CommandException(String.format(HEADERS__NO_VALUE_ASSIGNED.toString(), aux[0]));
+                throw new CommandException(HEADERS__NO_VALUE_ASSIGNED, aux[0]);
             this.headers.put(aux[0], aux[1]);
         }
 
@@ -211,7 +210,7 @@ public class CommandBuilder {
             this.pathHeaders.removeLast();
         }
         else
-            throw new CommandException(HEADERS__INVALID.toString());
+            throw new CommandException(HEADERS__INVALID);
     }
 
     /**
@@ -222,7 +221,7 @@ public class CommandBuilder {
      */
     private void parameterValidator(String param) throws CommandException {
         if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
-            throw new CommandException(String.format(PARAMETERS__EXPECTED.toString(), param));
+            throw new CommandException(PARAMETERS__EXPECTED, param);
     }
 
     /**
