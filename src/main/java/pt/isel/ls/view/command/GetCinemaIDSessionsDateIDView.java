@@ -84,9 +84,9 @@ public class GetCinemaIDSessionsDateIDView extends CommandView {
         header = new HtmlPage("Sessions for date: " + sdf_withSep.format(this.date),
                 h1(text("Sessions for date: " + sdf_withSep.format(this.date))),
                 h3(a(String.format(hyperlink_cinema, cinemaId), cinema.getName())),
-                table(td_array),
-                h2(a(String.format(hyperlink_dateNavigator, yesterday),"Yesterday's Sessions")),
-                h2(a(String.format(hyperlink_dateNavigator, tomorrow),"Tomorrow's Sessions"))
+                h3(a(String.format(hyperlink_dateNavigator, yesterday),"Previous day")),
+                h3(a(String.format(hyperlink_dateNavigator, tomorrow),"Next day")),
+                table(td_array)
         );
         return header.getBuildedString();
     }

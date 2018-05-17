@@ -18,7 +18,8 @@ public enum ExceptionEnum {
     HEADERS__EXPECTED("Header not found. Input headers was: %s"),
     HEADERS__INVALID("Header with invalid syntax. More info at: "+OPTIONS),
 
-    DATE_INVALID_FORMAT("Invalid date format. [dd/MM/yyyy HH:mm] & [yyyy/MM/dd HH:mm]"),
+    DATETIME_INVALID_FORMAT("Invalid date format. [dd/MM/yyyy HH:mm] & [yyyy/MM/dd HH:mm]"),
+    DATE_INVALID_FORMAT("Invalid date or/and format. [ddMMyyyy]"),
 
     SERVER_PORT_INVALID_FORMAT("Invalid server port number. Port syntax is, example: port=8080"),
 

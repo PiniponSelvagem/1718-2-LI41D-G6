@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import static pt.isel.ls.core.common.headers.Html.*;
 import static pt.isel.ls.core.strings.CommandEnum.CINEMA_ID_FULL;
 import static pt.isel.ls.core.strings.CommandEnum.SESSION_ID_FULL;
-import static pt.isel.ls.core.strings.CommandEnum.THEATER_ID_FULL;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetMovieIDView extends CommandView {

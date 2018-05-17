@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.strings.ExceptionEnum.DATE_INVALID_FORMAT;
+import static pt.isel.ls.core.strings.ExceptionEnum.DATETIME_INVALID_FORMAT;
 
 public class PostCinemaIDTheaterIDSessions extends Command {
 
@@ -49,7 +49,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 sdf2.setLenient(false);
                 event = sdf2.parse(check.trim());
             } catch (ParseException ex) {
-                throw new CommandException(DATE_INVALID_FORMAT);
+                throw new CommandException(DATETIME_INVALID_FORMAT);
             }
         }
 

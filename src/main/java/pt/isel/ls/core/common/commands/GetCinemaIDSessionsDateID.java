@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.ExceptionEnum.DATE_INVALID_FORMAT;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionsDateID extends Command {
@@ -46,8 +47,8 @@ public class GetCinemaIDSessionsDateID extends Command {
         SimpleDateFormat formatter3 = new SimpleDateFormat("ddMMyyyy");
         try {
             localDate = LocalDate.parse(str, formatter);
-        }catch(DateTimeParseException e){
-            return new InfoNotFoundView(data);
+        } catch(DateTimeParseException e){
+            return new InfoNotFoundView(data, DATE_INVALID_FORMAT.toString());
         }
         PreparedStatement stmt = connection.prepareStatement(
                 "SELECT * FROM CINEMA " +

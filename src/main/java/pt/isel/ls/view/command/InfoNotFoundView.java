@@ -7,9 +7,16 @@ import pt.isel.ls.core.utils.DataContainer;
 import static pt.isel.ls.core.common.headers.Html.*;
 
 public class InfoNotFoundView extends CommandView {
+    private final String msg;
 
     public InfoNotFoundView(DataContainer data) {
         this.data = data;
+        this.msg = "";
+    }
+
+    public InfoNotFoundView(DataContainer data, String msg) {
+        this.data = data;
+        this.msg = msg;
     }
 
     @Override
@@ -26,6 +33,7 @@ public class InfoNotFoundView extends CommandView {
                 h3(text("Seems like the requested page exists, " +
                         "but the info required to display it wasn't found.")),
                 h3(text("Did you change the url to come to this page? If not, please contact the admin.")),
+                h3(text(msg)),
                 h2(a("/", "Main page"))
         );
 
