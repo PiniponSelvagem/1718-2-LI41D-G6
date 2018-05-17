@@ -36,14 +36,16 @@ public class HttpCmdResolver extends HttpServlet {
         */
 
         String header = req.getHeader("Accept");
-        if (header.contains(PLAIN))     header = HDPRE+PLAIN;
-        else if (header.contains(JSON)) header = HDPRE+JSON;
-        else header = HDPRE+HTML;
+        if (header.contains(PLAIN))     header = PLAIN;
+        else if (header.contains(JSON)) header = JSON;
+        else header = HTML;
 
         //System.out.println(header);
 
         Charset utf8 = Charset.forName("utf-8");
-        resp.setContentType(String.format("text/html; charset=%s", utf8.name()));
+        resp.setContentType(String.format(header+"; charset=%s", utf8.name()));
+
+        header = HDPRE+header;
 
         String respBody = "";
 
