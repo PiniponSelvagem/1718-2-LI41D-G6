@@ -104,21 +104,13 @@ public class CommandBuilder {
      * @throws CommandException CommandException
      */
     private void findOptions(String[] args) throws CommandException {
-        /*
-        FUTURE NOTE: Parameters for date with time style -> 12:55, can conflict with
-                     detection of headers, since ':' is the equals syntax for it.
-                     ATM to work around this, its looking for '=' syntax, since its
-                     only used for the parameters equals syntax.
-
-        NOTE:        THE args[x].contains MUST BE DIFFERENT THAN HEADERS_EQUALTO.
-        */
 
         if (args.length == 3) {
-            if (args[2] != null && args[2].contains(PARAMS_EQUALTO.toString())) {
-                findParams(args[2]);
+            if (args[2] != null && args[2].contains(ACCEPT.toString())) {
+                findHeaders(args[2]);
             }
             else {
-                findHeaders(args[2]);
+                findParams(args[2]);
             }
         }
         else {

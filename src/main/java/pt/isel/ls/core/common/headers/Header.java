@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
+
 public abstract class Header extends CommonCmd {
     protected StringBuilder text = new StringBuilder();
     public String fileName;
@@ -17,6 +19,15 @@ public abstract class Header extends CommonCmd {
      */
     public String getBuildedString() {
         return text.toString();
+    }
+
+    /**
+     * @return Returns the path+methodname without the 1st "/",
+     * while adding it between path and methodname.
+     * example: text/html
+     */
+    public String getPathAndMethodName() {
+        return getPath().substring(1)+DIR_SEPARATOR.toString()+getMethodName();
     }
 
 
