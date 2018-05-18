@@ -5,3 +5,15 @@ dependencies {
     compile fileTree(dir: 'vendor/main', include: '*.jar')
     testCompile fileTree(dir: 'vendor/test', include: '*.jar')
 }
+
+task fatJar(type: Jar) {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } {
+		exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+	}
+    with jar
+    manifest {
+        attributes 'Main-Class': 'pt.isel.ls.Main'
+    }
+}
+
+build.finalizedBy(fatJar)

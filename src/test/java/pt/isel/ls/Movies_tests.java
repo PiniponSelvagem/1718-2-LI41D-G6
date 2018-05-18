@@ -9,6 +9,7 @@ import pt.isel.ls.model.Movie;
 import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.command.GetMovieIDView;
 import pt.isel.ls.view.command.GetMoviesView;
+import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -123,7 +124,7 @@ public class Movies_tests {
             }
 
             int id = movies.getFirst().getId();
-            GetMovieIDView movieIDView = (GetMovieIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con,false);
+            InfoNotFoundView movieIDView = (InfoNotFoundView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con,false);
             DataContainer data = movieIDView.getData();
             Movie movie = (Movie) data.getData(D_MOVIE);
             assertEquals(id, movie.getId());

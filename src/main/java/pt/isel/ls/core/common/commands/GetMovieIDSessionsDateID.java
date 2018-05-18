@@ -21,7 +21,7 @@ public class GetMovieIDSessionsDateID extends Command {
 
     private Timestamp date = null;
     private DataContainer data;
-    private static final String COLUMNS = "s.sid, s.Date, m.mid, t.tid, s.SeatsAvailable, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration, t.SeatsAvailable  ";
+    private static final String COLUMNS = "s.sid, s.Date, m.mid, t.tid, s.SeatsAvailable, t.Rows, t.Seats, t.Theater_Name, c.cid, m.Title, m.Release_Year, m.Duration, t.SeatsAvailable ";
     private static final String FROM = "FROM MOVIE AS m INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid ";
     private static final String INNER_JOIN_THEATER = "INNER JOIN THEATER AS t ON t.tid=s.tid ";
 
@@ -120,7 +120,7 @@ public class GetMovieIDSessionsDateID extends Command {
         String theaterName, title;
 
         LinkedList<Session> sessions = new LinkedList<>();
-        do {
+        while(rs.next()) {
             sid = rs.getInt(1);
             date = rs.getTimestamp(2);
             mid = rs.getInt(3);
@@ -142,7 +142,7 @@ public class GetMovieIDSessionsDateID extends Command {
                             cid
                     )
             );
-        } while(rs.next());
+        }
         data.add(D_SESSIONS, sessions);
     }
 }

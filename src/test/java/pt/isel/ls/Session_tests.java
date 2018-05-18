@@ -263,7 +263,7 @@ public class Session_tests {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con, false);
+            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
             LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;
