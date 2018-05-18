@@ -347,7 +347,7 @@ public class Session_tests {
                     session = sessions.get(i);
                     assertEquals(movId[idx], session.getMovie().getId());
                     assertEquals(date, session.getDateTime().split(" ")[0]);
-                    assertEquals(available, session.getTheater().getAvailableSeats());
+                    assertEquals(available, session.getTheater().getSeats());
                 }
             }
             view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()), con, false);

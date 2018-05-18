@@ -104,7 +104,6 @@ public class CommandBuilder {
      * @throws CommandException CommandException
      */
     private void findOptions(String[] args) throws CommandException {
-
         if (args.length == 3) {
             if (args[2] != null && args[2].contains(ACCEPT.toString())) {
                 findHeaders(args[2]);
@@ -219,7 +218,7 @@ public class CommandBuilder {
     /**
      *  If the command that is being requested to execute dosent have headers,
      *  add default header "HTML". If it has, create the correct header and its options.
-     *  Search the command in the commands tree.
+     *  Search the header in the headers tree.
      */
     private void buildCommand() throws CommandException {
         if (headers != null) {
