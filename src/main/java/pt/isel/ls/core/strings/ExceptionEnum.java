@@ -22,6 +22,7 @@ public enum ExceptionEnum {
     DATE_INVALID_FORMAT("Invalid date or/and format. [ddMMyyyy]"),
 
     SERVER_PORT_INVALID_FORMAT("Invalid server port number. Port syntax is, example: port=8080"),
+    SERVER_PORT_ALREADY_IN_USE("Could not start server on port %s because its already in use."),
 
     DEBUG__EXCEPTION("EXCEPTION AT: CommandBuilder.parsePath() when trying to: "+
             "args[1].subSequence(0, DIR_SEPARATOR.toString().length()).equals(DIR_SEPARATOR.toString())"),

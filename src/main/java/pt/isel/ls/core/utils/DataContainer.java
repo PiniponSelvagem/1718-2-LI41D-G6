@@ -5,6 +5,12 @@ import pt.isel.ls.core.common.headers.Header;
 import java.util.HashMap;
 
 public class DataContainer {
+
+    /**
+     * Class used to parse the data requested by the Command to the view
+     * while keeping the information organized for better handling.
+     */
+
     private Header header;
     private HashMap<DataEnum, Object> map = new HashMap<>();
 
@@ -12,35 +18,51 @@ public class DataContainer {
         this.header = header;
     }
 
+    /**
+     * @return Returns the header in this data container
+     */
     public Header getHeader() {
         return header;
     }
 
+    /**
+     * Add the object to the data container
+     * @param key DateEnum
+     * @param obj Object to add
+     */
     public void add(DataEnum key, Object obj) {
         map.put(key, obj);
     }
 
+    /**
+     * @param key DataEnum
+     * @return Returns the object requested from the data container
+     */
     public Object getData(DataEnum key) {
         return map.get(key);
     }
 
+    /**
+     * Enum to be used to organize the DataContainer
+     */
     public enum DataEnum {
-        D_CINEMAS,
-        D_CINEMA,
+        D_CINEMAS,          //Multiple cinemas
+        D_CINEMA,           //Just ONE cinema
 
-        D_THEATERS,
-        D_THEATER,
+        D_THEATERS,         //Multiple theaters
+        D_THEATER,          //Just ONE theater
 
-        D_SESSIONS,
-        D_SESSION,
+        D_SESSIONS,         //Multiple sessions
+        D_SESSION,          //Just ONE session
 
-        D_MOVIES,
-        D_MOVIE,
+        D_MOVIES,           //Multiple movies
+        D_MOVIE,            //Just ONE movie
 
-        D_TICKETS,
-        D_TICKET,
+        D_TICKETS,          //Multiple tickets
+        D_TICKET,           //Just ONE ticket
 
-        D_AVAILABLE_SEATS,
+        D_AVAILABLE_SEATS,  //Use to save integer value of number of seats available,
+                            //if you using D_SESSIONS or D_SESSION, use its available seats variable instead
 
         ;
     }

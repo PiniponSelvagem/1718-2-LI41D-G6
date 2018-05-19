@@ -5,6 +5,7 @@ import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.view.command.CommandView;
 
+import java.net.BindException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
