@@ -50,12 +50,9 @@ public class GetCinemaID extends Command {
         rs = stmt2.executeQuery();
         LinkedList<Theater> theaters = new LinkedList<>();
 
-        if (!rs.next())
-            return new InfoNotFoundView(data);
-
-        do {
+        while(rs.next()) {
             theaters.add(new Theater(rs.getInt(1), rs.getString(2), NA, NA, NA, NA));
-        } while(rs.next());
+        }
         data.add(D_THEATERS, theaters);
 
         PreparedStatement stmt4 = connection.prepareStatement("select DISTINCT m.Title as Title, m.Duration as Duration, m.Release_Year as Release_Year, m.mid" +
@@ -65,13 +62,11 @@ public class GetCinemaID extends Command {
                 " WHERE c.cid = ?");
         stmt4.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         rs = stmt4.executeQuery();
-        if (!rs.next())
-            return new InfoNotFoundView(data);
 
         LinkedList<Movie> movies = new LinkedList<>();
-        do {
+        while (rs.next()) {
             movies.add(new Movie(rs.getInt(4), rs.getString(1), rs.getInt(3), rs.getInt(2)));
-        } while (rs.next());
+        }
         data.add(D_MOVIES, movies);
 
         return new GetCinemaIDView(data);

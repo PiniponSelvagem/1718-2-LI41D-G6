@@ -222,7 +222,7 @@ public class CommandBuilder {
                     header.fileName = headers.get(FILE_NAME.toString());
                 }
                 else {
-                    throw new CommandException(HEADERS__INVALID);
+                    throw new CommandException(HEADERS__NOT_FOUND);
                 }
             } catch (InstantiationException | IllegalAccessException e) {
                 //If it came here, it could be because the Header class dosent have a constructor with no parameters

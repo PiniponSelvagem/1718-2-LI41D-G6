@@ -2,6 +2,7 @@ package pt.isel.ls.core.strings;
 
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.OPTIONS;
+import static pt.isel.ls.core.strings.CommandEnum.SEATS_ROW;
 
 public enum ExceptionEnum {
 
@@ -20,6 +21,7 @@ public enum ExceptionEnum {
 
     DATETIME_INVALID_FORMAT("Invalid date format. [dd/MM/yyyy HH:mm] & [yyyy/MM/dd HH:mm]"),
     DATE_INVALID_FORMAT("Invalid date or/and format. [ddMMyyyy]"),
+    TICKET_SEAT_INVALID("Invalid input for parameter "+SEATS_ROW.toString()+". Did you input a numeric value? [0..9]"),
 
     SERVER_PORT_INVALID_FORMAT("Invalid server port number. Port syntax is, example: port=8080"),
     SERVER_PORT_ALREADY_IN_USE("Could not start server on port %s because its already in use."),

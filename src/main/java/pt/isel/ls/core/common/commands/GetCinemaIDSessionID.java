@@ -62,8 +62,8 @@ public class GetCinemaIDSessionID extends Command {
         tid = rs.getInt(8);
         mid = rs.getInt(9);
         seats = rs.getInt(12);
-        theater= new Theater(tid, theaterName, rs.getInt(10), rs.getInt(11), seats, cid);
-        session= new Session(id, availableSeats, dateTime,new Movie(mid, title, NA, duration),theater, cid);
+        theater = new Theater(tid, theaterName, rs.getInt(10), rs.getInt(11), seats, cid);
+        session = new Session(id, availableSeats, dateTime, new Movie(mid, title, NA, duration), theater, cid);
         stmt = connection.prepareStatement(
                 "SELECT * FROM TICKET AS tk WHERE tk.sid=?");
         stmt.setInt(1, id);
