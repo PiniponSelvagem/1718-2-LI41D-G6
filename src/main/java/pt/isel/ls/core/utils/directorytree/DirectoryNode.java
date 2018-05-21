@@ -78,8 +78,8 @@ public class DirectoryNode {
      */
     @Override
     public boolean equals(Object obj) {
-        DirectoryNode cmpObj = (DirectoryNode)obj;
-        return dir.equals( cmpObj.dir );
+        DirectoryNode cmpObj = (DirectoryNode) obj;
+        return dir != null && dir.equals(cmpObj.dir);
     }
 
     /**

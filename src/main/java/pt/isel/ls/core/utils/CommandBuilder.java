@@ -14,6 +14,7 @@ import static pt.isel.ls.core.strings.ExceptionEnum.*;
 
 public class CommandBuilder {
     private CommandUtils cmdUtils;
+    private static final String REGEX_DIGITS = ".*\\d+.*";
 
     private String methodName;
     private LinkedList<String> path = new LinkedList<>();
@@ -131,15 +132,7 @@ public class CommandBuilder {
         String currDir = cmdUtils.getRootName();
         for (int i=0; i<path.size(); ++i) {
             if (path.get(i).length() > 0) {
-                //if (cmdUtils.getDirID(currDir) != null) {
-                //TODO: this testChar and IfElse might be temporary till better solution is found.
-                char testChar;
-                if (path.get(i).length() >= 2)
-                    testChar = path.get(i).charAt(1);
-                else
-                    testChar = path.get(i).charAt(0);
-
-                if (Character.isDigit(testChar)) {
+                if (path.get(i).matches(REGEX_DIGITS)) {
                     ids.put(cmdUtils.getDirID(currDir), path.get(i));
                     path.set(i, cmdUtils.getDirID(currDir));
                 }
