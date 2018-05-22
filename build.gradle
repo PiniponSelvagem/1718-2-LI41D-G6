@@ -6,14 +6,6 @@ dependencies {
     testCompile fileTree(dir: 'vendor/test', include: '*.jar')
 }
 
-task fatJar(type: Jar) {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } {
-		exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-	}
-    with jar
-    manifest {
-        attributes 'Main-Class': 'pt.isel.ls.Main'
-    }
-}
+mainClassName = "pt.isel.ls.heroku.HerokuServer"
 
-build.finalizedBy(fatJar)
+task stage(dependsOn: ['clean', 'installApp'])
