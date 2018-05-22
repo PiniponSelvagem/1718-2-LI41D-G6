@@ -96,7 +96,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             stmt.execute();
             rs = stmt.executeQuery();
             if(rs.next())SeatsAvailable = rs.getInt(1);
-            else{return new PostView<>("Session: NOT POSTED!", "Error: THERE IS NO SUCH THEATER!");}
+            else{return new PostView<>(false, "Session: NOT POSTED!", "Error: THERE IS NO SUCH THEATER!");}
         }
         if (flag) { //If DATE free, then POST
             stmt = connection.prepareStatement("INSERT INTO CINEMA_SESSION VALUES (?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
@@ -109,10 +109,10 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             rs = stmt.getGeneratedKeys();
             int id = 0;
             if (rs.next()) id = rs.getInt(1);
-            return new PostView<>("Session: ", id);
+            return new PostView<>(true, "Session: ", id);
         }
         else {
-            return new PostView<>("Session: ", "NOT POSTED!");
+            return new PostView<>(false, "Session: ", "NOT POSTED!");
         }
     }
 

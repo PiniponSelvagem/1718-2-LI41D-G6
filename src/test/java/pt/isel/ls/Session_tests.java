@@ -263,7 +263,7 @@ public class Session_tests {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con, false);
+            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
             LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;
@@ -347,7 +347,7 @@ public class Session_tests {
                     session = sessions.get(i);
                     assertEquals(movId[idx], session.getMovie().getId());
                     assertEquals(date, session.getDateTime().split(" ")[0]);
-                    assertEquals(available, session.getTheater().getAvailableSeats());
+                    assertEquals(available, session.getTheater().getSeats());
                 }
             }
             view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()), con, false);

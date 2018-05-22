@@ -14,6 +14,7 @@ import static pt.isel.ls.core.strings.ExceptionEnum.*;
 
 public class CommandBuilder {
     private CommandUtils cmdUtils;
+    private static final String REGEX_DIGITS = ".*\\d+.*";
 
     private String methodName;
     private LinkedList<String> path = new LinkedList<>();
@@ -104,21 +105,12 @@ public class CommandBuilder {
      * @throws CommandException CommandException
      */
     private void findOptions(String[] args) throws CommandException {
-        /*
-        FUTURE NOTE: Parameters for date with time style -> 12:55, can conflict with
-                     detection of headers, since ':' is the equals syntax for it.
-                     ATM to work around this, its looking for '=' syntax, since its
-                     only used for the parameters equals syntax.
-
-        NOTE:        THE args[x].contains MUST BE DIFFERENT THAN HEADERS_EQUALTO.
-        */
-
         if (args.length == 3) {
-            if (args[2] != null && args[2].contains(PARAMS_EQUALTO.toString())) {
-                findParams(args[2]);
+            if (args[2] != null && args[2].contains(ACCEPT.toString())) {
+                findHeaders(args[2]);
             }
             else {
-                findHeaders(args[2]);
+                findParams(args[2]);
             }
         }
         else {
@@ -140,15 +132,7 @@ public class CommandBuilder {
         String currDir = cmdUtils.getRootName();
         for (int i=0; i<path.size(); ++i) {
             if (path.get(i).length() > 0) {
-                //if (cmdUtils.getDirID(currDir) != null) {
-                //TODO: this testChar and IfElse might be temporary till better solution is found.
-                char testChar;
-                if (path.get(i).length() >= 2)
-                    testChar = path.get(i).charAt(1);
-                else
-                    testChar = path.get(i).charAt(0);
-
-                if (Character.isDigit(testChar)) {
+                if (path.get(i).matches(REGEX_DIGITS)) {
                     ids.put(cmdUtils.getDirID(currDir), path.get(i));
                     path.set(i, cmdUtils.getDirID(currDir));
                 }
@@ -227,7 +211,7 @@ public class CommandBuilder {
     /**
      *  If the command that is being requested to execute dosent have headers,
      *  add default header "HTML". If it has, create the correct header and its options.
-     *  Search the command in the commands tree.
+     *  Search the header in the headers tree.
      */
     private void buildCommand() throws CommandException {
         if (headers != null) {
@@ -238,7 +222,7 @@ public class CommandBuilder {
                     header.fileName = headers.get(FILE_NAME.toString());
                 }
                 else {
-                    throw new CommandException(HEADERS__INVALID);
+                    throw new CommandException(HEADERS__NOT_FOUND);
                 }
             } catch (InstantiationException | IllegalAccessException e) {
                 //If it came here, it could be because the Header class dosent have a constructor with no parameters

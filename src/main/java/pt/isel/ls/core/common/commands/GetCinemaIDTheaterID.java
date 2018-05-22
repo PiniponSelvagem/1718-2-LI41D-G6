@@ -33,7 +33,7 @@ public class GetCinemaIDTheaterID extends Command {
     public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
 
         PreparedStatement stmt = connection.prepareStatement(
-                "SELECT t.tid, t.Theater_Name, t.SeatsAvailable, c.cid, c.Name, c.City " +
+                "SELECT t.tid, t.Theater_Name, t.SeatsAvailable, c.cid, c.Name, c.City, t.Rows, t.Seats " +
                 "FROM THEATER AS t " +
                 "INNER JOIN CINEMA AS c ON c.cid=? " +
                 "WHERE t.tid=?"
@@ -48,7 +48,7 @@ public class GetCinemaIDTheaterID extends Command {
 
         int cid = rs.getInt(4);
         data.add(D_CINEMA, new Cinema(cid, rs.getString(5), rs.getString(6)));
-        data.add(D_THEATER, new Theater(rs.getInt(1), rs.getString(2), NA, NA, rs.getInt(3), cid));
+        data.add(D_THEATER, new Theater(rs.getInt(1), rs.getString(2), rs.getInt(7), rs.getInt(8), rs.getInt(3), cid));
 
 
 
@@ -70,10 +70,7 @@ public class GetCinemaIDTheaterID extends Command {
         Timestamp dateTime;
         String title;
 
-        if (!rs.next())
-            return new InfoNotFoundView(data);
-
-        do {
+        while(rs.next()) {
             sid = rs.getInt(1);
             dateTime = rs.getTimestamp(2);
             availableSeats = rs.getInt(3);
@@ -88,7 +85,7 @@ public class GetCinemaIDTheaterID extends Command {
                             null,
                             cid)
             );
-        } while(rs.next());
+        }
         data.add(D_SESSIONS, sessions);
 
         return new GetCinemaIDTheaterIDView(data);

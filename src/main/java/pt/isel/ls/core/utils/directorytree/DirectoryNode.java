@@ -61,7 +61,7 @@ public class DirectoryNode {
             DirectoryNode currentChild = new DirectoryNode(path.pop());
             int index = childs.indexOf( currentChild );
             if ( index == -1 ) {
-                return new NotFound(); //TODO: maybe return null here? would be easier and better for handling the exception
+                return null;
             } else {
                 DirectoryNode nextChild = childs.get(index);
                 return nextChild.search(path, methodName);
@@ -78,8 +78,8 @@ public class DirectoryNode {
      */
     @Override
     public boolean equals(Object obj) {
-        DirectoryNode cmpObj = (DirectoryNode)obj;
-        return dir.equals( cmpObj.dir );
+        DirectoryNode cmpObj = (DirectoryNode) obj;
+        return dir != null && dir.equals(cmpObj.dir);
     }
 
     /**

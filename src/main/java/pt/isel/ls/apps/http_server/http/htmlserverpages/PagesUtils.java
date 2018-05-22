@@ -17,7 +17,7 @@ public class PagesUtils {
      * Fills the pagesTree with all the custom pages that arent accessible from normal Commands
      */
     private void initializePagesTree() {
-        pagesMap.put("/", new Index());         //index page
+        pagesMap.put("/", new Index());     //index page
     }
 
     /**

@@ -3,6 +3,7 @@ package pt.isel.ls.apps.http_server;
 import pt.isel.ls.CommandRequest;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.*;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.PagesUtils;
+import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.exceptions.CommandException;
 
 import javax.servlet.http.HttpServlet;
@@ -13,10 +14,15 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import static pt.isel.ls.apps.http_server.http.HttpStatusCode.*;
+import static pt.isel.ls.core.strings.CommandEnum.ACCEPT;
+import static pt.isel.ls.core.strings.CommandEnum.HEADERS_EQUALTO;
 
 public class HttpCmdResolver extends HttpServlet {
-
     private PagesUtils pageUtils = new PagesUtils();
+    private static final String HDPRE = ACCEPT.toString()+HEADERS_EQUALTO.toString(), //header prefix
+                                PLAIN = new Plain().getPathAndMethodName(),
+                                JSON  = new Json().getPathAndMethodName(),
+                                HTML  = new Html().getPathAndMethodName();
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -29,8 +35,17 @@ public class HttpCmdResolver extends HttpServlet {
         System.out.println(req.getQueryString());
         */
 
+        String header = req.getHeader("Accept");
+        if (header.contains(PLAIN))     header = PLAIN;
+        else if (header.contains(JSON)) header = JSON;
+        else header = HTML;
+
+        //System.out.println(header);
+
         Charset utf8 = Charset.forName("utf-8");
-        resp.setContentType(String.format("text/html; charset=%s",utf8.name()));
+        resp.setContentType(String.format(header+"; charset=%s", utf8.name()));
+
+        header = HDPRE+header;
 
         String respBody = "";
 
@@ -39,10 +54,10 @@ public class HttpCmdResolver extends HttpServlet {
             if (page == null) {
                 String[] urlOptions;
                 if (req.getParameterNames().hasMoreElements()) {
-                    urlOptions = new String[] {req.getMethod(), req.getRequestURI(), req.getQueryString()};
+                    urlOptions = new String[] {req.getMethod(), req.getRequestURI(), req.getQueryString(), header};
                 }
                 else {
-                    urlOptions = new String[] {req.getMethod(), req.getRequestURI()};
+                    urlOptions = new String[] {req.getMethod(), req.getRequestURI(), header};
                 }
                 CommandRequest cmdReq = new CommandRequest(urlOptions, false);
                 if (cmdReq.getCmdView() != null)
@@ -59,7 +74,7 @@ public class HttpCmdResolver extends HttpServlet {
                 resp.setStatus(OK.valueOf());
             }
         } catch (CommandException e) {
-            respBody = new NotFound().body();
+            respBody = new NotFound(e.getMessage()).body();
             resp.setStatus(NOT_FOUND.valueOf());
 
         } finally {

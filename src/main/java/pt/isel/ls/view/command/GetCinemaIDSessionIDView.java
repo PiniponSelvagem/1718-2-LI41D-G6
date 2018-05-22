@@ -24,7 +24,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
 
     @Override
     protected String toPlain(Plain header) {
-        Session session = (Session) data.getData(D_SESSIONS);
+        Session session = (Session) data.getData(D_SESSION);
         header.addDetailed("Cinema "+session.getCinemaID()+" - Session "+session.getId(),
                 new String[]{"Date", "Title", "Duration", "Theater name", "Available seats"},
                 new String[]{session.getDateTime(),
@@ -65,8 +65,6 @@ public class GetCinemaIDSessionIDView extends CommandView {
             }
             td_array[i] = tr(td[i]);
         }
-        String hl = new GetCinemaIDSessionsToday().getPath()
-                .replace(CINEMA_ID_FULL.toString(), "%d");
 
         hyperLink = new GetCinemaIDTheaterID().getPath()
                 .replace(CINEMA_ID_FULL.toString(), String.valueOf(session.getCinemaID()))
@@ -88,7 +86,7 @@ public class GetCinemaIDSessionIDView extends CommandView {
 
     @Override
     protected String toJson(Json header) {
-        Session session = (Session) data.getData(D_SESSIONS);
+        Session session = (Session) data.getData(D_SESSION);
         header.addObject(
                 new String[]{"Date", "Title", "Duration", "Theater name", "Available seats"},
                 new String[]{session.getDateTime(),

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.ExceptionEnum.TICKET_SEAT_INVALID;
 
 
 public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
@@ -37,8 +38,13 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
         stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
         ResultSet rs = stmt.executeQuery();
         int seats=0, rows=0;
-        int seat=Integer.parseInt(cmdBuilder.getParameter(SEATS_ROW.toString()));
-        int row=cmdBuilder.getParameter(ROWS.toString()).charAt(0)-'A'+1;
+        int seat;
+        try {
+            seat = Integer.parseInt(cmdBuilder.getParameter(SEATS_ROW.toString()));
+        } catch (NumberFormatException e) {
+            throw new CommandException(TICKET_SEAT_INVALID);
+        }
+        int row = cmdBuilder.getParameter(ROWS.toString()).charAt(0)-'A'+1;
         if(rs.next()) {
             seats = rs.getInt(1);
             rows=rs.getInt(2);
@@ -57,9 +63,9 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
             );
             stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
             stmt.executeUpdate();
-            return new PostView<>("Ticket ID: ", id);
+            return new PostView<>(true, "Ticket ID: ", id);
         }
-        return new PostView<>("Ticket ", "NOT POSTED!");
+        return new PostView<>(false, "Ticket ", "NOT POSTED!");
     }
 
     @Override
