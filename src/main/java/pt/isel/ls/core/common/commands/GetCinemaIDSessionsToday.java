@@ -8,9 +8,9 @@ import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.view.command.CommandView;
 import pt.isel.ls.view.command.GetCinemaIDSessionsDateIDView;
+import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.*;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
@@ -33,22 +33,34 @@ public class GetCinemaIDSessionsToday extends Command {
         Date date = new java.sql.Date(new java.util.Date().getTime());
 
         PreparedStatement stmt = connection.prepareStatement(
+                "SELECT * FROM CINEMA " +
+                        "WHERE cid=?"
+        );
+
+        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
+        ResultSet rs = stmt.executeQuery();
+        DataContainer data=new DataContainer(cmdBuilder.getHeader());
+        if (!rs.next()) {
+            return new InfoNotFoundView(data);
+        }
+        else {
+            data.add(D_CINEMA, new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
+        }
+
+        stmt = connection.prepareStatement(
                 "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.tid, m.mid," +
-                        " s.SeatsAvailable, c.cid, c.Name, c.City FROM CINEMA_SESSION AS s " +
+                        " s.SeatsAvailable FROM CINEMA_SESSION AS s " +
                         "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                         "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                        "INNER JOIN CINEMA AS c ON c.cid = t.cid " +
-                        "WHERE c.cid=? AND (CAST(s.Date AS DATE))=?"
+                        "WHERE t.cid=? AND (CAST(s.Date AS DATE))=?"
         );
 
         stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
         stmt.setDate(2, date);
-        ResultSet rs = stmt.executeQuery();
-        DataContainer data =  new DataContainer(cmdBuilder.getHeader());
+        rs = stmt.executeQuery();
         int id, seats, cid = Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())), tid, mid, duration, availableSeats;
         Timestamp dateTime;
         String theaterName, title;
-        Cinema cinema = null;
         LinkedList<Session> sessions = new LinkedList<>();
         while(rs.next()){
             id = rs.getInt(1);
@@ -60,12 +72,6 @@ public class GetCinemaIDSessionsToday extends Command {
             tid = rs.getInt(7);
             mid = rs.getInt(8);
             availableSeats = rs.getInt(9);
-
-            if (cinema==null) {
-                cid = rs.getInt(10);
-                cinema = new Cinema(rs.getInt(10), rs.getString(11), rs.getString(12));
-                data.add(D_CINEMA, cinema);
-            }
             sessions.add(new Session(id, availableSeats, dateTime,
                             new Movie(mid, title, NA, duration),
                             new Theater(tid, theaterName, NA, NA, seats, cid),
