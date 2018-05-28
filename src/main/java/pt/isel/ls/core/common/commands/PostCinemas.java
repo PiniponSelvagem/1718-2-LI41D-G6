@@ -1,13 +1,18 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.CinemasSQL;
+import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.InvalidParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.PostView;
+import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.sql.Sql;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
 
 public class PostCinemas extends Command {
 
@@ -22,20 +27,38 @@ public class PostCinemas extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO CINEMA VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
-        stmt.setString(1, cmdBuilder.getParameter(NAME.toString()));
-        stmt.setString(2, cmdBuilder.getParameter(CITY.toString()));
-        stmt.executeUpdate();
-        ResultSet rs = stmt.getGeneratedKeys();
-        int id = 0;
-        if(rs.next()) id = rs.getInt(1);
+    public DataContainer execute(CommandBuilder cmdBuilder) throws InvalidParameterException {
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_POST,
+                CinemasSQL.postCinema(con,
+                    cmdBuilder.getParameter(NAME),
+                    cmdBuilder.getParameter(CITY)
+                )
+            );
+            con.commit();
+        } catch (SQLException e) {
+            data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-        return new PostView<>(true, "Cinema ID: ", id);
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

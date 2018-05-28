@@ -8,7 +8,6 @@ import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.sql.Sql;
-import pt.isel.ls.view.command.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,7 +45,7 @@ public class Cinema_tests {
             for(int i = 0; i < 3; i++) {
                 String name = "nameTest" + (i + 1);
                 new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                        {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, new CommandUtils()), con, false);
+                        {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, new CommandUtils()), con);
             }
 
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM CINEMA");
@@ -83,10 +82,9 @@ public class Cinema_tests {
             create_cinemas(con);
 
 
-            GetCinemasView view = (GetCinemasView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas"}, new CommandUtils()), con, false);
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas"}, new CommandUtils()), con);
 
-            DataContainer data = view.getData();
             LinkedList<Cinema> cinemas = (LinkedList<Cinema>) data.getData(D_CINEMAS);
             Cinema cinema;
             for(int i = 0; i < cinemas.size(); i++){
@@ -127,11 +125,8 @@ public class Cinema_tests {
                 i++;
             }
 
-            InfoNotFoundView view = (InfoNotFoundView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas/" + ids[1]}, new CommandUtils()), con, false);
-
-            DataContainer data;
-            data = view.getData();
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas/" + ids[1]}, new CommandUtils()), con);
             Cinema cinema = (Cinema) data.getData(D_CINEMA);
             assertEquals(ids[1], cinema.getId());
         } catch (SQLException | CommandException e) {
@@ -169,8 +164,7 @@ public class Cinema_tests {
                 String name = "theater";
                 name += (j + 1);
                 new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
-                        con, false);
+                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()), con);
                 seats += 10;
             }
 
@@ -217,14 +211,12 @@ public class Cinema_tests {
                 String name = "theater";
                 name += (j + 1);
                 new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
-                        con, false);
+                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()), con);
                 seats += 10;
             }
 
-            GetCinemaIDTheatersView view = (GetCinemaIDTheatersView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas/" + ids[0] + "/theaters"}, new CommandUtils()), con, false);
-            DataContainer data = view.getData();
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas/" + ids[0] + "/theaters"}, new CommandUtils()), con);
             Theater theater;
             LinkedList<Theater> theaters = (LinkedList<Theater>) data.getData(D_THEATERS);
             for(int k = 0; k < theaters.size(); k++){
@@ -269,8 +261,7 @@ public class Cinema_tests {
                 String name = "theater";
                 name += (j + 1);
                 new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()),
-                        con, false);
+                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, new CommandUtils()), con);
                 seats += 10;
             }
 
@@ -283,9 +274,8 @@ public class Cinema_tests {
                 k++;
             }
 
-            InfoNotFoundView view = (InfoNotFoundView) new CommandRequest().executeCommand(new CommandBuilder(new String[]
-                    {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()), con, false);
-            DataContainer data = view.getData();
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]
+                    {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, new CommandUtils()), con);
             Theater theater = (Theater) data.getData(D_THEATER);
             assertEquals("theater1", theater.getName());
 

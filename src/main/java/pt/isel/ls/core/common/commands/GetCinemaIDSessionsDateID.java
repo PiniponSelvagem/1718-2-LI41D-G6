@@ -1,23 +1,20 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.CinemasSQL;
+import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
+import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
+import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
+import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.InvalidParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
-import pt.isel.ls.model.Movie;
-import pt.isel.ls.model.Session;
-import pt.isel.ls.model.Theater;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDSessionsDateIDView;
-import pt.isel.ls.view.command.InfoNotFoundView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.strings.ExceptionEnum.DATE_INVALID_FORMAT;
@@ -37,86 +34,44 @@ public class GetCinemaIDSessionsDateID extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-
-        DataContainer data=new DataContainer(cmdBuilder.getHeader());
+    public DataContainer execute(CommandBuilder cmdBuilder) throws InvalidParameterException {
+        int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
         LocalDate localDate;
-        String str = cmdBuilder.getId(DATE_ID.toString());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
-        //SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatter3 = new SimpleDateFormat("ddMMyyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATH_FORMAT.toString());
+        
         try {
-            localDate = LocalDate.parse(str, formatter);
+            localDate = LocalDate.parse(cmdBuilder.getId(DATE_ID), formatter);
         } catch(DateTimeParseException e){
-            return new InfoNotFoundView(data, DATE_INVALID_FORMAT.toString());
-        }
-        PreparedStatement stmt = connection.prepareStatement(
-                "SELECT * FROM CINEMA " +
-                "WHERE cid=?"
-        );
-
-        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
-        ResultSet rs = stmt.executeQuery();
-
-        if (!rs.next()) {
-            return new InfoNotFoundView(data);
-        }
-        else {
-            data.add(D_CINEMA, new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            throw new InvalidParameterException(DATE_INVALID_FORMAT);
         }
 
-        stmt = connection.prepareStatement(
-                "SELECT s.sid, m.Title, m.Duration, t.Theater_Name, t.SeatsAvailable, s.Date, t.tid, m.mid," +
-                        " s.SeatsAvailable FROM CINEMA_SESSION AS s " +
-                "INNER JOIN THEATER AS t ON t.tid=s.tid " +
-                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "WHERE t.cid=? AND (CAST(s.Date AS DATE))=?"
-        );
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
 
-        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
-        stmt.setString(2, localDate.toString());
-        rs = stmt.executeQuery();
+            Cinema cinema = CinemasSQL.queryID(con, cinemaID);
+            data.add(D_CINEMA, cinema);
 
-
-        int sid, seats, cid = Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())), tid, mid, duration, availableSeats;
-        Timestamp date = null;
-        String theaterName, title;
-
-        LinkedList<Session> sessions = new LinkedList<>();
-        while(rs.next()) {
-            sid = rs.getInt(1);
-            title = rs.getString(2);
-            duration = rs.getInt(3);
-            theaterName = rs.getString(4);
-            seats = rs.getInt(5);
-            date = rs.getTimestamp(6);
-            tid = rs.getInt(7);
-            mid = rs.getInt(8);
-            availableSeats = rs.getInt(9);
-
-            sessions.add(
-                    new Session(sid, availableSeats, date,
-                            new Movie(mid, title, NA, duration),
-                            new Theater(tid, theaterName, NA, NA, seats, cid),
-                            cid
-                    )
-            );
-        }
-
-        if (date==null) {
-            try {
-                date=new Timestamp(formatter3.parse(str).getTime());
-            } catch (ParseException e) {
-                e.printStackTrace();
+            data.add(D_SESSIONS, SessionsSQL.queryForCinemaAndDate(con, cinemaID, localDate.toString()));
+            data.add(D_THEATERS, TheatersSQL.queryForCinema(con, cinemaID));
+            data.add(D_MOVIES,   MoviesSQL.queryForCinema(con, cinemaID));
+            data.add(D_CID,      cinemaID);
+            con.commit();
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
 
-        data.add(D_SESSIONS, sessions);
-        return new GetCinemaIDSessionsDateIDView(data, cid, date);
-    }
+        Date date = Date.valueOf(localDate);
+        data.add(D_DATE, date);
 
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

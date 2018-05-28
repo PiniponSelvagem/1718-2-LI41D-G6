@@ -1,5 +1,6 @@
-package pt.isel.ls.view.command;
+package pt.isel.ls.view;
 
+import pt.isel.ls.apps.http_server.http.HttpStatusCode;
 import pt.isel.ls.core.common.commands.GetMovieID;
 import pt.isel.ls.core.common.commands.GetMovies;
 import pt.isel.ls.core.common.headers.*;
@@ -7,21 +8,21 @@ import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Movie;
-import pt.isel.ls.view.command.utils.HtmlViewCommon;
+import pt.isel.ls.view.utils.HtmlViewCommon;
 import static pt.isel.ls.core.common.headers.Html.*;
 
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.tr;
-import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
-import static pt.isel.ls.core.strings.CommandEnum.MOVIE_ID_FULL;
+import static pt.isel.ls.core.common.headers.html_utils.HtmlElem.submit;
+import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIES;
 
 
 public class GetMoviesView extends CommandView {
 
     public GetMoviesView(DataContainer data) {
-        this.data = data;
+        super(data);
     }
 
     @Override
@@ -33,28 +34,33 @@ public class GetMoviesView extends CommandView {
     }
 
     @Override
-    protected String toHtml(Html header) {
+    protected String toHtml(HtmlPage header) {
         String[] tableColumns = {"Title", "Release Year", "Duration"};
         Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
         LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
         Writable[][] td = new Writable[movies.size()][tableColumns.length];
         Writable[] td_array = new Writable[movies.size()+1];
         td_array[0] = tr(th);
-        Movie movie;
         String hyperLink = new GetMovieID().getPath()
                 .replace(MOVIE_ID_FULL.toString(), "%d");
-        for (int i = 0; i < movies.size(); i++) {
-            movie = movies.get(i);
-            td[i][0] = td(a(String.format(hyperLink, movie.getId()), movie.getTitle()));
-            td[i][1] = td(text(Integer.toString(movie.getYear())));
-            td[i][2] = td(text(Integer.toString(movie.getDuration())));
-            td_array[i+1] = tr(td[i]);
-        }
 
-        header = new HtmlPage("Movies",
+        HtmlViewCommon.fillTableDataMovies(movies, td, td_array, hyperLink);
+
+        header.createPage(HttpStatusCode.OK, "Movies",
                 h3(a(DIR_SEPARATOR.toString(), "Main page")),
                 h1(text("Movies: ")),
-                table(td_array));
+                table(td_array),
+                breakLine(),
+                form(POST.toString(), new GetMovies().getPath(),
+                        text("Title: "), breakLine(),
+                        textInput(TITLE.toString()), breakLine(),
+                        text("Duration:"), breakLine(),
+                        textInput(DURATION.toString()), breakLine(),
+                        text("Release year:"), breakLine(),
+                        textInput(YEAR.toString()), breakLine(),
+                        submit("Create")
+                )
+        );
 
         return header.getBuildedString();
     }

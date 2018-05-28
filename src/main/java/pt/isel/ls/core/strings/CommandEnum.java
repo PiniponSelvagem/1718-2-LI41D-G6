@@ -14,6 +14,7 @@ public enum CommandEnum {
     PARAMS_VALS_SEPERATOR_REPLACEMENT(" "),
     HEADERS_SEPERATOR("\\|"),
     HEADERS_EQUALTO(":"),
+    DATE_PATH_FORMAT("ddMMyyyy"),
 
     //Methods
     OPTIONS("OPTIONS"),

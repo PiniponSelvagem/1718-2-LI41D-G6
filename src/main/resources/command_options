@@ -17,7 +17,7 @@ HOW TO USE:
 Each command is defined using the following generic structure:
     {method} {path} {headers} {parameters}
 
-! NOTE ! -> {headers} is optional and can be commutated with {parameters}.
+! NOTE ! -> {headers} is optional.
 
 where
     the method defines the type of action to perform (e.g. GET or POST)
@@ -39,12 +39,15 @@ accept:                             : Represent information...
     text/html - html format
     application/json - json format
 
+ --- Header options below require 'accept' option to be set ---
 file-name:<name.extension>          : Write to file the information
 --------------------------------------------------------------------------------------------
 COMMANDS:
 
 OPTIONS /                           : Display this help message
 EXIT /                              : Terminates this application.
+LISTEN /                            : Start HTTP server
+        port - port number to start the server
 
 
  - Movie management -
@@ -62,6 +65,9 @@ POST /cinemas                       : Creates a new cinema, given the following 
         city - the city where the cinema is located
 GET /cinemas                        : List all cinemas
 GET /cinemas/{cid}                  : Detailed information for the cinema identified by {cid}
+
+
+ - Theater management -
 POST /cinemas/{cid}/theaters        : Adds a new theater to a cinema, given the following params
         name - theater name
         row  - theater number of rows

@@ -1,13 +1,11 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.CinemasSQL;
+import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
+import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Cinema;
-import pt.isel.ls.model.Movie;
-import pt.isel.ls.model.Theater;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDView;
-import pt.isel.ls.view.command.InfoNotFoundView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -30,50 +28,28 @@ public class GetCinemaID extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
+    public DataContainer execute(CommandBuilder cmdBuilder) {
+        int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
 
-        ResultSet rs;
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM CINEMA WHERE cid = ?");
-        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
-        rs = stmt.executeQuery();
-        DataContainer data = new DataContainer(cmdBuilder.getHeader());
-
-        if(!rs.next())
-            return new InfoNotFoundView(data);
-
-        data.add(D_CINEMA, new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
-
-
-        //Get theater names for cinema id
-        PreparedStatement stmt2 = connection.prepareStatement("select t.tid, t.Theater_Name from THEATER as t inner join CINEMA as c on t.cid = c.cid and c.cid = ?");
-        stmt2.setString(1, cmdBuilder.getId((CINEMA_ID.toString())));
-        rs = stmt2.executeQuery();
-        LinkedList<Theater> theaters = new LinkedList<>();
-
-        while(rs.next()) {
-            theaters.add(new Theater(rs.getInt(1), rs.getString(2), NA, NA, NA, NA));
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_CINEMA,   CinemasSQL.queryID(con, cinemaID));
+            data.add(D_THEATERS, new LinkedList<>(TheatersSQL.queryForCinema(con, cinemaID).values()));
+            data.add(D_MOVIES,   new LinkedList<>(MoviesSQL.queryForCinema(con, cinemaID).values()));
+            con.commit();
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
-        data.add(D_THEATERS, theaters);
 
-        PreparedStatement stmt4 = connection.prepareStatement("select DISTINCT m.Title as Title, m.Duration as Duration, m.Release_Year as Release_Year, m.mid" +
-                " from MOVIE as m inner join CINEMA_SESSION as cs on m.mid = cs.mid" +
-                " inner join THEATER as t on t.tid = cs.tid" +
-                " inner join CINEMA as c on c.cid = t.cid" +
-                " WHERE c.cid = ?");
-        stmt4.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
-        rs = stmt4.executeQuery();
-
-        LinkedList<Movie> movies = new LinkedList<>();
-        while (rs.next()) {
-            movies.add(new Movie(rs.getInt(4), rs.getString(1), rs.getInt(3), rs.getInt(2)));
-        }
-        data.add(D_MOVIES, movies);
-
-        return new GetCinemaIDView(data);
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

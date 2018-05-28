@@ -13,6 +13,7 @@ public enum ExceptionEnum {
     PARAMETERS__NOT_FOUND("This command requires parameters and they weren't found. More info at: "+OPTIONS),
     PARAMETERS__NO_VALUE_ASSIGNED("Parameter { %s } doesn't have an assigned value."),
     PARAMETERS__EXPECTED("Parameter not found. Input parameter was: %s"),
+    PARAMETERS__INVALID("Invalid parameter type. %s."),
 
     HEADERS__NOT_FOUND("Header not found. Check available headers at: "+OPTIONS),
     HEADERS__NO_VALUE_ASSIGNED("Header { %s } doesn't have an assigned value."),
@@ -29,6 +30,7 @@ public enum ExceptionEnum {
     DEBUG__EXCEPTION("EXCEPTION AT: CommandBuilder.parsePath() when trying to: "+
             "args[1].subSequence(0, DIR_SEPARATOR.toString().length()).equals(DIR_SEPARATOR.toString())"),
 
+    VIEW_CREATION_ERROR("ERROR while initializing view."),
 
     ;
 

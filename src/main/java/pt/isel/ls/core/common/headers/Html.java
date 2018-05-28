@@ -2,7 +2,6 @@ package pt.isel.ls.core.common.headers;
 
 import pt.isel.ls.core.common.headers.html_utils.HtmlElem;
 import pt.isel.ls.core.common.headers.html_utils.HtmlText;
-import pt.isel.ls.core.utils.writable.CompositeWritable;
 import pt.isel.ls.core.utils.writable.Writable;
 
 import java.io.*;
@@ -12,15 +11,9 @@ import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.HTML;
 import static pt.isel.ls.core.strings.CommandEnum.TEXT;
 
-public class Html extends Header {
+public abstract class Html extends Header {
 
-    private Writable _content;
-
-    public Html(Writable... cs) {
-        _content = new CompositeWritable(cs);
-    }
-
-    public Html(){}
+    protected Writable _content;
 
     @Override
     public String getMethodName() {
@@ -49,7 +42,13 @@ public class Html extends Header {
     public static Writable textInput(String name) {
         return new HtmlElem("input")
             .withAttr("type", "text")
-            .withAttr("name", name);            
+            .withAttr("name", name);
+    }
+    public static Writable hiddenInput(String name, String value) {
+        return new HtmlElem("input")
+                .withAttr("type", "hidden")
+                .withAttr("name", name)
+                .withAttr("value", value);
     }
     public static Writable ul(Writable... c) {
         return new HtmlElem("ul",c);
@@ -61,6 +60,9 @@ public class Html extends Header {
         return new HtmlElem("a", text(t))
             .withAttr("href", href);
     }
+    public static Writable breakLine() {
+        return new HtmlElem("br", false);
+    }
     public static Writable table(Writable[] c) {
         return new HtmlElem("table", c)
                 .withAttr("border", "1");
@@ -70,6 +72,7 @@ public class Html extends Header {
                 .withAttr("class", name)
                 .withAttr("border", "1");
     }
+
     public static Writable tr(Writable[] c) {
         return new HtmlElem("tr").withContent(c);
     }
@@ -99,7 +102,8 @@ public class Html extends Header {
         ByteArrayOutputStream _os = new ByteArrayOutputStream();
         Charset _charset = Charset.forName("UTF-8");
         try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(_os, _charset))){
-            _content.writeTo(writer);
+            if (_content!=null)
+                _content.writeTo(writer);
         } catch (IOException e) {
             e.printStackTrace();
         }

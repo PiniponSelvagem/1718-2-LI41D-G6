@@ -11,11 +11,20 @@ public class DataContainer {
      * while keeping the information organized for better handling.
      */
 
+    private String createdBy;
     private Header header;
     private HashMap<DataEnum, Object> map = new HashMap<>();
 
-    public DataContainer(Header header) {
+    public DataContainer(String createdBy, Header header) {
+        this.createdBy = createdBy;
         this.header = header;
+    }
+
+    /**
+     * @return Returns the simple name of the class that generated this DataContainer
+     */
+    public String getCreatedBy() {
+        return createdBy;
     }
 
     /**
@@ -43,6 +52,14 @@ public class DataContainer {
     }
 
     /**
+     * Update header after creating the view that is ready to be sent:
+     * @param header Header
+     */
+    public void updateHeader(Header header) {
+        this.header = header;
+    }
+
+    /**
      * Enum to be used to organize the DataContainer
      */
     public enum DataEnum {
@@ -61,8 +78,18 @@ public class DataContainer {
         D_TICKETS,          //Multiple tickets
         D_TICKET,           //Just ONE ticket
 
-        D_AVAILABLE_SEATS,  //Use to save integer value of number of seats available,
+        D_AVAILABLE_SEATS,  //Save integer value of number of seats available,
                             //if you using D_SESSIONS or D_SESSION, use its available seats variable instead
+
+        D_DATE,             //Date value
+        D_CID,              //Integer value cinemaID
+        D_TID,              //Integer value theaterID
+        D_SID,              //Integer value sessionID
+        D_TKID,             //Integer value ticketID
+        D_MID,              //Integer value movieID
+
+        D_DELETE,           //Save boolean value to tell if could delete the requested info
+        D_POST,             //Post information, save PostData in it
 
         ;
     }

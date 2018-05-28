@@ -1,13 +1,16 @@
 package pt.isel.ls.core.utils;
 
 import pt.isel.ls.core.common.commands.Command;
+import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.common.headers.Header;
-import pt.isel.ls.core.common.headers.Html;
+import pt.isel.ls.core.exceptions.InvalidParameterException;
+import pt.isel.ls.core.strings.CommandEnum;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.strings.ExceptionEnum.*;
@@ -33,7 +36,7 @@ public class CommandBuilder {
      * @param cmdUtils CommandUtils
      * @throws CommandException CommandException
      */
-    public CommandBuilder(String[] args, CommandUtils cmdUtils) throws CommandException {
+    public CommandBuilder(String[] args, CommandUtils cmdUtils) throws CommandException, InvalidParameterException {
         if (args.length == 0) throw new CommandException(COMMAND__NOT_FOUND);
         this.cmdUtils = cmdUtils;
         parseMethod(args);
@@ -104,7 +107,7 @@ public class CommandBuilder {
      * @param args String[] containing the command
      * @throws CommandException CommandException
      */
-    private void findOptions(String[] args) throws CommandException {
+    private void findOptions(String[] args) throws CommandException, InvalidParameterException {
         if (args.length == 3) {
             if (args[2] != null && args[2].contains(ACCEPT.toString())) {
                 findHeaders(args[2]);
@@ -115,8 +118,8 @@ public class CommandBuilder {
         }
         else {
             if (args.length == 4) {
-                findHeaders(args[2]);
-                findParams(args[3]);
+                findParams(args[2]);
+                findHeaders(args[3]);
             }
         }
     }
@@ -144,9 +147,10 @@ public class CommandBuilder {
     /**
      * Find parameters and organize them for later use.
      * @param params String of the parameters to be worked with
-     * @throws CommandException when parameters werent found or no value was assigned to the param that is currently checking wasnt found
+     * @throws CommandException when parameters werent found
+     * @throws InvalidParameterException when parameters assigned wasnt found
      */
-    private void findParams(String params) throws CommandException {
+    private void findParams(String params) throws CommandException, InvalidParameterException {
         if (params == null) throw new CommandException(PARAMETERS__NOT_FOUND);
         this.params = new HashMap<>();
         String[] paramsSplit = params.split(PARAMS_SEPARATOR.toString());
@@ -156,7 +160,7 @@ public class CommandBuilder {
         for (String aParamsSplit : paramsSplit) {
             String[] aux = aParamsSplit.split(PARAMS_EQUALTO.toString());
             if (aux.length != 2) {
-                throw new CommandException(PARAMETERS__NO_VALUE_ASSIGNED, aux[0]);
+                throw new InvalidParameterException(PARAMETERS__NO_VALUE_ASSIGNED, aux[0]);
             }
             value = aux[1].replace(
                     PARAMS_VALS_SEPARATOR.toString(),
@@ -173,9 +177,10 @@ public class CommandBuilder {
     /**
      * Find headers and organize them for later use.
      * @param headers String of headers to be workwd with
-     * @throws CommandException when headers werent found or no value was assigned to the header that is currently checking wasnt found
+     * @throws CommandException when headers werent found
+     * @throws InvalidParameterException when value to assigned param wasnt found
      */
-    private void findHeaders(String headers) throws CommandException {
+    private void findHeaders(String headers) throws CommandException, InvalidParameterException {
         if (headers == null) throw new CommandException(HEADERS__NOT_FOUND);
         this.headers = new HashMap<>();
         String[] headersSplit = headers.split(HEADERS_SEPERATOR.toString());
@@ -183,7 +188,7 @@ public class CommandBuilder {
         for (String aHeadersSplit : headersSplit) {
             String[] aux = aHeadersSplit.split(HEADERS_EQUALTO.toString());
             if (aux.length != 2)
-                throw new CommandException(HEADERS__NO_VALUE_ASSIGNED, aux[0]);
+                throw new InvalidParameterException(HEADERS__NO_VALUE_ASSIGNED, aux[0]);
             this.headers.put(aux[0], aux[1]);
         }
 
@@ -201,11 +206,11 @@ public class CommandBuilder {
      * Throws CommandException if parameter wasnt found or if is not a known parameter.
      * Good to validate user input parameter, and stop the action if its not valid.
      * @param param Parameter to check
-     * @throws CommandException when param is not valid nor found, telling the one it was checking
+     * @throws InvalidParameterException when param is not valid nor found, telling the one it was checking
      */
-    private void parameterValidator(String param) throws CommandException {
-        if (params == null || !params.containsKey(param) || !cmdUtils.validParam(param))
-            throw new CommandException(PARAMETERS__EXPECTED, param);
+    private void parameterValidator(CommandEnum param) throws InvalidParameterException {
+        if (params == null || !params.containsKey(param.toString()) || !cmdUtils.validParam(param.toString()))
+            throw new InvalidParameterException(PARAMETERS__EXPECTED, param.toString());
     }
 
     /**
@@ -226,15 +231,16 @@ public class CommandBuilder {
                 }
             } catch (InstantiationException | IllegalAccessException e) {
                 //If it came here, it could be because the Header class dosent have a constructor with no parameters
+                //Until better work around is found, the Header should have a method to update the builded string.
                 System.out.println("ERROR: UNABLE TO CREATE HEADER!");
                 System.out.println("       Falling back to default header creation -> HTML.");
-                header = new Html();
+                header = new HtmlPage();
             } catch (ClassCastException e) {
-                throw new CommandException(HEADERS__NOT_FOUND); //TODO: {@link: DirectoryNode.search(LinkedList<String>, String)
+                throw new CommandException(HEADERS__NOT_FOUND);
             }
         }
         else {
-            header = new Html();
+            header = new HtmlPage();
         }
         buildedCommand = (Command) cmdUtils.getCmdTree().search(path, methodName);
     }
@@ -261,11 +267,11 @@ public class CommandBuilder {
      * it will only return the first one.
      * @param param Parameter name.
      * @return Returns the desired parameter.
-     * @throws CommandException check CommandException of {@link #parameterValidator(String)}
+     * @throws InvalidParameterException check InvalidParameterException of {@link #parameterValidator(CommandEnum)}
      */
-    public String getParameter(String param) throws CommandException {
+    public String getParameter(CommandEnum param) throws InvalidParameterException {
         parameterValidator(param);
-        return params.get(param).getFirst();
+        return params.get(param.toString()).getFirst();
     }
 
     /**
@@ -273,29 +279,40 @@ public class CommandBuilder {
      * @param param Parameter key to get
      * @param i Index of the parameter in the list.
      * @return Returns the requested parameter value if valid, if indexoutofboundsexception returns null.
-     * @throws CommandException check CommandException of {@link #parameterValidator(String)}
+     * @throws CommandException check CommandException of {@link #parameterValidator(CommandEnum)}
+     * @throws InvalidParameterException check InvalidParameterException of {@link #parameterValidator(CommandEnum)}
      */
-    public String getParameter(String param, int i) throws CommandException {
+    public String getParameter(CommandEnum param, int i) throws CommandException, InvalidParameterException {
         parameterValidator(param);
-        return (i < getParameterSize(param)) ? params.get(param).get(i) : null;
+        return (i < getParameterSize(param)) ? params.get(param.toString()).get(i) : null;
+    }
+
+    /**
+     * @param param Parameter key to get
+     * @return Returns the list containing the multiple parameters with same key.
+     * @throws InvalidParameterException check InvalidParameterException of {@link #parameterValidator(CommandEnum)}
+     */
+    public List<String> getParametersList(CommandEnum param) throws InvalidParameterException {
+        parameterValidator(param);
+        return params.get(param.toString());
     }
 
     /**
      * @param param Parameter key to check for
      * @return Returns the size of the list containing multiple parameters with same key.
-     * @throws CommandException check CommandException of {@link #parameterValidator(String)}
+     * @throws InvalidParameterException check InvalidParameterException of {@link #parameterValidator(CommandEnum)}
      */
-    public int getParameterSize(String param) throws CommandException {
+    public int getParameterSize(CommandEnum param) throws InvalidParameterException {
         parameterValidator(param);
-        return params.get(param).size();
+        return params.get(param.toString()).size();
     }
 
     /**
      * @param param Check if this param is present
      * @return Returns bool if params hashmap has this key.
      */
-    public boolean hasParameter(String param) {
-        return params != null && params.containsKey(param);
+    public boolean hasParameter(CommandEnum param) {
+        return params != null && params.containsKey(param.toString());
     }
 
     /**
@@ -303,8 +320,8 @@ public class CommandBuilder {
      * @param id "key" to get the value
      * @return Returns the corresponding to this id
      */
-    public String getId(String id) {
-        return ids.get(ID_PREFIX+id+ID_SUFFIX);
+    public String getId(CommandEnum id) {
+        return ids.get(ID_PREFIX+id.toString()+ID_SUFFIX);
     }
 
     /**

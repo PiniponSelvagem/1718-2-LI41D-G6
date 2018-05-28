@@ -2,12 +2,9 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.apps.http_server.HttpServer;
 import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.InvalidParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.view.command.CommandView;
-
-import java.net.BindException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import pt.isel.ls.core.utils.DataContainer;
 
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.LISTEN;
@@ -27,20 +24,15 @@ public class Listen extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
+    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException, InvalidParameterException {
         int port;
         try {
-            port = Integer.parseInt(cmdBuilder.getParameter(SERVER_PORT.toString()));
+            port = Integer.parseInt(cmdBuilder.getParameter(SERVER_PORT));
             new HttpServer(port);
         }
         catch (NumberFormatException e){
-            throw new CommandException(SERVER_PORT_INVALID_FORMAT);
+            throw new InvalidParameterException(SERVER_PORT_INVALID_FORMAT);
         }
-        return null;
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return false;
+        return new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
     }
 }

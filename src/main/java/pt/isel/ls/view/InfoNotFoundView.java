@@ -1,5 +1,6 @@
-package pt.isel.ls.view.command;
+package pt.isel.ls.view;
 
+import pt.isel.ls.apps.http_server.http.HttpStatusCode;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
@@ -10,25 +11,24 @@ public class InfoNotFoundView extends CommandView {
     private final String msg;
 
     public InfoNotFoundView(DataContainer data) {
-        this.data = data;
+        super(data);
         this.msg = "";
     }
 
     public InfoNotFoundView(DataContainer data, String msg) {
-        this.data = data;
+        super(data);
         this.msg = msg;
     }
 
     @Override
     protected String toPlain(Plain header) {
         header.addTitle("Requested information not found.");
-
         return header.getBuildedString();
     }
 
     @Override
-    protected String toHtml(Html header) {
-        header = new HtmlPage("Invalid Page",
+    protected String toHtml(HtmlPage header) {
+        header.createPage(HttpStatusCode.NOT_FOUND, "Invalid Page",
                 h1(text("OOPS! What happen???")),
                 h3(text("Seems like the requested page exists, " +
                         "but the info required to display it wasn't found.")),
@@ -36,7 +36,6 @@ public class InfoNotFoundView extends CommandView {
                 h3(text(msg)),
                 h2(a("/", "Main page"))
         );
-
         return header.getBuildedString();
     }
 
@@ -45,7 +44,6 @@ public class InfoNotFoundView extends CommandView {
         header.addObject(
                 null,
                 null);
-
         return header.getBuildedString();
     }
 }

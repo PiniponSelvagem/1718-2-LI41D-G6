@@ -2,17 +2,20 @@ package pt.isel.ls.core.common.headers;
 
 import pt.isel.ls.core.common.CommonCmd;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 
 public abstract class Header extends CommonCmd {
     protected StringBuilder text = new StringBuilder();
     public String fileName;
-    private final static String dirFiles = "header_files";
+
+    /**
+     * This constructor without parameters exists so {@link pt.isel.ls.core.utils.CommandUtils#headersTree}
+     * can do {@link #getMethodName()} and {@link #getPath()} so later can be used to find the correct
+     * header and create it.
+     */
+    public Header() {
+        ;
+    }
 
     /**
      * @return Returns buildedString.
@@ -30,22 +33,11 @@ public abstract class Header extends CommonCmd {
         return getPath().substring(1)+DIR_SEPARATOR.toString()+getMethodName();
     }
 
+    public Object getCode() {
+        return null;
+    }
 
-    /**
-     * Write builded text to file.
-     */
-    public void writeToFile() {
-        if (fileName != null) {
-            BufferedWriter writer;
-            try {
-                File file = new File(dirFiles);
-                file.mkdir();   //create dirFiles directory if dosent exits
-                writer = new BufferedWriter(new FileWriter(file.getPath()+"/"+fileName));
-                writer.write(text.toString());
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public String getRedirectLink() {
+        return null;
     }
 }

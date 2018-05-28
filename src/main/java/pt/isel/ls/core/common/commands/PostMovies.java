@@ -1,13 +1,18 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
+import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.InvalidParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.PostView;
+import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.ExceptionEnum.PARAMETERS__INVALID;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
 
 public class PostMovies extends Command {
 
@@ -22,22 +27,47 @@ public class PostMovies extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO MOVIE VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-        stmt.setString(1, cmdBuilder.getParameter(TITLE.toString()));
-        stmt.setInt(2, Integer.parseInt(cmdBuilder.getParameter(YEAR.toString())));
-        stmt.setInt(3, Integer.parseInt(cmdBuilder.getParameter(DURATION.toString())));
-        stmt.executeUpdate();
+    public DataContainer execute(CommandBuilder cmdBuilder) throws InvalidParameterException {
+        int year, duration;
+        try {
+            year = Integer.parseInt(cmdBuilder.getParameter(YEAR));
+            duration = Integer.parseInt(cmdBuilder.getParameter(DURATION));
+        } catch (NumberFormatException e) {
+            throw new InvalidParameterException(PARAMETERS__INVALID, e.getMessage());
+        }
 
-        int id = 0;
-        ResultSet rs = stmt.getGeneratedKeys();
-        if(rs.next()) id = rs.getInt(1);
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_POST,
+                    MoviesSQL.postMovie(con,
+                        cmdBuilder.getParameter(TITLE),
+                        year,
+                        duration
+                    )
+            );
+            con.commit();
+        } catch (SQLException e) {
+            data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-        return new PostView<>(true, "Movie ID = ", id);
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

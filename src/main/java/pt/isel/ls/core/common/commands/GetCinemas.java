@@ -1,19 +1,17 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.CinemasSQL;
+import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Cinema;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemasView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMAS;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
 
 public class GetCinemas extends Command {
 
@@ -28,22 +26,33 @@ public class GetCinemas extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("SELECT * from CINEMA");
-        ResultSet rs = stmt.executeQuery();
-        DataContainer data = new DataContainer(cmdBuilder.getHeader());
-        LinkedList<Cinema> cinemas = new LinkedList<>();
+    public DataContainer execute(CommandBuilder cmdBuilder) {
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_CINEMAS, CinemasSQL.queryAll(con));
+            con.commit();
+            } catch (SQLException e) {
+                data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
+                try {
+                    if (con != null) {
+                        con.rollback();
+                    }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            } finally {
+                if (con != null) {
+                    try {
+                        con.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
-        while(rs.next()){
-            cinemas.add(new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
-        }
-        data.add(D_CINEMAS, cinemas);
-
-        return new GetCinemasView(data);
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

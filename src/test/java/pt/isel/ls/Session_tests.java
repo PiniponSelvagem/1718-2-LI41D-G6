@@ -8,7 +8,8 @@ import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.sql.Sql;
-import pt.isel.ls.view.command.*;
+import pt.isel.ls.view.GetCinemaIDSessionsDateIDView;
+import pt.isel.ls.view.GetMovieIDSessionsDateIDView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,7 +45,7 @@ public class Session_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con, false);
+                new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con);
             }
             PreparedStatement stmt = con.prepareStatement("SELECT mid FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
@@ -53,12 +54,12 @@ public class Session_tests {
                 movId[i] = rs.getInt(1);
                 i++;
             }
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas", "name=cinema1&city=cidade1"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas", "name=cinema1&city=cidade1"}, new CommandUtils()), con);
             stmt = con.prepareStatement("SELECT cid FROM CINEMA");
             rs = stmt.executeQuery();
             if(rs.next()) cinemaId = rs.getInt(1);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala1&row=12&seat=18"}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala2&row=12&seat=18"}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala1&row=12&seat=18"}, new CommandUtils()), con);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters", "name=sala2&row=12&seat=18"}, new CommandUtils()), con);
             stmt = con.prepareStatement("SELECT tid FROM THEATER");
             rs = stmt.executeQuery();
             i=0;
@@ -66,12 +67,12 @@ public class Session_tests {
                 theatersId[i] = rs.getInt(1);
                 i++;
             }
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date="+date+"+19:00&mid="+movId[1]}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+15:30&mid="+movId[2]}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+15:30&mid="+movId[1]}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date="+date+"+19:00&mid="+movId[2]}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date="+date+"+19:00&mid="+movId[1]}, new CommandUtils()), con);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+15:30&mid="+movId[2]}, new CommandUtils()), con);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:00&mid="+movId[0]}, new CommandUtils()), con);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+15:30&mid="+movId[1]}, new CommandUtils()), con);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date="+date+"+19:00&mid="+movId[2]}, new CommandUtils()), con);
             stmt = con.prepareStatement("SELECT sid FROM CINEMA_SESSION");
             rs = stmt.executeQuery();
             i=0;
@@ -131,8 +132,8 @@ public class Session_tests {
             int size=0;
             while (rs.next()) size++;
 
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+16:00&mid="+movId[2]}, new CommandUtils()), con, false);
-            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:30&mid="+movId[0]}, new CommandUtils()), con, false);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[0]+"/sessions", "date=2018/4/1+16:00&mid="+movId[2]}, new CommandUtils()), con);
+            new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/cinemas/"+cinemaId+"/theaters/"+theatersId[1]+"/sessions", "date=2018/4/1+12:30&mid="+movId[0]}, new CommandUtils()), con);
 
             stmt = con.prepareStatement("SELECT s.sid, s.tid, s.mid FROM CINEMA_SESSION AS s");
             rs = stmt.executeQuery();
@@ -162,8 +163,7 @@ public class Session_tests {
             con.setAutoCommit(false);
 
             createSession(con);
-            GetCinemaIDSessionsView view = (GetCinemaIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions"}, new CommandUtils()), con, false);
-            DataContainer data = view.getData();
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions"}, new CommandUtils()), con);
             LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;
 
@@ -197,9 +197,9 @@ public class Session_tests {
 
             createSession(con);
             for(int t=0; t<theatersId.length; t++) {
-                GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions"}, new CommandUtils()), con, false);
-                DataContainer data = view.getData();
+                DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions"}, new CommandUtils()), con);
                 LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
+
                 Session session;
                 for (int i = 0; i < sessions.size(); i++) {
                     session = sessions.get(i);
@@ -232,8 +232,7 @@ public class Session_tests {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id=rs.getInt(1);
-                GetCinemaIDSessionIDView sessionIDView = (GetCinemaIDSessionIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/sessions/" + id}, new CommandUtils()), con, false);
-                DataContainer data = sessionIDView.getData();
+                DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/" + cinemaId + "/sessions/" + id}, new CommandUtils()), con);
                 Session session = (Session) data.getData(D_SESSION);
                 assertEquals(id, session.getId());
             }
@@ -263,8 +262,7 @@ public class Session_tests {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
-            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con, false);
-            DataContainer data = view.getData();
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/today"}, new CommandUtils()), con);
             LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;
             for (int i = 0; i < sessions.size(); i++) {
@@ -300,8 +298,7 @@ public class Session_tests {
             LocalDate localDate = LocalDate.now();
             String date= dtf.format(localDate);
             for(int t=0;t<theatersId.length;t++) {
-                GetCinemaIDTheaterIDSessionsView view = (GetCinemaIDTheaterIDSessionsView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions/today"}, new CommandUtils()), con, false);
-                DataContainer data = view.getData();
+                DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/theaters/" + theatersId[t] + "/sessions/today"}, new CommandUtils()), con);
                 LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
                 Session session;
                 for (int i = 0; i < sessions.size(); i++) {
@@ -339,7 +336,7 @@ public class Session_tests {
             DataContainer data;
             LinkedList<Session> sessions;
 
-            GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()), con, false);
+            GetMovieIDSessionsDateIDView view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeView(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","available="+available}, new CommandUtils()), con);
             if(view!=null) {
                 data = view.getData();
                 sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
@@ -350,7 +347,7 @@ public class Session_tests {
                     assertEquals(available, session.getTheater().getSeats());
                 }
             }
-            view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()), con, false);
+            view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeView(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx] +"/sessions/date/01042018","cid="+cid}, new CommandUtils()), con);
             if(view!=null) {
                 data = view.getData();
                 sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
@@ -363,7 +360,7 @@ public class Session_tests {
             }
             PreparedStatement stmt;
             ResultSet rs;
-            view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/date/01042018","city="+city}, new CommandUtils()), con, false);
+            view = (GetMovieIDSessionsDateIDView) new CommandRequest().executeView(new CommandBuilder(new String[]{"GET", "/movies/"+movId[idx]+"/sessions/date/01042018","city="+city}, new CommandUtils()), con, false);
             if(view!=null) {
                 data = view.getData();
                 sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
@@ -398,7 +395,7 @@ public class Session_tests {
             con.setAutoCommit(false);
             createSession(con);
             String date= "2018-04-01";
-            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/date/01042018"}, new CommandUtils()), con, false);
+            GetCinemaIDSessionsDateIDView view = (GetCinemaIDSessionsDateIDView) new CommandRequest().executeView(new CommandBuilder(new String[]{"GET", "/cinemas/"+cinemaId+"/sessions/date/01042018"}, new CommandUtils()), con, false);
             DataContainer data = view.getData();
             LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
             Session session;

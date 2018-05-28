@@ -1,15 +1,15 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
-import pt.isel.ls.view.command.InfoNotFoundView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_AVAILABLE_SEATS;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SID;
 
 public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
 
@@ -27,25 +27,26 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-
-        int availableSeats;
-        String sid = cmdBuilder.getId(SESSION_ID.toString());
-
-        PreparedStatement stmt = connection.prepareStatement("SELECT CINEMA_SESSION.SeatsAvailable from CINEMA_SESSION where CINEMA_SESSION.sid=?");
-        stmt.setString(1, sid);
-        ResultSet rs = stmt.executeQuery();
-        DataContainer data = new DataContainer(cmdBuilder.getHeader());
-        if(rs.next()){
-            availableSeats = rs.getInt(1);
-            data.add(D_AVAILABLE_SEATS, availableSeats);
-            return new GetCinemaIDTheaterIDSessionIDTicketsAvailableView(data, Integer.parseInt(sid));
+    public DataContainer execute(CommandBuilder cmdBuilder) {
+        int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_AVAILABLE_SEATS, SessionsSQL.queryAvailableSeats(con, sessionID));
+            data.add(D_SID, sessionID);
+            con.commit();
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
-        return new InfoNotFoundView(data);
-    }
 
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

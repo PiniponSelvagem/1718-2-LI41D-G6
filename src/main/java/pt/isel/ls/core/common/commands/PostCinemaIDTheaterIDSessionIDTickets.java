@@ -1,17 +1,19 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.PostData;
+import pt.isel.ls.core.common.commands.db_queries.TicketsSQL;
 import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.InvalidParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.PostView;
+import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.strings.ExceptionEnum.TICKET_SEAT_INVALID;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
@@ -30,46 +32,54 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
-        PreparedStatement stmt=connection.prepareStatement("SELECT t.Seats, t.Rows " +
-                "FROM CINEMA_SESSION AS s INNER JOIN THEATER AS t ON t.tid=s.tid " +
-                "WHERE s.sid=?"
-        );
-        stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
-        ResultSet rs = stmt.executeQuery();
-        int seats=0, rows=0;
+    public DataContainer execute(CommandBuilder cmdBuilder) throws InvalidParameterException {
+        int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
+
         int seat;
         try {
-            seat = Integer.parseInt(cmdBuilder.getParameter(SEATS_ROW.toString()));
+            seat = Integer.parseInt(cmdBuilder.getParameter(SEATS_ROW));
         } catch (NumberFormatException e) {
-            throw new CommandException(TICKET_SEAT_INVALID);
+            throw new InvalidParameterException(TICKET_SEAT_INVALID);
         }
-        int row = cmdBuilder.getParameter(ROWS.toString()).charAt(0)-'A'+1;
-        if(rs.next()) {
-            seats = rs.getInt(1);
-            rows=rs.getInt(2);
-        }
-        if(seat<=seats && row<=rows && seat>0 && row>0) {
-            stmt = connection.prepareStatement("INSERT INTO TICKET VALUES(?, ?, ?, ?)");
-            String id = cmdBuilder.getParameter(ROWS.toString()) + cmdBuilder.getParameter(SEATS_ROW.toString());
-            stmt.setString(1, id);
-            stmt.setString(2, cmdBuilder.getParameter(SEATS_ROW.toString()));
-            stmt.setString(3, cmdBuilder.getParameter(ROWS.toString()));
-            stmt.setString(4, cmdBuilder.getId(SESSION_ID.toString()));
-            stmt.executeUpdate();
 
-            stmt = connection.prepareStatement("UPDATE CINEMA_SESSION SET CINEMA_SESSION.SeatsAvailable = CINEMA_SESSION.SeatsAvailable - 1 "+
-                    "WHERE CINEMA_SESSION.sid = ?"
-            );
-            stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
-            stmt.executeUpdate();
-            return new PostView<>(true, "Ticket ID: ", id);
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        PostData postData = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            postData = TicketsSQL.postTicket(con,
+                                    sessionID,
+                                    cmdBuilder.getParameter(ROWS),
+                                    seat);
+            data.add(D_POST, postData);
+            con.commit();
+        } catch (SQLException e) {
+            data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return new PostView<>(false, "Ticket ", "NOT POSTED!");
-    }
 
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        data.add(D_CID, Integer.parseInt(cmdBuilder.getId(CINEMA_ID)));
+        data.add(D_TID, Integer.parseInt(cmdBuilder.getId(THEATER_ID)));
+        data.add(D_SID, sessionID);
+        if (postData != null) {
+            data.add(D_TKID,postData.getId());
+        }
+
+        return data;
     }
 }

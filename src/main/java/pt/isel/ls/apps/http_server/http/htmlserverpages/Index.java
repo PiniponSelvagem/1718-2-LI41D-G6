@@ -1,6 +1,6 @@
 package pt.isel.ls.apps.http_server.http.htmlserverpages;
 
-import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
+import pt.isel.ls.apps.http_server.http.HttpStatusCode;
 
 import static pt.isel.ls.core.common.headers.Html.*;
 import static pt.isel.ls.core.common.headers.Html.a;
@@ -10,10 +10,16 @@ public class Index extends ServerPage {
 
     @Override
     public String body() {
-        return new HtmlPage("Cinemas Info",
+        page.createPage(HttpStatusCode.OK, "Cinemas Info",
                 h1(text("Cinemas Info")),
                 li(a("/cinemas/", "Cinemas")),
                 li(a("/movies/", "Movies"))
-        ).getBuildedString();
+        );
+        return page.getBuildedString();
+    }
+
+    @Override
+    public HttpStatusCode getStatus() {
+        return HttpStatusCode.OK;
     }
 }

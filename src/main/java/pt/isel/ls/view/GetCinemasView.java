@@ -1,23 +1,26 @@
-package pt.isel.ls.view.command;
+package pt.isel.ls.view;
 
+import pt.isel.ls.apps.http_server.http.HttpStatusCode;
 import pt.isel.ls.core.common.commands.GetCinemaID;
+import pt.isel.ls.core.common.commands.GetCinemas;
 import pt.isel.ls.core.common.headers.*;
 import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Cinema;
-import pt.isel.ls.view.command.utils.HtmlViewCommon;
+import pt.isel.ls.view.utils.HtmlViewCommon;
 
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.Html.*;
+import static pt.isel.ls.core.common.headers.html_utils.HtmlElem.submit;
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CINEMAS;
 
 public class GetCinemasView extends CommandView {
 
     public GetCinemasView(DataContainer data) {
-        this.data = data;
+        super(data);
     }
 
     @Override
@@ -29,7 +32,7 @@ public class GetCinemasView extends CommandView {
     }
 
     @Override
-    protected String toHtml(Html header) {
+    protected String toHtml(HtmlPage header) {
         String[] tableColumns = {"Name", "City"};
         Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
 
@@ -49,19 +52,18 @@ public class GetCinemasView extends CommandView {
             td_array[y+1] = tr(td[y]);
         }
 
-        header = new HtmlPage("Cinemas",
+        header.createPage(HttpStatusCode.OK, "Cinemas",
                 h3(a(DIR_SEPARATOR.toString(), "Main page")),
                 h1(text("Cinemas")),
-                //h2(text("h2")),
-                //h3(text("h3")),
-                //li(text("test")),
-                //text("text"),
-                //a("/cinemas/1", "cinemas 1"),
-                //textInput("textInput"),
-                //ul(text("u1")),
-                //label("to", "text"),
-                //form("method", "/cinemas/1", text("test")),
-                table(td_array)
+                table(td_array),
+                breakLine(),
+                form(POST.toString(), new GetCinemas().getPath(),
+                        text("Name:"), breakLine(),
+                        textInput(NAME.toString()), breakLine(),
+                        text("City:"), breakLine(),
+                        textInput(CITY.toString()), breakLine(),
+                        submit("Create")
+                )
         );
 
         return header.getBuildedString();

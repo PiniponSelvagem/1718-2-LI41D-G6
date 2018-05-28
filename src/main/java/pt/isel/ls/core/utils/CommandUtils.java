@@ -2,8 +2,10 @@ package pt.isel.ls.core.utils;
 
 import pt.isel.ls.core.common.commands.*;
 import pt.isel.ls.core.common.headers.*;
+import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.directorytree.DirectoryNode;
 import pt.isel.ls.core.utils.directorytree.DirectoryTree;
+import pt.isel.ls.view.*;
 
 import java.util.HashMap;
 
@@ -14,6 +16,7 @@ public class CommandUtils {
     private String root = ROOT_DIR.toString();
     private DirectoryTree cmdTree = new DirectoryTree(new DirectoryNode(root));
     private DirectoryTree headersTree = new DirectoryTree(new DirectoryNode(root));
+    private HashMap<String, String> cmdViewMap = new HashMap<>();
     private HashMap<String, String> dirID = new HashMap<>();
     private HashMap<String, Boolean> paramsCheck = new HashMap<>();
 
@@ -25,6 +28,7 @@ public class CommandUtils {
         initializeDirID();
         initializeParamsCheck();
         initializeHeadersTree();
+        initializeCommandViewMap();
     }
 
 
@@ -125,11 +129,60 @@ public class CommandUtils {
      */
     private void initializeHeadersTree() {
         /* Directory: text */
-        headersTree.add(new Plain());   //"PLAIN"
-        headersTree.add(new Html());    //"HTML"
+        headersTree.add(new Plain());    //"PLAIN"
+        headersTree.add(new HtmlPage()); //"HTML"
 
         /* Directory: application */
-        headersTree.add(new Json());    //"JSON"
+        headersTree.add(new Json());     //"JSON"
+    }
+
+    /**
+     * Fills the cmdViewMap, linking each command to their view.
+     */
+    private void initializeCommandViewMap() {
+        /* Internal commands */
+        cmdViewMap.put(Options.class.getSimpleName(), OptionsView.class.getName()); //"OPTIONS"
+        cmdViewMap.put(Exit.class.getSimpleName(),    ExitView.class.getName());    //"EXIT"
+
+
+        /* Commands related to MOVIES */
+        cmdViewMap.put(PostMovies.class.getSimpleName(), PostMoviesView.class.getName());       //"POST /movies"
+        cmdViewMap.put(GetMovies.class.getSimpleName(),  GetMoviesView.class.getName());  //"GET /movies"
+        cmdViewMap.put(GetMovieID.class.getSimpleName(), GetMovieIDView.class.getName()); //"GET /movies/{mid}"
+
+
+        /* Commands related to CINEMAS */
+        cmdViewMap.put(PostCinemas.class.getSimpleName(), PostCinemasView.class.getName()); //"POST /cinemas"
+        cmdViewMap.put(GetCinemas.class.getSimpleName(),  GetCinemasView.class.getName());  //"GET /cinemas"
+        cmdViewMap.put(GetCinemaID.class.getSimpleName(), GetCinemaIDView.class.getName()); //"GET /cinemas/{cid}"
+
+
+        /* Commands related to CINEMAS->THEATERS */
+        cmdViewMap.put(PostCinemaIDTheaters.class.getSimpleName(), PostCinemaIDTheatersView.class.getName()); //"POST /cinemas/{cid}/theaters"
+        cmdViewMap.put(GetCinemaIDTheaters.class.getSimpleName(),  GetCinemaIDTheatersView.class.getName());  //"GET /cinemas/{cid}/theaters"
+        cmdViewMap.put(GetCinemaIDTheaterID.class.getSimpleName(), GetCinemaIDTheaterIDView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}"
+
+
+        /* Commands related to CINEMAS->THEATERS->SESSIONS */
+        cmdViewMap.put(PostCinemaIDTheaterIDSessions.class.getSimpleName(),     PostCinemaIDTheaterIDSessionsView.class.getName());//"POST /cinemas/{cid}/theaters/{tid}/sessions"
+        cmdViewMap.put(GetCinemaIDTheaterIDSessions.class.getSimpleName(),      GetCinemaIDTheaterIDSessionsView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}/sessions"
+        cmdViewMap.put(GetCinemaIDTheaterIDSessionsToday.class.getSimpleName(), GetCinemaIDTheaterIDSessionsView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
+
+
+        /* Commands related to CINEMAS->SESSIONS */
+        cmdViewMap.put(GetCinemaIDSessions.class.getSimpleName(),       GetCinemaIDSessionsView.class.getName());       //"GET /cinemas/{cid}/sessions"
+        cmdViewMap.put(GetCinemaIDSessionID.class.getSimpleName(),      GetCinemaIDSessionIDView.class.getName());      //"GET /cinemas/{cid}/sessions/{sid}"
+        cmdViewMap.put(GetCinemaIDSessionsToday.class.getSimpleName(),  GetCinemaIDSessionsDateIDView.class.getName()); //"GET /cinemas/{cid}/sessions/today"
+        cmdViewMap.put(GetCinemaIDSessionsDateID.class.getSimpleName(), GetCinemaIDSessionsDateIDView.class.getName()); //"GET /cinemas/{cid}/sessions/date/{dmy}"
+        cmdViewMap.put(GetMovieIDSessionsDateID.class.getSimpleName(),  GetMovieIDSessionsDateIDView.class.getName());  //"GET /movies/{mid}/sessions/date/{dmy}"
+
+
+        /* Commands related to Tickets */
+        cmdViewMap.put(PostCinemaIDTheaterIDSessionIDTickets.class.getSimpleName(),         PostCinemaIDTheaterIDSessionIDTicketsView.class.getName());         //"POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdViewMap.put(GetCinemaIDTheaterIDSessionIDTickets.class.getSimpleName(),          GetCinemaIDTheaterIDSessionIDTicketsView.class.getName());          //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        cmdViewMap.put(GetCinemaIDTheaterIDSessionIDTicketID.class.getSimpleName(),         GetCinemaIDTheaterIDSessionIDTicketIDView.class.getName());         //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}"
+        cmdViewMap.put(GetCinemaIDTheaterIDSessionIDTicketsAvailable.class.getSimpleName(), GetCinemaIDTheaterIDSessionIDTicketsAvailableView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available"
+        cmdViewMap.put(DeleteCinemaIDTheaterIDSessionIDTicket.class.getSimpleName(),        DeleteView.class.getName());                                        //"DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
     }
 
     /**
@@ -139,8 +192,6 @@ public class CommandUtils {
     private void putParamsCheck(String param) {
         paramsCheck.put(param, true);
     }
-
-
 
     /**
      * @return Returns the command Tree
@@ -154,6 +205,13 @@ public class CommandUtils {
      */
     public DirectoryTree getHeadersTree() {
         return headersTree;
+    }
+
+    /**
+     * @return Returns cmdView hashmap <String: Command, String: CommandView>
+     */
+    public HashMap<String, String> getCmdViewMap() {
+        return cmdViewMap;
     }
 
     /**

@@ -7,9 +7,6 @@ import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
 import pt.isel.ls.sql.Sql;
-import pt.isel.ls.view.command.GetMovieIDView;
-import pt.isel.ls.view.command.GetMoviesView;
-import pt.isel.ls.view.command.InfoNotFoundView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -49,7 +46,7 @@ public class Movies_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i + 1);
-                new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con, false);
+                new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con);
             }
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
@@ -84,8 +81,7 @@ public class Movies_tests {
             con.setAutoCommit(false);
 
             createMovie(con);
-            GetMoviesView view = (GetMoviesView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con, false);
-            DataContainer data = view.getData();
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con);
             LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
             Movie movie;
             for(int i = 0; i < movies.size(); ){
@@ -124,8 +120,7 @@ public class Movies_tests {
             }
 
             int id = movies.getFirst().getId();
-            InfoNotFoundView movieIDView = (InfoNotFoundView) new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con,false);
-            DataContainer data = movieIDView.getData();
+            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con);
             Movie movie = (Movie) data.getData(D_MOVIE);
             assertEquals(id, movie.getId());
 

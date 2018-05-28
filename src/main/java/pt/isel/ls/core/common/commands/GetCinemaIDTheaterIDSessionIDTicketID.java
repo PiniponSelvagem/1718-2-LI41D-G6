@@ -1,11 +1,10 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.*;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.*;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketIDView;
-import pt.isel.ls.view.command.InfoNotFoundView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 
@@ -28,63 +27,35 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        Ticket ticket;
-        Session session;
-        Theater theater;
-        Movie movie;
-        Cinema cinema;
+    public DataContainer execute(CommandBuilder cmdBuilder) {
+        int cinemaID  = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
+        int theaterID = Integer.parseInt(cmdBuilder.getId(THEATER_ID));
+        int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
+        String ticketID = cmdBuilder.getId(TICKET_ID);
+        DataContainer data=new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_TICKET,  TicketsSQL.queryID(con, sessionID, ticketID));
+            data.add(D_SESSION, SessionsSQL.queryID(con, sessionID));
+            data.add(D_CINEMA,  CinemasSQL.queryID(con, cinemaID));
+            data.add(D_THEATER, TheatersSQL.queryID(con, theaterID));
 
-        PreparedStatement stmt = connection.prepareStatement(
-                "SELECT tk.row, tk.seat, s.Date, m.Title, m.Duration, t.Theater_Name, c.cid, t.tid, s.sid, m.mid, t.Rows, t.Seats,c.Name " +
-                "FROM TICKET AS tk " +
-                "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
-                "INNER JOIN THEATER AS t ON s.tid=t.tid " +
-                "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "WHERE tk.tkid=? AND tk.sid=?"
-        );
-        stmt.setString(1, cmdBuilder.getId(TICKET_ID.toString()));
-        stmt.setString(2, cmdBuilder.getId(SESSION_ID.toString()));
-        ResultSet rs = stmt.executeQuery();
+            Session session = (Session) data.getData(D_SESSION);
+            if (session!=null)
+                data.add(D_MOVIE, MoviesSQL.queryID(con, session.getMovieID()));
+            con.commit();
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
 
-        DataContainer data=new DataContainer(cmdBuilder.getHeader());
-        int seat, sid, tid, cid, mid, duration;
-        String row;
-        Timestamp date;
-        String theaterName, title;
-
-        if (!rs.next())
-            return new InfoNotFoundView(data);
-
-        row = rs.getString(1);
-        seat = rs.getInt(2);
-        date = rs.getTimestamp(3);
-        title = rs.getString(4);
-        duration = rs.getInt(5);
-        theaterName = rs.getString(6);
-        cid = rs.getInt(7);
-        tid = rs.getInt(8);
-        sid = rs.getInt(9);
-        mid = rs.getInt(10);
-
-        cinema = new Cinema(cid, rs.getString(13), null);
-        movie = new Movie(mid, title, NA, duration);
-        theater = new Theater(tid, theaterName,rs.getInt(11), rs.getInt(12), NA, cid);
-        session = new Session(sid, NA, date, movie,theater, cid);
-        ticket = new Ticket(row.charAt(0), seat, session);
-
-        data.add(D_MOVIE, movie);
-        data.add(D_SESSION,session);
-        data.add(D_TICKET,ticket);
-        data.add(D_CINEMA,cinema);
-        data.add(D_THEATER,theater);
-
-        return new GetCinemaIDTheaterIDSessionIDTicketIDView(data);
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

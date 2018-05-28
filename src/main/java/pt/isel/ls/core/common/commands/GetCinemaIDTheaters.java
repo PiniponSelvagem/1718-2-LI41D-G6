@@ -1,18 +1,15 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Theater;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDTheatersView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CID;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATERS;
 
 public class GetCinemaIDTheaters extends Command {
@@ -28,25 +25,26 @@ public class GetCinemaIDTheaters extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM THEATER AS t WHERE t.cid=?");
-        stmt.setString(1, cmdBuilder.getId(CINEMA_ID.toString()));
-        ResultSet rs = stmt.executeQuery();
-        DataContainer data = new DataContainer(cmdBuilder.getHeader());
-        LinkedList<Theater> theaters = new LinkedList<>();
-
-        while(rs.next()){
-            theaters.add(
-                    new Theater(rs.getInt(1), rs.getString(5), rs.getInt(3), rs.getInt(4), rs.getInt(2), rs.getInt(6)
-            ));
+    public DataContainer execute(CommandBuilder cmdBuilder) {
+        int cinemaID  = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_THEATERS, TheatersSQL.queryAll(con, cinemaID));
+            data.add(D_CID, cinemaID);
+            con.commit();
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
-        data.add(D_THEATERS, theaters);
 
-        return new GetCinemaIDTheatersView(data, Integer.parseInt(cmdBuilder.getId(CINEMA_ID.toString())));
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

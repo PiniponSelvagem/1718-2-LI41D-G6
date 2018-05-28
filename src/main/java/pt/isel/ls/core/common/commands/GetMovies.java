@@ -1,21 +1,17 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
+import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Movie;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetMoviesView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
-import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
-import static pt.isel.ls.core.strings.CommandEnum.GET;
-import static pt.isel.ls.core.strings.CommandEnum.MOVIES;
+import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIES;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
 
 public class GetMovies extends Command {
 
@@ -30,22 +26,33 @@ public class GetMovies extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("SELECT * from MOVIE");
-        ResultSet rs = stmt.executeQuery();
-        DataContainer data = new DataContainer(cmdBuilder.getHeader());
-        LinkedList<Movie> movies = new LinkedList<>();
-
-        while(rs.next()){
-            movies.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+    public DataContainer execute(CommandBuilder cmdBuilder) {
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_MOVIES, MoviesSQL.queryAll(con));
+            con.commit();
+        } catch (SQLException e) {
+            data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        data.add(D_MOVIES, movies);
 
-        return new GetMoviesView(data);
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

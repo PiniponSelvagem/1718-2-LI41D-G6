@@ -2,10 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.Main;
 import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.ExitView;
-
-import java.sql.Connection;
+import pt.isel.ls.core.utils.DataContainer;
 
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.EXIT;
@@ -23,13 +20,8 @@ public class Exit extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection con) {
+    public DataContainer execute(CommandBuilder cmdBuilder) {
         Main.close();
-        return new ExitView();
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return false;
+        return new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
     }
 }

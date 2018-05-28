@@ -1,19 +1,19 @@
 package pt.isel.ls.core.common.commands;
 
+import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
+import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
+import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
+import pt.isel.ls.core.common.commands.db_queries.TicketsSQL;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
-import pt.isel.ls.model.Theater;
-import pt.isel.ls.model.Ticket;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.GetCinemaIDTheaterIDSessionIDTicketsView;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_TICKETS;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
 
@@ -31,56 +31,37 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws SQLException {
+    public DataContainer execute(CommandBuilder cmdBuilder) {
+        int cinemaID  = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
+        int theaterID = Integer.parseInt(cmdBuilder.getId(THEATER_ID));
+        int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
+        DataContainer data=new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_TICKETS, new LinkedList<>(TicketsSQL.queryAll(con, sessionID).values()));
+            data.add(D_THEATER, TheatersSQL.queryID(con, theaterID));
 
-        PreparedStatement stmt = connection.prepareStatement(
-                "SELECT tk.row, tk.seat, s.Date, m.Title, m.Duration, t.Theater_Name, t.cid, t.tid, s.sid, m.mid " +
-                "FROM TICKET AS tk " +
-                "INNER JOIN CINEMA_SESSION AS s ON tk.sid=s.sid " +
-                "INNER JOIN THEATER AS t ON s.tid=t.tid " +
-                "INNER JOIN CINEMA AS c ON t.cid=c.cid " +
-                "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
-                "WHERE s.sid=?"
-        );
-        stmt.setString(1, cmdBuilder.getId(SESSION_ID.toString()));
-        ResultSet rs = stmt.executeQuery();
+            Session session = SessionsSQL.queryID(con, sessionID);
+            data.add(D_SESSION, session);
+            if (session != null) {
+                data.add(D_MOVIE, MoviesSQL.queryID(con, session.getMovieID()));
+            }
 
-        DataContainer data=new DataContainer(cmdBuilder.getHeader());
-        int seat, sid=0, cid=NA, mid, tid, duration;
-        String row;
-        Timestamp date;
-        String theaterName, title;
-
-        LinkedList<Ticket> tickets = new LinkedList<>();
-        while(rs.next()){
-            row = rs.getString(1);
-            seat = rs.getInt(2);
-            date = rs.getTimestamp(3);
-            title = rs.getString(4);
-            duration = rs.getInt(5);
-            theaterName = rs.getString(6);
-            cid = rs.getInt(7);
-            tid = rs.getInt(8);
-            sid = rs.getInt(9);
-            mid = rs.getInt(10);
-
-            tickets.add(
-                    new Ticket(row.charAt(0), seat,
-                            new Session(sid, NA, date,
-                                    new Movie(mid, title, NA, duration),
-                                    new Theater(tid, theaterName, NA, NA, NA, cid),
-                                    cid
-                            )
-                    )
-            );
+            data.add(D_CID, cinemaID);
+            data.add(D_SID, sessionID);
+            con.commit();
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
-        data.add(D_TICKETS, tickets);
 
-        return new GetCinemaIDTheaterIDSessionIDTicketsView(data, cid, sid);
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        return data;
     }
 }

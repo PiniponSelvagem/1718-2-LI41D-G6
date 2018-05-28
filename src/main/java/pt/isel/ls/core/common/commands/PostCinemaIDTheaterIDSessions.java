@@ -1,9 +1,11 @@
 package pt.isel.ls.core.common.commands;
 
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.common.commands.db_queries.PostData;
+import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
+import pt.isel.ls.core.exceptions.InvalidParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.view.command.CommandView;
-import pt.isel.ls.view.command.PostView;
+import pt.isel.ls.core.utils.DataContainer;
+import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -12,6 +14,9 @@ import java.util.Date;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.strings.ExceptionEnum.DATETIME_INVALID_FORMAT;
+import static pt.isel.ls.core.strings.ExceptionEnum.PARAMETERS__INVALID;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CID;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
 
 public class PostCinemaIDTheaterIDSessions extends Command {
 
@@ -27,97 +32,69 @@ public class PostCinemaIDTheaterIDSessions extends Command {
     }
 
     @Override
-    public CommandView execute(CommandBuilder cmdBuilder, Connection connection) throws CommandException, SQLException {
+    public DataContainer execute(CommandBuilder cmdBuilder) throws InvalidParameterException {
+        int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
+
+        int movieID;
+        try {
+            movieID = Integer.parseInt(cmdBuilder.getParameter(MOVIE_ID));
+        } catch (NumberFormatException e) {
+            throw new InvalidParameterException(PARAMETERS__INVALID, e.getMessage());
+        }
 
         SimpleDateFormat sdf1= new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //format 1
         SimpleDateFormat sdf2= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format 2
-        Date date, newDate, event;
-        Timestamp timestamp;
-        PreparedStatement stmt;
-        ResultSet rs;
+        String dateStr = cmdBuilder.getParameter(DATE_PARAM);
         String check;
-        boolean flag=true;
-        int duration,eventDuration=0, SeatsAvailable=0;
+        Date date;
 
         try {
-            check=cmdBuilder.getParameter(DATE_PARAM.toString())+":00";
+            check = dateStr+":00";
             sdf1.setLenient(false);
-            event = sdf1.parse(check.trim());
+            date = sdf1.parse(check.trim());
         } catch (ParseException e) {
             try {
-                check=cmdBuilder.getParameter(DATE_PARAM.toString())+":00";
+                check = dateStr+":00";
                 sdf2.setLenient(false);
-                event = sdf2.parse(check.trim());
+                date = sdf2.parse(check.trim());
             } catch (ParseException ex) {
-                throw new CommandException(DATETIME_INVALID_FORMAT);
+                throw new InvalidParameterException(DATETIME_INVALID_FORMAT);
             }
         }
 
-        stmt = connection.prepareStatement(
-                "SELECT m.Duration FROM MOVIE AS m "+
-                        "WHERE m.mid=?"
-        );
-        stmt.setString(1, cmdBuilder.getParameter(MOVIE_ID.toString()));
-        rs = stmt.executeQuery();
-
-        if(rs.next())eventDuration=rs.getInt(1);
-        Date newEvent=new Date(event.getTime() + eventDuration * 60000);
-
-        stmt = connection.prepareStatement(
-                "SELECT s.Date, m.Duration, t.SeatsAvailable FROM CINEMA_SESSION AS s " +
-                        "INNER JOIN MOVIE AS m ON m.mid=s.mid "+
-                        "INNER JOIN THEATER AS t ON t.tid=s.tid "+
-                        "WHERE s.tid=?"
-        );
-        stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
-        stmt.execute();
-        rs = stmt.executeQuery();
-
-        while (rs.next()) { //Check if DATE is already in use
-            if (SeatsAvailable == 0) SeatsAvailable = rs.getInt(3);
-            timestamp = rs.getTimestamp(1);
-            if (timestamp != null) date = new Date(timestamp.getTime());
-            else {
-                date = rs.getDate(1);
-            }
-            duration = rs.getInt(2);
-            newDate = new Date(date.getTime() + (duration * 60000));
-            if ((date.before(event) && newDate.after(event)) || (event.before(date) && newEvent.after(date)) || date.equals(event) || newDate.equals(newEvent) || date.equals(newEvent) || event.equals(newDate)) {
-                flag = false;
-                break;
-            }
-        }
-        if(SeatsAvailable==0 && flag){
-            stmt = connection.prepareStatement(
-                    "SELECT t.SeatsAvailable FROM THEATER AS t "+
-                            "WHERE t.tid=?"
+        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        Connection con = null;
+        try {
+            con = Sql.getConnection();
+            con.setAutoCommit(false);
+            data.add(D_POST,
+                    SessionsSQL.postSession(con,
+                        Integer.parseInt(cmdBuilder.getId(THEATER_ID)),
+                        date,
+                        movieID
+                    )
             );
-            stmt.setString(1, cmdBuilder.getId(THEATER_ID.toString()));
-            stmt.execute();
-            rs = stmt.executeQuery();
-            if(rs.next())SeatsAvailable = rs.getInt(1);
-            else{return new PostView<>(false, "Session: NOT POSTED!", "Error: THERE IS NO SUCH THEATER!");}
+            con.commit();
+        } catch (SQLException e) {
+            data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        if (flag) { //If DATE free, then POST
-            stmt = connection.prepareStatement("INSERT INTO CINEMA_SESSION VALUES (?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
-            stmt.setTimestamp(1,new Timestamp(event.getTime()));
-            stmt.setString(2, cmdBuilder.getParameter(MOVIE_ID.toString()));
-            stmt.setString(3, cmdBuilder.getId(THEATER_ID.toString()));
-            stmt.setInt(4, SeatsAvailable);
-            stmt.executeUpdate();
 
-            rs = stmt.getGeneratedKeys();
-            int id = 0;
-            if (rs.next()) id = rs.getInt(1);
-            return new PostView<>(true, "Session: ", id);
-        }
-        else {
-            return new PostView<>(false, "Session: ", "NOT POSTED!");
-        }
-    }
-
-    @Override
-    public boolean isSQLRequired() {
-        return true;
+        data.add(D_CID, cinemaID);
+        return data;
     }
 }
