@@ -44,6 +44,14 @@ public class GetMovieID extends Command {
                     e1.printStackTrace();
                 }
             }
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return data;

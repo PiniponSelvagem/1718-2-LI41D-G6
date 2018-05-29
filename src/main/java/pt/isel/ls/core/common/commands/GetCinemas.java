@@ -34,24 +34,25 @@ public class GetCinemas extends Command {
             con.setAutoCommit(false);
             data.add(D_CINEMAS, CinemasSQL.queryAll(con));
             con.commit();
-            } catch (SQLException e) {
-                data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
-                try {
-                    if (con != null) {
-                        con.rollback();
-                    }
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            } finally {
+        } catch (SQLException e) {
+            data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
+            try {
                 if (con != null) {
-                    try {
-                        con.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    con.rollback();
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            //TODO: catch excp handling
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
+        }
 
         return data;
     }

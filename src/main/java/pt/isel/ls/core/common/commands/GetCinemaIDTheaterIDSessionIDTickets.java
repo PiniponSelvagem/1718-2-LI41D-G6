@@ -60,6 +60,15 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
                     e1.printStackTrace();
                 }
             }
+            //TODO: catch excp handling
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return data;

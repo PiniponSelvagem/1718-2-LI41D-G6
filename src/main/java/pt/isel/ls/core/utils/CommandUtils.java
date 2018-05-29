@@ -57,7 +57,7 @@ public class CommandUtils {
         /* Commands related to CINEMAS->THEATERS */
         cmdTree.add(new PostCinemaIDTheaters());    //"POST /cinemas/{cid}/theaters"
         cmdTree.add(new GetCinemaIDTheaters());     //"GET /cinemas/{cid}/theaters"
-        cmdTree.add(new GetCinemaIDTheaterID());   //"GET /cinemas/{cid}/theaters/{tid}"
+        cmdTree.add(new GetCinemaIDTheaterID());    //"GET /cinemas/{cid}/theaters/{tid}"
 
 
         /* Commands related to CINEMAS->THEATERS->SESSIONS */

@@ -26,7 +26,6 @@ public class GetCinemaIDSessionID extends Command {
 
     @Override
     public DataContainer execute(CommandBuilder cmdBuilder) {
-        int cinemaID  = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
         int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
 
         DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
@@ -35,7 +34,7 @@ public class GetCinemaIDSessionID extends Command {
             con = Sql.getConnection();
             con.setAutoCommit(false);
             data.add(D_SESSION, SessionsSQL.queryID(con, sessionID));
-            data.add(D_MOVIE,   MoviesSQL.queryForSession(con, cinemaID));
+            data.add(D_MOVIE,   MoviesSQL.queryForSession(con, sessionID));
             data.add(D_THEATER, TheatersSQL.queryForSession(con, sessionID));
             data.add(D_TICKETS, TicketsSQL.queryAll(con, sessionID));
             con.commit();
@@ -45,6 +44,15 @@ public class GetCinemaIDSessionID extends Command {
                     con.close();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
+                }
+            }
+            //TODO: catch excp handling
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
         }

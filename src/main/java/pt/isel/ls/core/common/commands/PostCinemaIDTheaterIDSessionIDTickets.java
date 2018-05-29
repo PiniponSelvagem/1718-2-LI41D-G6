@@ -63,6 +63,7 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
+            //TODO: catch excp handling
         } finally {
             if (con != null) {
                 try {
