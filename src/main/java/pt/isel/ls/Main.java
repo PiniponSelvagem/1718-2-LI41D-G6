@@ -1,27 +1,28 @@
 package pt.isel.ls;
 
 import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.exceptions.InvalidParameterException;
+import pt.isel.ls.core.exceptions.ViewNotImplementedException;
 import pt.isel.ls.core.utils.CommandUtils;
 
 import java.io.*;
 import java.util.Scanner;
 
+import static pt.isel.ls.core.common.headers.HeadersAvailable.TEXT_HTML;
 import static pt.isel.ls.core.strings.CommandEnum.ARGS_SEPARATOR;
 
 public class Main {
     private final static String FILE_NAME_WELCOME = "welcome_message",
                                 WAIT_INPUT = "> ",
                                 dirFiles   = "header_files";
-    private final static CommandUtils cmdUtils = new CommandUtils();
+    private final static CommandUtils cmdUtils = new CommandUtils(TEXT_HTML.toString());
     private static boolean close = false;
 
     public static void main(String[] args) {
         if (args.length != 0) {
             try {
                 CommandRequest cmdReq = new CommandRequest(args);
-                output(cmdReq.getData().getHeader().fileName, cmdReq.executeView().getBuildedString());
-            } catch (CommandException | InvalidParameterException e) {
+                output(cmdReq.getData().getFileName(), cmdReq.executeView().getString());
+            } catch (CommandException | ViewNotImplementedException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -42,8 +43,8 @@ public class Main {
             args = in.nextLine().split(ARGS_SEPARATOR.toString());
             try {
                 cmdReq = new CommandRequest(args);
-                output(cmdReq.getData().getHeader().fileName, cmdReq.executeView().getBuildedString());
-            } catch (CommandException | InvalidParameterException e) {
+                output(cmdReq.getData().getFileName(), cmdReq.executeView().getString());
+            } catch (CommandException | ViewNotImplementedException e) {
                 System.out.println(e.getMessage());
             }
 

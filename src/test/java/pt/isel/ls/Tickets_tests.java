@@ -7,9 +7,9 @@ import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Ticket;
 import pt.isel.ls.sql.Sql;
-import pt.isel.ls.view.GetCinemaIDTheaterIDSessionIDTicketIDView;
-import pt.isel.ls.view.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
-import pt.isel.ls.view.GetCinemaIDTheaterIDSessionIDTicketsView;
+import pt.isel.ls.view.json.GetCinemaIDTheaterIDSessionIDTicketIDView;
+import pt.isel.ls.view.json.GetCinemaIDTheaterIDSessionIDTicketsAvailableView;
+import pt.isel.ls.view.json.GetCinemaIDTheaterIDSessionIDTicketsView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

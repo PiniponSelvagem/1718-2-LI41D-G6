@@ -1,7 +1,5 @@
 package pt.isel.ls.core.utils;
 
-import pt.isel.ls.core.common.headers.Header;
-
 import java.util.HashMap;
 
 public class DataContainer {
@@ -12,12 +10,18 @@ public class DataContainer {
      */
 
     private String createdBy;
-    private Header header;
+    private String fileName;
+    public  String headerType;
     private HashMap<DataEnum, Object> map = new HashMap<>();
 
-    public DataContainer(String createdBy, Header header) {
+    public DataContainer(String createdBy, String fileName) {
         this.createdBy = createdBy;
-        this.header = header;
+        this.fileName = fileName;
+    }
+
+    public DataContainer(String createdBy) {
+        this.createdBy = createdBy;
+        this.fileName = null;
     }
 
     /**
@@ -28,10 +32,10 @@ public class DataContainer {
     }
 
     /**
-     * @return Returns the header in this data container
+     * @return Returns String fileName, can be null and in this case no file should be created
      */
-    public Header getHeader() {
-        return header;
+    public String getFileName() {
+        return fileName;
     }
 
     /**
@@ -49,14 +53,6 @@ public class DataContainer {
      */
     public Object getData(DataEnum key) {
         return map.get(key);
-    }
-
-    /**
-     * Update header after creating the view that is ready to be sent:
-     * @param header Header
-     */
-    public void updateHeader(Header header) {
-        this.header = header;
     }
 
     /**

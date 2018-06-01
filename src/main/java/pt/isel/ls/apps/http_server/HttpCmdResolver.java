@@ -1,34 +1,34 @@
 package pt.isel.ls.apps.http_server;
 
 import pt.isel.ls.CommandRequest;
-import pt.isel.ls.apps.http_server.http.HttpResponse;
-import pt.isel.ls.apps.http_server.http.HttpStatusCode;
+import pt.isel.ls.core.common.headers.HeadersAvailable;
+import pt.isel.ls.core.common.headers.html.HttpResponse;
+import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.*;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.PagesUtils;
-import pt.isel.ls.core.common.headers.*;
-import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.exceptions.InvalidParameterException;
+import pt.isel.ls.core.exceptions.ViewNotImplementedException;
+import pt.isel.ls.view.CommandView;
+import pt.isel.ls.view.html.HtmlView;
+import pt.isel.ls.view.html.PostView;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
-import java.util.Map;
 
-import static pt.isel.ls.apps.http_server.http.HttpStatusCode.*;
+import static pt.isel.ls.core.common.headers.html.HttpStatusCode.OK;
 import static pt.isel.ls.core.strings.CommandEnum.ACCEPT;
 import static pt.isel.ls.core.strings.CommandEnum.HEADERS_EQUALTO;
 
 public class HttpCmdResolver extends HttpServlet {
     private PagesUtils pageUtils = new PagesUtils();
     private static final String HDPRE = ACCEPT.toString()+HEADERS_EQUALTO.toString(), //header prefix
-                                PLAIN = new Plain().getPathAndMethodName(),
-                                JSON  = new Json().getPathAndMethodName(),
-                                HTML  = new HtmlPage().getPathAndMethodName();
+                                PLAIN = HeadersAvailable.TEXT_PLAIN.toString(),
+                                JSON  = HeadersAvailable.APP_JSON.toString(),
+                                HTML  = HeadersAvailable.TEXT_HTML.toString();
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -69,41 +69,47 @@ public class HttpCmdResolver extends HttpServlet {
     }
 
     private HttpResponse handleRequest(String header, HttpServletRequest req) {
+        if (!req.getMethod().equals("GET") && !req.getMethod().equals("POST")) {
+            return new HttpResponse(HttpStatusCode.METHOD_NOT_ALLOWED);
+        }
+
         ServerPage page = pageUtils.getPage(req.getRequestURI());
-        HttpStatusCode code;
 
         if (page == null) {
             String[] urlOptions;
             try {
-                if (req.getMethod().equals("POST") && req.getParameterNames().hasMoreElements()) {
+                CommandView cmdView;
+                if (header.equals(HTML) && req.getMethod().equals("POST") && req.getParameterNames().hasMoreElements()) {
                     handleFormData(req);
                     urlOptions = new String[]{req.getMethod(), req.getRequestURI(), handleFormData(req), header};
-                    Header respHeader = new CommandRequest(urlOptions).executeView();
-                    String redirectLink = respHeader.getRedirectLink();
-                    if (redirectLink != null)
-                        return new HttpResponse(HttpStatusCode.SEE_OTHER)
-                                .withHeader("Location", respHeader.getRedirectLink());
-
+                    cmdView = new CommandRequest(urlOptions).executeView();
+                    if (cmdView instanceof PostView) {
+                        String redirectLink = ((PostView) cmdView).getRedirectLink();
+                        if (redirectLink != null)
+                            return new HttpResponse(HttpStatusCode.SEE_OTHER)
+                                    .withHeader("Location", redirectLink);
+                    }
                 } else if (req.getParameterNames().hasMoreElements()) {
                     urlOptions = new String[]{req.getMethod(), req.getRequestURI(), req.getQueryString(), header};
                 } else {
                     urlOptions = new String[]{req.getMethod(), req.getRequestURI(), header};
                 }
-                Header respHeader = new CommandRequest(urlOptions).executeView();
+                cmdView = new CommandRequest(urlOptions).executeView();
 
-                if (respHeader.getCode() == null) code = OK;    //in case the request was made with header != text/html
-                else code = (HttpStatusCode) respHeader.getCode();
+                if (!(cmdView instanceof HtmlView))
+                    return new HttpResponse(OK, cmdView.getString());  //in case the request was made with header != text/html
+                return new HttpResponse(((HtmlView) cmdView).getCode(), cmdView.getString());
 
-                return new HttpResponse(code, respHeader.getBuildedString());
             } catch (CommandException e) {
-                page = new NotFound(e.getMessage());
-                return new HttpResponse(page.getStatus(), page.body());
-            } catch (InvalidParameterException e) {
-                page = new InvalidParam(e.getMessage());
-                return new HttpResponse(page.getStatus(), page.body());
+                return new NotFound().getHttpResponse();
+            //} catch (InvalidParameterException e) {
+            //    page = new InvalidParam(e.getMessage());
+            //    return page.getHttpResponse();
+            } catch (ViewNotImplementedException e) {
+                return new HttpResponse(HttpStatusCode.NO_CONTENT);
             }
         }
-        return new HttpResponse(page.getStatus(), page.body());
+        return page.getHttpResponse();
     }
 
     private String handleFormData(HttpServletRequest req) {
@@ -116,5 +122,4 @@ public class HttpCmdResolver extends HttpServlet {
         str.deleteCharAt(str.length()-1); //remove last '&'
         return str.toString();
     }
-
 }

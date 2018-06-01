@@ -8,8 +8,8 @@ import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.sql.Sql;
-import pt.isel.ls.view.GetCinemaIDSessionsDateIDView;
-import pt.isel.ls.view.GetMovieIDSessionsDateIDView;
+import pt.isel.ls.view.json.GetCinemaIDSessionsDateIDView;
+import pt.isel.ls.view.json.GetMovieIDSessionsDateIDView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

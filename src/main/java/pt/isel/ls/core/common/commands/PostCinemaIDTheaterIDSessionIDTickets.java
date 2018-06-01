@@ -3,7 +3,6 @@ package pt.isel.ls.core.common.commands;
 import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.common.commands.db_queries.TicketsSQL;
 import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.exceptions.InvalidParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -32,17 +31,17 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws InvalidParameterException {
+    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
         int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
 
         int seat;
         try {
             seat = Integer.parseInt(cmdBuilder.getParameter(SEATS_ROW));
         } catch (NumberFormatException e) {
-            throw new InvalidParameterException(TICKET_SEAT_INVALID);
+            throw new CommandException(TICKET_SEAT_INVALID);
         }
 
-        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         PostData postData = null;
         try {

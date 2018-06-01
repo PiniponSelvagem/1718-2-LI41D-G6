@@ -27,7 +27,7 @@ public class GetMovieID extends Command {
     @Override
     public DataContainer execute(CommandBuilder cmdBuilder) {
         int movieID = Integer.parseInt(cmdBuilder.getId(MOVIE_ID));
-        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         try {
             con = Sql.getConnection();

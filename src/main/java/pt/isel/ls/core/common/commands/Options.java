@@ -20,6 +20,6 @@ public class Options extends Command {
 
     @Override
     public DataContainer execute(CommandBuilder cmdBuilder) {
-        return new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        return new DataContainer(this.getClass().getSimpleName());
     }
 }

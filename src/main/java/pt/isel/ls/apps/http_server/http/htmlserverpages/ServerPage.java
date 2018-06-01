@@ -1,13 +1,15 @@
 package pt.isel.ls.apps.http_server.http.htmlserverpages;
 
-import pt.isel.ls.apps.http_server.http.HttpStatusCode;
-import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
+import pt.isel.ls.core.common.headers.html.HttpResponse;
+import pt.isel.ls.core.common.headers.html.HttpStatusCode;
+import pt.isel.ls.core.common.headers.html.HtmlPage;
 
 public abstract class ServerPage {
 
-    HtmlPage page = new HtmlPage();
+    protected abstract HtmlPage page();
+    protected abstract HttpStatusCode status();
 
-    public abstract String body();
-
-    public abstract HttpStatusCode getStatus();
+    public final HttpResponse getHttpResponse() {
+        return new HttpResponse(status(), page().getString());
+    }
 }

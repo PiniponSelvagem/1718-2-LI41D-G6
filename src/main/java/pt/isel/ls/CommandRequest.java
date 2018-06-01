@@ -1,8 +1,7 @@
 package pt.isel.ls;
 
-import pt.isel.ls.core.common.headers.Header;
 import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.exceptions.InvalidParameterException;
+import pt.isel.ls.core.exceptions.ViewNotImplementedException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
@@ -13,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
-import static pt.isel.ls.core.strings.ExceptionEnum.VIEW_CREATION_ERROR;
+import static pt.isel.ls.core.strings.ExceptionEnum.VIEW__CREATION_ERROR;
 
 public class CommandRequest {
 
@@ -21,7 +20,7 @@ public class CommandRequest {
     private DataContainer data;
     private final CommandUtils cmdUtils = Main.getCmdUtils();
 
-    public CommandRequest(String[] args) throws CommandException, InvalidParameterException {
+    public CommandRequest(String[] args) throws CommandException {
         commandRequest(args);
     }
 
@@ -30,11 +29,12 @@ public class CommandRequest {
      * Then it checks if the command requires a SQL connection and executes the command accordingly.
      * @param args {method, path, header, parameters} or {method, path, header, parameters}
      */
-    private void commandRequest(String[] args) throws CommandException, InvalidParameterException {
+    private void commandRequest(String[] args) throws CommandException {
         CommandBuilder cmdBuilder = new CommandBuilder(args, cmdUtils);
         if (cmdBuilder.getCommand() == null)
             throw new CommandException(COMMAND__NOT_FOUND);
         data = executeCommand(cmdBuilder);
+        data.headerType = cmdBuilder.getHeaderType();
     }
 
     /**
@@ -43,18 +43,23 @@ public class CommandRequest {
      * @return Returns the DataContainer with the info that the command got
      * @throws CommandException CommandException
      */
-    private DataContainer executeCommand(CommandBuilder cmdBuilder) throws CommandException, InvalidParameterException {
+    private DataContainer executeCommand(CommandBuilder cmdBuilder) throws CommandException {
         return cmdBuilder.getCommand().execute(cmdBuilder);
     }
 
-    /**
-     * Execute the appropriate view for the command that was executed.
-     */
-    public Header executeView() throws CommandException {
 
-        //TODO: I dont like this code, but works for now
-        HashMap viewMap = cmdUtils.getCmdViewMap();
-        String viewLink = (String) viewMap.get(data.getCreatedBy());
+    /**
+     * Create view for requested header
+     * @return Returns CommandView ready for output.
+     * @throws ViewNotImplementedException ViewNotImplementedException
+     */
+    public CommandView executeView() throws ViewNotImplementedException {
+        HashMap<String, String> viewMap = cmdUtils.getCmdViewMap(data.headerType);
+
+        if (viewMap == null)
+            throw new ViewNotImplementedException(data.headerType);
+
+        String viewLink = viewMap.get(data.getCreatedBy());
         if (viewLink!=null) {
             Object obj;
             try {
@@ -62,17 +67,15 @@ public class CommandRequest {
                 Constructor<?> constructor = klass.getConstructor(DataContainer.class);
                 obj = constructor.newInstance(data);
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-                throw new CommandException(VIEW_CREATION_ERROR);
+                throw new ViewNotImplementedException(VIEW__CREATION_ERROR);
             }
             cmdView = (CommandView) obj;
         }
-        //TODO: --- END ---
 
+        if (cmdView == null)
+            throw new ViewNotImplementedException(data.headerType);
 
-        if (cmdView != null)
-            cmdView.getAllInfoString();
-
-        return data.getHeader();
+        return cmdView;
     }
 
     /**

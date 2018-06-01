@@ -1,41 +1,44 @@
 package pt.isel.ls.core.utils;
 
 import pt.isel.ls.core.common.commands.*;
-import pt.isel.ls.core.common.headers.*;
-import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
 import pt.isel.ls.core.utils.directorytree.DirectoryNode;
 import pt.isel.ls.core.utils.directorytree.DirectoryTree;
-import pt.isel.ls.view.*;
+import pt.isel.ls.core.utils.view_map.*;
+import pt.isel.ls.view.console.ExitView;
+import pt.isel.ls.view.console.OptionsView;
 
 import java.util.HashMap;
 
+import static pt.isel.ls.core.common.headers.HeadersAvailable.*;
 import static pt.isel.ls.core.strings.CommandEnum.*;
 
 public class CommandUtils {
 
     private String root = ROOT_DIR.toString();
     private DirectoryTree cmdTree = new DirectoryTree(new DirectoryNode(root));
-    private DirectoryTree headersTree = new DirectoryTree(new DirectoryNode(root));
-    private HashMap<String, String> cmdViewMap = new HashMap<>();
     private HashMap<String, String> dirID = new HashMap<>();
     private HashMap<String, Boolean> paramsCheck = new HashMap<>();
+
+    public final String defaultHeaderType;
+    private static HashMap<String, HashMap<String, String>> viewTypeMap = new HashMap<>();
 
     /**
      * Start core utils.
      */
-    public CommandUtils() {
-        initializeCommandsTree();
-        initializeDirID();
-        initializeParamsCheck();
-        initializeHeadersTree();
-        initializeCommandViewMap();
+    public CommandUtils(String defaultHeaderType) {
+        this.defaultHeaderType = defaultHeaderType;
+        initCommandsTree();
+        initDirID();
+        initParamsCheck();
+        initViewMaps();
+        addConsoleViewsToDefaultHeaderTypeMap(defaultHeaderType);
     }
 
 
     /**
      * Fills the cmdTree with all the possible commands available.
      */
-    private void initializeCommandsTree() {
+    private void initCommandsTree() {
         /* Internal commands */
         cmdTree.add(new Options());                 //"OPTIONS"
         cmdTree.add(new Exit());                    //"EXIT"
@@ -88,7 +91,7 @@ public class CommandUtils {
      * there we replace that value with the value thats in this HashMap, so the commandTree can
      * continue its way in the directories.
      */
-    private void initializeDirID() {
+    private void initDirID() {
         dirID.put(CINEMAS.toString(),  CINEMA_ID_FULL.toString());
         dirID.put(MOVIES.toString(),   MOVIE_ID_FULL.toString());
         dirID.put(THEATERS.toString(), THEATER_ID_FULL.toString());
@@ -101,7 +104,7 @@ public class CommandUtils {
      * Fills the HashMap with the all available parameters, with value TRUE.
      * This way, when we can check if its a valid parameter with {@link #validParam(String param)}.
      */
-    private void initializeParamsCheck() {
+    private void initParamsCheck() {
         putParamsCheck(CINEMA_ID.toString());
         putParamsCheck(NAME.toString());
         putParamsCheck(CITY.toString());
@@ -125,68 +128,30 @@ public class CommandUtils {
     }
 
     /**
-     * Fills the headersTree with all the possible headers available.
+     * Fills the multiple view maps, linking each command to their view based on header type.
      */
-    private void initializeHeadersTree() {
-        /* Directory: text */
-        headersTree.add(new Plain());    //"PLAIN"
-        headersTree.add(new HtmlPage()); //"HTML"
-
-        /* Directory: application */
-        headersTree.add(new Json());     //"JSON"
+    private void initViewMaps() {
+        viewTypeMap.put(TEXT_HTML.toString(),  new ViewMapHtml().getViewMap());
+        viewTypeMap.put(TEXT_PLAIN.toString(), new ViewMapPlain().getViewMap());
+        viewTypeMap.put(APP_JSON.toString(),   new ViewMapJson().getViewMap());
     }
 
     /**
-     * Fills the cmdViewMap, linking each command to their view.
+     * Fills the Map that is assigned as default header view, with the views of the console commands.
+     * @param defaultHeaderType Default header, when header is omitted in the command input,
+     *                          the requested view will be from this type of header.
      */
-    private void initializeCommandViewMap() {
+    private void addConsoleViewsToDefaultHeaderTypeMap(String defaultHeaderType) {
+        HashMap<String, String> map = viewTypeMap.get(defaultHeaderType);
+
         /* Internal commands */
-        cmdViewMap.put(Options.class.getSimpleName(), OptionsView.class.getName()); //"OPTIONS"
-        cmdViewMap.put(Exit.class.getSimpleName(),    ExitView.class.getName());    //"EXIT"
-
-
-        /* Commands related to MOVIES */
-        cmdViewMap.put(PostMovies.class.getSimpleName(), PostMoviesView.class.getName());       //"POST /movies"
-        cmdViewMap.put(GetMovies.class.getSimpleName(),  GetMoviesView.class.getName());  //"GET /movies"
-        cmdViewMap.put(GetMovieID.class.getSimpleName(), GetMovieIDView.class.getName()); //"GET /movies/{mid}"
-
-
-        /* Commands related to CINEMAS */
-        cmdViewMap.put(PostCinemas.class.getSimpleName(), PostCinemasView.class.getName()); //"POST /cinemas"
-        cmdViewMap.put(GetCinemas.class.getSimpleName(),  GetCinemasView.class.getName());  //"GET /cinemas"
-        cmdViewMap.put(GetCinemaID.class.getSimpleName(), GetCinemaIDView.class.getName()); //"GET /cinemas/{cid}"
-
-
-        /* Commands related to CINEMAS->THEATERS */
-        cmdViewMap.put(PostCinemaIDTheaters.class.getSimpleName(), PostCinemaIDTheatersView.class.getName()); //"POST /cinemas/{cid}/theaters"
-        cmdViewMap.put(GetCinemaIDTheaters.class.getSimpleName(),  GetCinemaIDTheatersView.class.getName());  //"GET /cinemas/{cid}/theaters"
-        cmdViewMap.put(GetCinemaIDTheaterID.class.getSimpleName(), GetCinemaIDTheaterIDView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}"
-
-
-        /* Commands related to CINEMAS->THEATERS->SESSIONS */
-        cmdViewMap.put(PostCinemaIDTheaterIDSessions.class.getSimpleName(),     PostCinemaIDTheaterIDSessionsView.class.getName());//"POST /cinemas/{cid}/theaters/{tid}/sessions"
-        cmdViewMap.put(GetCinemaIDTheaterIDSessions.class.getSimpleName(),      GetCinemaIDTheaterIDSessionsView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}/sessions"
-        cmdViewMap.put(GetCinemaIDTheaterIDSessionsToday.class.getSimpleName(), GetCinemaIDTheaterIDSessionsView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}/sessions/today"
-
-
-        /* Commands related to CINEMAS->SESSIONS */
-        cmdViewMap.put(GetCinemaIDSessions.class.getSimpleName(),       GetCinemaIDSessionsView.class.getName());       //"GET /cinemas/{cid}/sessions"
-        cmdViewMap.put(GetCinemaIDSessionID.class.getSimpleName(),      GetCinemaIDSessionIDView.class.getName());      //"GET /cinemas/{cid}/sessions/{sid}"
-        cmdViewMap.put(GetCinemaIDSessionsToday.class.getSimpleName(),  GetCinemaIDSessionsDateIDView.class.getName()); //"GET /cinemas/{cid}/sessions/today"
-        cmdViewMap.put(GetCinemaIDSessionsDateID.class.getSimpleName(), GetCinemaIDSessionsDateIDView.class.getName()); //"GET /cinemas/{cid}/sessions/date/{dmy}"
-        cmdViewMap.put(GetMovieIDSessionsDateID.class.getSimpleName(),  GetMovieIDSessionsDateIDView.class.getName());  //"GET /movies/{mid}/sessions/date/{dmy}"
-
-
-        /* Commands related to Tickets */
-        cmdViewMap.put(PostCinemaIDTheaterIDSessionIDTickets.class.getSimpleName(),         PostCinemaIDTheaterIDSessionIDTicketsView.class.getName());         //"POST /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdViewMap.put(GetCinemaIDTheaterIDSessionIDTickets.class.getSimpleName(),          GetCinemaIDTheaterIDSessionIDTicketsView.class.getName());          //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
-        cmdViewMap.put(GetCinemaIDTheaterIDSessionIDTicketID.class.getSimpleName(),         GetCinemaIDTheaterIDSessionIDTicketIDView.class.getName());         //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/{tkid}"
-        cmdViewMap.put(GetCinemaIDTheaterIDSessionIDTicketsAvailable.class.getSimpleName(), GetCinemaIDTheaterIDSessionIDTicketsAvailableView.class.getName()); //"GET /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets/available"
-        cmdViewMap.put(DeleteCinemaIDTheaterIDSessionIDTicket.class.getSimpleName(),        DeleteView.class.getName());                                        //"DELETE /cinemas/{cid}/theaters/{tid}/sessions/{sid}/tickets"
+        map.put(Options.class.getSimpleName(), OptionsView.class.getName()); //"OPTIONS"
+        map.put(Exit.class.getSimpleName(),    ExitView.class.getName());    //"EXIT"
     }
 
+
     /**
-     * Used by {@link #initializeParamsCheck()}
+     * Used by {@link #initParamsCheck()}
      * @param param Add this KEY to the HashMap with value TRUE
      */
     private void putParamsCheck(String param) {
@@ -201,17 +166,10 @@ public class CommandUtils {
     }
 
     /**
-     * @return Returns the command Tree
-     */
-    public DirectoryTree getHeadersTree() {
-        return headersTree;
-    }
-
-    /**
      * @return Returns cmdView hashmap <String: Command, String: CommandView>
      */
-    public HashMap<String, String> getCmdViewMap() {
-        return cmdViewMap;
+    public HashMap<String, String> getCmdViewMap(String headerType) {
+        return viewTypeMap.get(headerType);
     }
 
     /**

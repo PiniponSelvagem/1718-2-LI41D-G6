@@ -30,7 +30,7 @@ public class GetCinemaIDTheaterIDSessionsToday extends Command {
         int cinemaID  = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
         int theaterID = Integer.parseInt(cmdBuilder.getId(THEATER_ID));
         Date date = new java.sql.Date(new java.util.Date().getTime());
-        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         try {
             con = Sql.getConnection();

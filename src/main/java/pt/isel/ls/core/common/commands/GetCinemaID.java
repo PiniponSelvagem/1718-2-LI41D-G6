@@ -31,7 +31,7 @@ public class GetCinemaID extends Command {
     public DataContainer execute(CommandBuilder cmdBuilder) {
         int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
 
-        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         try {
             con = Sql.getConnection();

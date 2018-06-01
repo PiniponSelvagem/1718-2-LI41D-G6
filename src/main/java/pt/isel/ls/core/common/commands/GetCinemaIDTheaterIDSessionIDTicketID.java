@@ -32,7 +32,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketID extends Command {
         int theaterID = Integer.parseInt(cmdBuilder.getId(THEATER_ID));
         int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
         String ticketID = cmdBuilder.getId(TICKET_ID);
-        DataContainer data=new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        DataContainer data=new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         try {
             con = Sql.getConnection();

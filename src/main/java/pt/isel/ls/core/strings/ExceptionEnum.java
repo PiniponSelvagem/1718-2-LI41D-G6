@@ -30,7 +30,7 @@ public enum ExceptionEnum {
     DEBUG__EXCEPTION("EXCEPTION AT: CommandBuilder.parsePath() when trying to: "+
             "args[1].subSequence(0, DIR_SEPARATOR.toString().length()).equals(DIR_SEPARATOR.toString())"),
 
-    VIEW_CREATION_ERROR("ERROR while initializing view."),
+    VIEW__CREATION_ERROR("ERROR while initializing view."),
 
     ;
 

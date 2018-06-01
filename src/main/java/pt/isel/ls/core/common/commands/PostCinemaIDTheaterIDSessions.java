@@ -2,7 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
-import pt.isel.ls.core.exceptions.InvalidParameterException;
+import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -32,14 +32,14 @@ public class PostCinemaIDTheaterIDSessions extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws InvalidParameterException {
+    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
         int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
 
         int movieID;
         try {
             movieID = Integer.parseInt(cmdBuilder.getParameter(MOVIE_ID));
         } catch (NumberFormatException e) {
-            throw new InvalidParameterException(PARAMETERS__INVALID, e.getMessage());
+            throw new CommandException(PARAMETERS__INVALID, e.getMessage());
         }
 
         SimpleDateFormat sdf1= new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //format 1
@@ -58,11 +58,11 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 sdf2.setLenient(false);
                 date = sdf2.parse(check.trim());
             } catch (ParseException ex) {
-                throw new InvalidParameterException(DATETIME_INVALID_FORMAT);
+                throw new CommandException(DATETIME_INVALID_FORMAT);
             }
         }
 
-        DataContainer data = new DataContainer(this.getClass().getSimpleName(), cmdBuilder.getHeader());
+        DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         try {
             con = Sql.getConnection();

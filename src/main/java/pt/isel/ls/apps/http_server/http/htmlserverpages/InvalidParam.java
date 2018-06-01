@@ -1,9 +1,9 @@
 package pt.isel.ls.apps.http_server.http.htmlserverpages;
 
-import pt.isel.ls.apps.http_server.http.HttpStatusCode;
-import pt.isel.ls.core.common.headers.html_utils.HtmlPage;
+import pt.isel.ls.core.common.headers.html.HtmlPage;
+import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 
-import static pt.isel.ls.core.common.headers.Html.*;
+import static pt.isel.ls.core.common.headers.html.Html.*;
 
 public class InvalidParam extends ServerPage {
 
@@ -14,20 +14,18 @@ public class InvalidParam extends ServerPage {
     }
 
     @Override
-    public String body() {
-        HtmlPage page = new HtmlPage();
-        page.createPage(HttpStatusCode.BAD_REQUEST, "400",
+    protected HtmlPage page() {
+        return new HtmlPage(String.valueOf(status().valueOf()),
                 h1(text("Input invalid")),
                 h3(text(msg)),
                 h3(text("Suggestion: Check if the input was valid, and try again. " +
                         "If error persists and you are SURE that this is an error, contact the admin.")),
                 h2(a("/", "Main page"))
         );
-        return page.getBuildedString();
     }
 
     @Override
-    public HttpStatusCode getStatus() {
-        return HttpStatusCode.NOT_FOUND;
+    protected HttpStatusCode status() {
+        return HttpStatusCode.BAD_REQUEST;
     }
 }
