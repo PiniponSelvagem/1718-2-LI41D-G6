@@ -28,7 +28,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailable extends Command {
 
     @Override
     public DataContainer execute(CommandBuilder cmdBuilder) {
-        int sessionID = Integer.parseInt(cmdBuilder.getId(SESSION_ID));
+        String sessionID = cmdBuilder.getId(SESSION_ID);
         DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         try {

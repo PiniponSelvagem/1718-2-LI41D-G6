@@ -27,8 +27,8 @@ public class GetCinemaIDTheaterIDSessionsToday extends Command {
 
     @Override
     public DataContainer execute(CommandBuilder cmdBuilder) {
-        int cinemaID  = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
-        int theaterID = Integer.parseInt(cmdBuilder.getId(THEATER_ID));
+        String cinemaID  = cmdBuilder.getId(CINEMA_ID);
+        String theaterID = cmdBuilder.getId(THEATER_ID);
         Date date = new java.sql.Date(new java.util.Date().getTime());
         DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;

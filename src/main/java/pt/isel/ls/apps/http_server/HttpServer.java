@@ -3,7 +3,7 @@ package pt.isel.ls.apps.http_server;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 
 import java.net.BindException;
 
@@ -15,12 +15,12 @@ public class HttpServer {
      */
     private int listenPort;
 
-    public HttpServer(int listenPort) throws CommandException {
+    public HttpServer(int listenPort) throws ParameterException {
         this.listenPort = listenPort;
         try {
             run();
         } catch (BindException e) {
-            throw new CommandException(SERVER_PORT_ALREADY_IN_USE, String.valueOf(listenPort));
+            throw new ParameterException(SERVER_PORT_ALREADY_IN_USE, String.valueOf(listenPort));
         } catch (Exception e) {
             e.printStackTrace();
         }

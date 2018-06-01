@@ -32,7 +32,7 @@ public class GetMoviesView extends HtmlView {
         Writable[] td_array = new Writable[movies.size()+1];
         td_array[0] = tr(th);
         String hyperLink = new GetMovieID().getPath()
-                .replace(MOVIE_ID_FULL.toString(), "%d");
+                .replace(MOVIE_ID_FULL.toString(), "%s");
 
         HtmlViewCommon.fillTableDataMovies(movies, td, td_array, hyperLink);
 

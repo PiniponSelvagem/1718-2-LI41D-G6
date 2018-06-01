@@ -10,18 +10,11 @@ public class DataContainer {
      */
 
     private String createdBy;
-    private String fileName;
     public  String headerType;
     private HashMap<DataEnum, Object> map = new HashMap<>();
 
-    public DataContainer(String createdBy, String fileName) {
-        this.createdBy = createdBy;
-        this.fileName = fileName;
-    }
-
     public DataContainer(String createdBy) {
         this.createdBy = createdBy;
-        this.fileName = null;
     }
 
     /**
@@ -29,13 +22,6 @@ public class DataContainer {
      */
     public String getCreatedBy() {
         return createdBy;
-    }
-
-    /**
-     * @return Returns String fileName, can be null and in this case no file should be created
-     */
-    public String getFileName() {
-        return fileName;
     }
 
     /**

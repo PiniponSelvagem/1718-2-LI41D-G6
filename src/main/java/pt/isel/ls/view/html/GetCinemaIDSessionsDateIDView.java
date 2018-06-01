@@ -21,21 +21,21 @@ import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionsDateIDView extends HtmlView {
-    private int cinemaId;
+    private String cinemaId;
     private Date date;
     private static final int FULL_DAY = 24*60*60*1000;
 
     public GetCinemaIDSessionsDateIDView(DataContainer data) {
         super(data);
-        this.cinemaId = (Integer) data.getData(D_CID);
+        this.cinemaId = (String) data.getData(D_CID);
         this.date = (Date) data.getData(D_DATE);
     }
 
     @Override
     public HtmlPage createPage() {
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
-        HashMap<Integer, Theater> theaters = (HashMap<Integer, Theater>) data.getData(D_THEATERS);
-        HashMap<Integer, Movie> movies = (HashMap<Integer, Movie>) data.getData(D_MOVIES);
+        HashMap<String, Theater> theaters = (HashMap<String, Theater>) data.getData(D_THEATERS);
+        HashMap<String, Movie> movies = (HashMap<String, Movie>) data.getData(D_MOVIES);
         Cinema cinema = (Cinema) data.getData(D_CINEMA);
 
         if (cinema!=null) {
@@ -48,13 +48,13 @@ public class GetCinemaIDSessionsDateIDView extends HtmlView {
 
             Session session;
             String hyperlink_date = new GetCinemaIDSessionID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), "%d")
-                    .replace(SESSION_ID_FULL.toString(), "%d");
+                    .replace(CINEMA_ID_FULL.toString(), "%s")
+                    .replace(SESSION_ID_FULL.toString(), "%s");
             String hyperlink_theater = new GetCinemaIDTheaterID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), "%d")
-                    .replace(THEATER_ID_FULL.toString(), "%d");
+                    .replace(CINEMA_ID_FULL.toString(), "%s")
+                    .replace(THEATER_ID_FULL.toString(), "%s");
             String hyperlink_movie = new GetMovieID().getPath()
-                    .replace(MOVIE_ID_FULL.toString(), "%d");
+                    .replace(MOVIE_ID_FULL.toString(), "%s");
             for (int i = 0; i < sessions.size(); ++i) {
                 session = sessions.get(i);
                 td[i][0] = td(a(String.format(hyperlink_date, session.getCinemaID(), session.getId()),
@@ -78,10 +78,10 @@ public class GetCinemaIDSessionsDateIDView extends HtmlView {
             String yesterday = sdf_noSep.format(new Date(this.date.getTime() - FULL_DAY));
 
             String hyperlink_dateNavigator = new GetCinemaIDSessionsDateID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), String.valueOf(cinemaId))
+                    .replace(CINEMA_ID_FULL.toString(), cinemaId)
                     .replace(DATE_ID_FULL.toString(), "%s");
 
-            String hyperlink_cinema = new GetCinemaID().getPath().replace(CINEMA_ID_FULL.toString(), "%d");
+            String hyperlink_cinema = new GetCinemaID().getPath().replace(CINEMA_ID_FULL.toString(), "%s");
 
             return new HtmlPage("Sessions for date: " + sdf_withSep.format(this.date),
                     h1(text("Sessions for date: " + sdf_withSep.format(this.date))),

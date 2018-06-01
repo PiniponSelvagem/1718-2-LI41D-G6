@@ -2,7 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
 import pt.isel.ls.core.common.commands.db_queries.PostData;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -26,13 +26,13 @@ public class PostMovies extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
+    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
         int year, duration;
         try {
             year = Integer.parseInt(cmdBuilder.getParameter(YEAR));
             duration = Integer.parseInt(cmdBuilder.getParameter(DURATION));
         } catch (NumberFormatException e) {
-            throw new CommandException(PARAMETERS__INVALID, e.getMessage());
+            throw new ParameterException(PARAMETERS__INVALID, e.getMessage());
         }
 
         DataContainer data = new DataContainer(this.getClass().getSimpleName());

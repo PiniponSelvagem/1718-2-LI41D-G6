@@ -1,6 +1,8 @@
 package pt.isel.ls;
 
 import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.CommonException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.exceptions.ViewNotImplementedException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
@@ -17,10 +19,11 @@ import static pt.isel.ls.core.strings.ExceptionEnum.VIEW__CREATION_ERROR;
 public class CommandRequest {
 
     private CommandView cmdView;
+    private CommandBuilder cmdBuilder;
     private DataContainer data;
     private final CommandUtils cmdUtils = Main.getCmdUtils();
 
-    public CommandRequest(String[] args) throws CommandException {
+    public CommandRequest(String[] args) throws CommonException {
         commandRequest(args);
     }
 
@@ -29,8 +32,8 @@ public class CommandRequest {
      * Then it checks if the command requires a SQL connection and executes the command accordingly.
      * @param args {method, path, header, parameters} or {method, path, header, parameters}
      */
-    private void commandRequest(String[] args) throws CommandException {
-        CommandBuilder cmdBuilder = new CommandBuilder(args, cmdUtils);
+    private void commandRequest(String[] args) throws CommonException {
+        cmdBuilder = new CommandBuilder(args, cmdUtils);
         if (cmdBuilder.getCommand() == null)
             throw new CommandException(COMMAND__NOT_FOUND);
         data = executeCommand(cmdBuilder);
@@ -43,7 +46,7 @@ public class CommandRequest {
      * @return Returns the DataContainer with the info that the command got
      * @throws CommandException CommandException
      */
-    private DataContainer executeCommand(CommandBuilder cmdBuilder) throws CommandException {
+    private DataContainer executeCommand(CommandBuilder cmdBuilder) throws CommandException, ParameterException {
         return cmdBuilder.getCommand().execute(cmdBuilder);
     }
 
@@ -61,7 +64,7 @@ public class CommandRequest {
 
         String viewLink = viewMap.get(data.getCreatedBy());
         if (viewLink!=null) {
-            Object obj;
+            Object obj = null;
             try {
                 Class<?> klass = Class.forName(viewLink);
                 Constructor<?> constructor = klass.getConstructor(DataContainer.class);
@@ -83,5 +86,12 @@ public class CommandRequest {
      */
     public DataContainer getData() {
         return data;
+    }
+
+    /**
+     * @return Returns fileName, can be null.
+     */
+    public String getFileName() {
+        return cmdBuilder.getFileName();
     }
 }

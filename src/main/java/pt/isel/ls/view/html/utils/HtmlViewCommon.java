@@ -28,8 +28,6 @@ public class HtmlViewCommon {
 
     /**
      * Fills TableData with movies.
-     * Used at: {@link GetCinemaIDView#toHtml(HtmlPage)},
-     *          {@link GetMoviesView#toHtml(HtmlPage)}
      * @param movies Movies list
      * @param td TableData values of one movie
      * @param td_array TableData movies

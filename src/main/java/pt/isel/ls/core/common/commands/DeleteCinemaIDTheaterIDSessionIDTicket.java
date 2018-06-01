@@ -2,7 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.common.commands.db_queries.TicketsSQL;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -30,7 +30,7 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
+    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
         DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Connection con = null;
         try {
@@ -38,7 +38,7 @@ public class DeleteCinemaIDTheaterIDSessionIDTicket extends Command {
             con.setAutoCommit(false);
             data.add(D_DELETE,
                     TicketsSQL.deleteTicket(con,
-                        Integer.parseInt(cmdBuilder.getId(SESSION_ID)),
+                        cmdBuilder.getId(SESSION_ID),
                         cmdBuilder.getParametersList(TICKET_ID),
                         cmdBuilder.getParameterSize(TICKET_ID)
                     )

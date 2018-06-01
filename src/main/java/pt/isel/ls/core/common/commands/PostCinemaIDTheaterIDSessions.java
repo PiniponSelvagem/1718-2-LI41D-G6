@@ -2,7 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -32,15 +32,9 @@ public class PostCinemaIDTheaterIDSessions extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
-        int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
-
-        int movieID;
-        try {
-            movieID = Integer.parseInt(cmdBuilder.getParameter(MOVIE_ID));
-        } catch (NumberFormatException e) {
-            throw new CommandException(PARAMETERS__INVALID, e.getMessage());
-        }
+    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
+        String cinemaID = cmdBuilder.getId(CINEMA_ID);
+        String movieID  = cmdBuilder.getParameter(MOVIE_ID);
 
         SimpleDateFormat sdf1= new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //format 1
         SimpleDateFormat sdf2= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format 2
@@ -58,7 +52,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
                 sdf2.setLenient(false);
                 date = sdf2.parse(check.trim());
             } catch (ParseException ex) {
-                throw new CommandException(DATETIME_INVALID_FORMAT);
+                throw new ParameterException(DATETIME_INVALID_FORMAT);
             }
         }
 
@@ -69,7 +63,7 @@ public class PostCinemaIDTheaterIDSessions extends Command {
             con.setAutoCommit(false);
             data.add(D_POST,
                     SessionsSQL.postSession(con,
-                        Integer.parseInt(cmdBuilder.getId(THEATER_ID)),
+                        cmdBuilder.getId(THEATER_ID),
                         date,
                         movieID
                     )

@@ -1,7 +1,6 @@
 package pt.isel.ls.core.utils.directorytree;
 
-import pt.isel.ls.core.common.CommonCmd;
-import pt.isel.ls.core.common.commands.NotFound;
+import pt.isel.ls.core.common.commands.Command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,11 +10,11 @@ import java.util.List;
 public class DirectoryNode {
 
     private List<DirectoryNode> childs;
-    private HashMap<String, CommonCmd> methods;
+    private HashMap<String, Command> methods;
     private String dir;
 
     /**
-     * CommandNode constructor, use {@link #add(LinkedList, String, CommonCmd)} (} instead to add a new node.
+     * CommandNode constructor, use {@link #add(LinkedList, String, Command)} (} instead to add a new node.
      * @param dir This directory.
      */
     public DirectoryNode(String dir) {
@@ -31,7 +30,7 @@ public class DirectoryNode {
      * @param method Method name to add.
      * @param cmd Command to add.
      */
-    public void add(LinkedList<String> path, String method, CommonCmd cmd) {
+    public void add(LinkedList<String> path, String method, Command cmd) {
         if ( path.isEmpty() ) {
             if (!methods.containsKey(method))
                 methods.put(method, cmd);
@@ -49,32 +48,11 @@ public class DirectoryNode {
     }
 
     /**
-     * Search for this command in this directory, not found? go to the next directory aka child.
-     * @param path Search on this path.
-     * @param methodName Method to search for.
-     * @return If found return it, if not return {@link NotFound}
-     */
-    public Object search(LinkedList<String> path, String methodName) {
-        if ( path.isEmpty() ) {
-            return methods.get(methodName);
-        } else {
-            DirectoryNode currentChild = new DirectoryNode(path.pop());
-            int index = childs.indexOf( currentChild );
-            if ( index == -1 ) {
-                return null;
-            } else {
-                DirectoryNode nextChild = childs.get(index);
-                return nextChild.search(path, methodName);
-            }
-        }
-    }
-
-    /**
      * Compare if OBJ directory is equal to this one, this way there will not be duplicated directories.
-     * This gets compared at line: int index = childs.indexOf( currentChild ); {@link #add(LinkedList, String, CommonCmd)}
+     * This gets compared at line: int index = childs.indexOf( currentChild ); {@link #add(LinkedList, String, Command)}
      * @param obj Object to compare its directory with THIS one.
      * @return TRUE if its equal to this directory, FALSE if not and
-     * at {@link #add(LinkedList, String, CommonCmd)} create a new directory.
+     * at {@link #add(LinkedList, String, Command)} create a new directory.
      */
     @Override
     public boolean equals(Object obj) {
@@ -88,5 +66,20 @@ public class DirectoryNode {
     @Override
     public String toString() {
         return dir;
+    }
+
+
+    /** METHODS USED BY {@link Router} **/
+    String getDir() {
+        return dir;
+    }
+    List<DirectoryNode> getChilds() {
+        return childs;
+    }
+    boolean childsContains(String dir) {
+        return childs.contains(new DirectoryNode(dir));
+    }
+    HashMap<String, Command> getMethods() {
+        return methods;
     }
 }

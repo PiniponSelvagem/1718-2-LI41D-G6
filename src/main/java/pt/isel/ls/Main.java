@@ -1,7 +1,6 @@
 package pt.isel.ls;
 
-import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.exceptions.ViewNotImplementedException;
+import pt.isel.ls.core.exceptions.CommonException;
 import pt.isel.ls.core.utils.CommandUtils;
 
 import java.io.*;
@@ -21,8 +20,8 @@ public class Main {
         if (args.length != 0) {
             try {
                 CommandRequest cmdReq = new CommandRequest(args);
-                output(cmdReq.getData().getFileName(), cmdReq.executeView().getString());
-            } catch (CommandException | ViewNotImplementedException e) {
+                output(cmdReq.getFileName(), cmdReq.executeView().getString());
+            } catch (CommonException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -43,8 +42,8 @@ public class Main {
             args = in.nextLine().split(ARGS_SEPARATOR.toString());
             try {
                 cmdReq = new CommandRequest(args);
-                output(cmdReq.getData().getFileName(), cmdReq.executeView().getString());
-            } catch (CommandException | ViewNotImplementedException e) {
+                output(cmdReq.getFileName(), cmdReq.executeView().getString());
+            } catch (CommonException e) {
                 System.out.println(e.getMessage());
             }
 

@@ -4,7 +4,7 @@ import pt.isel.ls.core.common.commands.db_queries.CinemasSQL;
 import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
 import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
 import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
@@ -33,15 +33,15 @@ public class GetCinemaIDSessionsDateID extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
-        int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
+    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
+        String cinemaID = cmdBuilder.getId(CINEMA_ID);
         LocalDate localDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATH_FORMAT.toString());
         
         try {
             localDate = LocalDate.parse(cmdBuilder.getId(DATE_ID), formatter);
         } catch(DateTimeParseException e){
-            throw new CommandException(DATE_INVALID_FORMAT);
+            throw new ParameterException(DATE_INVALID_FORMAT);
         }
 
         DataContainer data = new DataContainer(this.getClass().getSimpleName());

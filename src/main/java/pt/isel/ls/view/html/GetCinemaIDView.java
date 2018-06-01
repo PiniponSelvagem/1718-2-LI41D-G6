@@ -39,8 +39,8 @@ public class GetCinemaIDView extends HtmlView {
             Writable[] li_array = new Writable[theaters.size()];
             Theater theater;
             String hyperLink = new GetCinemaIDTheaterID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), "%d")
-                    .replace(THEATER_ID_FULL.toString(), "%d"); //get path and make it ready to add IDs
+                    .replace(CINEMA_ID_FULL.toString(), "%s")
+                    .replace(THEATER_ID_FULL.toString(), "%s"); //get path and make it ready to add IDs
             for (int y = 0; y < theaters.size(); ++y) {
                 theater = theaters.get(y);
                 li_array[y] = li(a(String.format(hyperLink, cinema.getId(), theater.getId()),
@@ -56,12 +56,12 @@ public class GetCinemaIDView extends HtmlView {
             td_array = new Writable[movies.size() + 1];
             td_array[0] = tr(th);
             hyperLink = new GetMovieID().getPath()
-                    .replace(MOVIE_ID_FULL.toString(), "%d"); //get path and make it ready to add ID
+                    .replace(MOVIE_ID_FULL.toString(), "%s"); //get path and make it ready to add ID
 
             HtmlViewCommon.fillTableDataMovies(movies, td, td_array, hyperLink);
 
             hyperLink = new GetCinemaIDSessionsToday().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), "%d"); //get path and make it ready to add ID
+                    .replace(CINEMA_ID_FULL.toString(), "%s"); //get path and make it ready to add ID
 
             String hyperLink_post = new GetCinemaIDTheaters().getPath()
                     .replace(CINEMA_ID_FULL.toString(), String.valueOf(cinema.getId()));

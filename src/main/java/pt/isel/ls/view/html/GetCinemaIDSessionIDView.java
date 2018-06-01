@@ -43,9 +43,9 @@ public class GetCinemaIDSessionIDView extends HtmlView {
             String tkRow, tkSeat, tkid;
             String addTicketButton = "submit";
             String hyperlink_newTicket = new GetCinemaIDTheaterIDSessionIDTickets().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), "%d")
-                    .replace(THEATER_ID_FULL.toString(), "%d")
-                    .replace(SESSION_ID_FULL.toString(), "%d");
+                    .replace(CINEMA_ID_FULL.toString(), "%s")
+                    .replace(THEATER_ID_FULL.toString(), "%s")
+                    .replace(SESSION_ID_FULL.toString(), "%s");
             for (int i = 0; i < theater.getRows(); ++i) {
                 for (int j = 0; j < theater.getSeatsPerRow(); ++j) {
                     tkRow = ""+(char) ((i) + 'A');

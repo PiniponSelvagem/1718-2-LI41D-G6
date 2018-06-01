@@ -33,7 +33,7 @@ public class GetCinemasView extends HtmlView {
         td_array[0] = tr(th);
         Cinema cinema;
         String hyperLink = new GetCinemaID().getPath()
-                .replace(CINEMA_ID_FULL.toString(), "%d"); //get path and make it ready to add ID
+                .replace(CINEMA_ID_FULL.toString(), "%s"); //get path and make it ready to add ID
         for (int y=0; y<cinemas.size(); ++y) {
             cinema = cinemas.get(y);
             td[y][0] = td(

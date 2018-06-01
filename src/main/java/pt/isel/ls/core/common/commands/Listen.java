@@ -1,7 +1,7 @@
 package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.apps.http_server.HttpServer;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 
@@ -23,14 +23,14 @@ public class Listen extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
+    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
         int port;
         try {
             port = Integer.parseInt(cmdBuilder.getParameter(SERVER_PORT));
             new HttpServer(port);
         }
         catch (NumberFormatException e){
-            throw new CommandException(SERVER_PORT_INVALID_FORMAT);
+            throw new ParameterException(SERVER_PORT_INVALID_FORMAT);
         }
         return new DataContainer(this.getClass().getSimpleName());
     }

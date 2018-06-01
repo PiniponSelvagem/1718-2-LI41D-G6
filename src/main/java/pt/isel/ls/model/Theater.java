@@ -1,11 +1,11 @@
 package pt.isel.ls.model;
 
 public class Theater {
-    private final int id, rows, seatsRow, seats, cid;
-    private final String name;
+    private final int rows, seatsRow, seats;
+    private final String name, id, cid;
 
 
-    public Theater(int id, String name, int rows, int seatsRow, int seats, int cid) {
+    public Theater(String id, String name, int rows, int seatsRow, int seats, String cid) {
         this.id = id;
         this.name = name;
         this.rows = rows;
@@ -14,7 +14,7 @@ public class Theater {
         this.cid = cid;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -34,7 +34,7 @@ public class Theater {
         return seats;
     }
 
-    public int getCinemaID() {
+    public String getCinemaID() {
         return cid;
     }
 }

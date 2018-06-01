@@ -16,7 +16,7 @@ public class InvalidParam extends ServerPage {
     @Override
     protected HtmlPage page() {
         return new HtmlPage(String.valueOf(status().valueOf()),
-                h1(text("Input invalid")),
+                h1(text("Invalid input")),
                 h3(text(msg)),
                 h3(text("Suggestion: Check if the input was valid, and try again. " +
                         "If error persists and you are SURE that this is an error, contact the admin.")),

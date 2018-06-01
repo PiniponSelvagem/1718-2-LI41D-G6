@@ -6,8 +6,7 @@ import pt.isel.ls.core.common.headers.html.HttpResponse;
 import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.*;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.PagesUtils;
-import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.exceptions.ViewNotImplementedException;
+import pt.isel.ls.core.exceptions.*;
 import pt.isel.ls.view.CommandView;
 import pt.isel.ls.view.html.HtmlView;
 import pt.isel.ls.view.html.PostView;
@@ -79,7 +78,7 @@ public class HttpCmdResolver extends HttpServlet {
             String[] urlOptions;
             try {
                 CommandView cmdView;
-                if (header.equals(HTML) && req.getMethod().equals("POST") && req.getParameterNames().hasMoreElements()) {
+                if (header.equals(HDPRE+HTML) && req.getMethod().equals("POST") && req.getParameterNames().hasMoreElements()) {
                     handleFormData(req);
                     urlOptions = new String[]{req.getMethod(), req.getRequestURI(), handleFormData(req), header};
                     cmdView = new CommandRequest(urlOptions).executeView();
@@ -102,10 +101,9 @@ public class HttpCmdResolver extends HttpServlet {
 
             } catch (CommandException e) {
                 return new NotFound().getHttpResponse();
-            //} catch (InvalidParameterException e) {
-            //    page = new InvalidParam(e.getMessage());
-            //    return page.getHttpResponse();
-            } catch (ViewNotImplementedException e) {
+            } catch (ParameterException e) {
+                return new InvalidParam(e.getMessage()).getHttpResponse();
+            } catch (CommonException e) {
                 return new HttpResponse(HttpStatusCode.NO_CONTENT);
             }
         }

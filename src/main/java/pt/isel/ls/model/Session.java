@@ -4,10 +4,10 @@ package pt.isel.ls.model;
 import java.sql.Timestamp;
 
 public class Session {
-    private final int id, availableSeats, mid, cid, tid;
-    private final String dateTime, date, time;
+    private final int availableSeats;
+    private final String dateTime, date, time, id, mid, cid, tid;
 
-    public Session(int id, int availableSeats, Timestamp dateTime, int mid, int cid, int tid) {
+    public Session(String id, int availableSeats, Timestamp dateTime, String mid, String cid, String tid) {
         this.id = id;
         this.availableSeats = availableSeats;
         this.dateTime = dateTime.toLocalDateTime().toString().replace('T', ' ');
@@ -24,7 +24,7 @@ public class Session {
         this.tid = tid;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -41,13 +41,13 @@ public class Session {
         return date.replace("-", "");
     }
 
-    public int getMovieID() {
+    public String getMovieID() {
         return mid;
     }
-    public int getCinemaID() {
+    public String getCinemaID() {
         return cid;
     }
-    public int getTheaterID() {
+    public String getTheaterID() {
         return tid;
     }
 

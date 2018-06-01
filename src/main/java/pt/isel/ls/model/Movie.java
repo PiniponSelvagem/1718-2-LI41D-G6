@@ -1,18 +1,18 @@
 package pt.isel.ls.model;
 
 public class Movie {
-    private final int id, year, duration;
-    private final String title;
+    private final int year, duration;
+    private final String title, id;
 
 
-    public Movie(int id, String title, int year, int duration) {
+    public Movie(String id, String title, int year, int duration) {
         this.id = id;
         this.title = title;
         this.year = year;
         this.duration = duration;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

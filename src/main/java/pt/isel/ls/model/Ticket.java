@@ -2,11 +2,11 @@ package pt.isel.ls.model;
 
 public class Ticket {
     private final char row;
-    private final int seat, sid;
-    private final String id;
+    private final int seat;
+    private final String id, sid;
 
 
-    public Ticket(char row, int seat, int sid) {
+    public Ticket(char row, int seat, String sid) {
         this.row = row;
         this.seat = seat;
         this.id = row+""+seat;
@@ -25,7 +25,7 @@ public class Ticket {
         return seat;
     }
 
-    public int getSessionID() {
+    public String getSessionID() {
         return sid;
     }
 }

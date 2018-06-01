@@ -1,10 +1,8 @@
 package pt.isel.ls.core.utils.directorytree;
 
 
-import pt.isel.ls.core.common.CommonCmd;
+import pt.isel.ls.core.common.commands.Command;
 import pt.isel.ls.core.utils.CommandBuilder;
-
-import java.util.LinkedList;
 
 public class DirectoryTree {
 
@@ -21,17 +19,14 @@ public class DirectoryTree {
     /**
      * @param cmd Add this object to the Tree.
      */
-    public void add(CommonCmd cmd) {
+    public void add(Command cmd) {
         root.add(CommandBuilder.pathToList(cmd.getPath()), cmd.getMethodName(), cmd);
     }
 
     /**
-     * Searches the object in the Tree.
-     * @param path Search on this path.
-     * @param name Search for this method/header/other with this name
-     * @return Returns the requested core.
+     * @return Returns the root dir of the tree.
      */
-    public Object search(LinkedList<String> path, String name) {
-        return root.search(path, name);
+    public DirectoryNode getRoot() {
+        return root;
     }
 }

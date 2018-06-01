@@ -51,7 +51,7 @@ public class CinemasSQL {
         LinkedList<Cinema> cinemas = new LinkedList<>();
 
         while(rs.next()){
-            cinemas.add(new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            cinemas.add(new Cinema(rs.getString(1), rs.getString(2), rs.getString(3)));
         }
 
         return cinemas;
@@ -64,19 +64,19 @@ public class CinemasSQL {
      * @return Returns Cinema
      * @throws SQLException SQLException
      */
-    public static Cinema queryID(Connection con, int cinemaID) throws SQLException {
+    public static Cinema queryID(Connection con, String cinemaID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT c.cid, c.Name, c.City " +
                 "FROM CINEMA AS c " +
                 "WHERE cid=?"
         );
-        stmt.setInt(1, cinemaID);
+        stmt.setString(1, cinemaID);
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
             return null;
 
-        return new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3));
+        return new Cinema(rs.getString(1), rs.getString(2), rs.getString(3));
     }
 
     /**
@@ -86,7 +86,7 @@ public class CinemasSQL {
      * @return Returns list of cinemas
      * @throws SQLException SQLException
      */
-    public static List<Cinema> queryPlayingMovieID(Connection con, int movieID) throws SQLException {
+    public static List<Cinema> queryPlayingMovieID(Connection con, String movieID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT DISTINCT c.cid, c.Name, c.City " +
                 "FROM CINEMA AS c " +
@@ -94,12 +94,12 @@ public class CinemasSQL {
                 "INNER JOIN CINEMA_SESSION AS cs ON cs.tid=t.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=cs.mid AND m.mid=?"
         );
-        stmt.setInt(1, movieID);
+        stmt.setString(1, movieID);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Cinema> cinemas = new LinkedList<>();
 
         while(rs.next()) {
-            cinemas.add(new Cinema(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            cinemas.add(new Cinema(rs.getString(1), rs.getString(2), rs.getString(3)));
         }
 
         return cinemas;

@@ -40,8 +40,8 @@ public class GetCinemaIDTheaterIDView extends HtmlView {
             td_array[0] = tr(th);
 
             String hyperLink = new GetCinemaIDSessionID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), "%d")
-                    .replace(SESSION_ID_FULL.toString(), "%d"); //get path and make it ready to add IDs
+                    .replace(CINEMA_ID_FULL.toString(), "%s")
+                    .replace(SESSION_ID_FULL.toString(), "%s"); //get path and make it ready to add IDs
             Session session;
             for (int j = 0; j < sessions.size(); j++) {
                 session = sessions.get(j);
@@ -50,7 +50,7 @@ public class GetCinemaIDTheaterIDView extends HtmlView {
             }
 
             hyperLink = new GetCinemaID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), "%d"); //get path and make it ready to add ID
+                    .replace(CINEMA_ID_FULL.toString(), "%s"); //get path and make it ready to add ID
 
             String hyperLink_post = new GetCinemaIDTheaterIDSessions().getPath()
                     .replace(CINEMA_ID_FULL.toString(), String.valueOf(cinema.getId()))

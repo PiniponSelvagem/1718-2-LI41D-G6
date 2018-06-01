@@ -16,7 +16,7 @@ public class PostCinemaIDTheatersView extends PostView {
     @Override
     public String createRedirect() {
         return new GetCinemaIDTheaterID().getPath()
-                .replace(CINEMA_ID_FULL.toString(), String.valueOf(data.getData(D_CID)))
+                .replace(CINEMA_ID_FULL.toString(), (String) data.getData(D_CID))
                 .replace(THEATER_ID_FULL.toString(), postData.getId().toString());
     }
 }

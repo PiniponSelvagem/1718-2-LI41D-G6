@@ -1,16 +1,15 @@
 package pt.isel.ls.model;
 
 public class Cinema {
-    private final int id;
-    private final String name, city;
+    private final String name, city, id;
 
-    public Cinema(int id, String name, String city) {
+    public Cinema(String id, String name, String city) {
         this.id = id;
         this.name = name;
         this.city = city;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

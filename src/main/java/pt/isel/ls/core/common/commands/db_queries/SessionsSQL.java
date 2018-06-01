@@ -27,14 +27,14 @@ public class SessionsSQL {
      * @return Returns id of posted session
      * @throws SQLException SQLException
      */
-    public static PostData postSession(Connection con, int theaterID, Date event, int movieID) throws SQLException {
+    public static PostData postSession(Connection con, String theaterID, Date event, String movieID) throws SQLException {
         Date date, newDate;
         Timestamp timestamp;
         PreparedStatement stmt;
         ResultSet rs;
 
         boolean canPost = true;
-        int duration, eventDuration=0, seatsAvailable=0;
+        int duration, eventDuration, seatsAvailable=0;
 
         Movie movie = MoviesSQL.queryID(con, movieID);
         if (movie == null) {
@@ -50,7 +50,7 @@ public class SessionsSQL {
                 "INNER JOIN THEATER AS t ON t.tid=s.tid "+
                 "WHERE s.tid=?"
         );
-        stmt.setInt(1, theaterID);
+        stmt.setString(1, theaterID);
         stmt.execute();
         rs = stmt.executeQuery();
 
@@ -74,7 +74,7 @@ public class SessionsSQL {
                     "SELECT t.SeatsAvailable FROM THEATER AS t "+
                     "WHERE t.tid=?"
             );
-            stmt.setInt(1, theaterID);
+            stmt.setString(1, theaterID);
             stmt.execute();
             rs = stmt.executeQuery();
             if(rs.next())
@@ -89,8 +89,8 @@ public class SessionsSQL {
                     PreparedStatement.RETURN_GENERATED_KEYS
             );
             stmt.setTimestamp(1,new Timestamp(event.getTime()));
-            stmt.setInt(2, movieID);
-            stmt.setInt(3, theaterID);
+            stmt.setString(2, movieID);
+            stmt.setString(3, theaterID);
             stmt.setInt(4, seatsAvailable);
             stmt.executeUpdate();
 
@@ -112,21 +112,21 @@ public class SessionsSQL {
      * @return Returns list of sessions
      * @throws SQLException SQLException
      */
-    public static List<Session> queryForCinema(Connection con, int cinemaID) throws SQLException {
+    public static List<Session> queryForCinema(Connection con, String cinemaID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
-                "SELECT s.sid, s.SeatsAvailable, s.Date, m.mid, t.tid " +
+                "SELECT s.sid, s.SeatsAvailable, s.Date, m.mid, t.cid, t.tid " +
                 "FROM CINEMA_SESSION AS s " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE cid=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setInt(1, cinemaID);
+        stmt.setString(1, cinemaID);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
         while(rs.next()){
-            sessions.add(new Session(rs.getInt(1), rs.getInt(2), rs.getTimestamp(3), rs.getInt(4), cinemaID, rs.getInt(5)));
+            sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
         }
 
         return sessions;
@@ -139,7 +139,7 @@ public class SessionsSQL {
      * @return Returns Session
      * @throws SQLException SQLException
      */
-    public static Session queryID(Connection con, int sessionID) throws SQLException {
+    public static Session queryID(Connection con, String sessionID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT s.sid, s.SeatsAvailable, s.Date, m.mid, t.cid, t.tid " +
                 "FROM CINEMA_SESSION AS s " +
@@ -147,13 +147,13 @@ public class SessionsSQL {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE s.sid=?"
         );
-        stmt.setInt(1, sessionID);
+        stmt.setString(1, sessionID);
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
             return null;
 
-        return new Session(rs.getInt(1), rs.getInt(2), rs.getTimestamp(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
+        return new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6));
     }
 
     /**
@@ -163,7 +163,7 @@ public class SessionsSQL {
      * @return Returns list of sessions
      * @throws SQLException SQLException
      */
-    public static List<Session> queryForTheater(Connection con, int theaterID) throws SQLException {
+    public static List<Session> queryForTheater(Connection con, String theaterID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT s.sid, s.SeatsAvailable, s.Date, m.mid, t.cid, t.tid " +
                 "FROM CINEMA_SESSION AS s " +
@@ -172,12 +172,12 @@ public class SessionsSQL {
                 "WHERE t.tid=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setInt(1, theaterID);
+        stmt.setString(1, theaterID);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
         while(rs.next()) {
-            sessions.add(new Session(rs.getInt(1), rs.getInt(2), rs.getTimestamp(3), rs.getInt(4), rs.getInt(5), rs.getInt(6)));
+            sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
         }
 
         return sessions;
@@ -192,7 +192,7 @@ public class SessionsSQL {
      * @return Returns list of sessions
      * @throws SQLException SQLException
      */
-    private static List<Session> queryForDate(Connection con, int id, String date, String condition) throws SQLException {
+    private static List<Session> queryForDate(Connection con, String id, String date, String condition) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT s.sid, s.SeatsAvailable, s.Date, s.mid, t.cid, t.tid " +
                 "FROM CINEMA_SESSION AS s " +
@@ -201,21 +201,21 @@ public class SessionsSQL {
                 "WHERE "+condition+" AND (CAST(s.Date AS DATE))=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setInt(1, id);
+        stmt.setString(1, id);
         stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
         while(rs.next()) {
-            sessions.add(new Session(rs.getInt(1), rs.getInt(2), rs.getTimestamp(3), rs.getInt(4), rs.getInt(5), rs.getInt(6)));
+            sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
         }
 
         return sessions;
     }
-    public static List<Session> queryForCinemaAndDate(Connection con, int cinemaID, String date) throws SQLException {
+    public static List<Session> queryForCinemaAndDate(Connection con, String cinemaID, String date) throws SQLException {
         return queryForDate(con, cinemaID, date, "t.cid=?");
     }
-    public static List<Session> queryForTheaterAndDate(Connection con, int theaterID, String date) throws SQLException {
+    public static List<Session> queryForTheaterAndDate(Connection con, String theaterID, String date) throws SQLException {
         return queryForDate(con, theaterID, date, "t.tid=?");
     }
 
@@ -225,12 +225,12 @@ public class SessionsSQL {
      * @param sessionID sessionID
      * @return Returns int value of available seats
      */
-    public static int queryAvailableSeats(Connection con, int sessionID) throws SQLException {
+    public static int queryAvailableSeats(Connection con, String sessionID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT CINEMA_SESSION.SeatsAvailable " +
                 "FROM CINEMA_SESSION " +
                 "WHERE CINEMA_SESSION.sid=?");
-        stmt.setInt(1, sessionID);
+        stmt.setString(1, sessionID);
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
@@ -247,7 +247,7 @@ public class SessionsSQL {
      * @return Returns list of sessions
      * @throws SQLException SQLException
      */
-    public static List<Session> queryPlayingMovieID(Connection con, int movieID) throws SQLException {
+    public static List<Session> queryPlayingMovieID(Connection con, String movieID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT s.sid, s.SeatsAvailable, s.Date, m.mid, t.cid, t.tid " +
                 "FROM CINEMA_SESSION AS s " +
@@ -256,12 +256,12 @@ public class SessionsSQL {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid AND m.mid=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setInt(1, movieID);
+        stmt.setString(1, movieID);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
         while(rs.next()) {
-            sessions.add(new Session(rs.getInt(1), rs.getInt(2), rs.getTimestamp(3), rs.getInt(4), rs.getInt(5), rs.getInt(6)));
+            sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
         }
 
         return sessions;
@@ -277,36 +277,37 @@ public class SessionsSQL {
      * @return Returns list of sessions
      * @throws SQLException SQLException
      */
-    private static List<Session> queryPlayingMovieIDForDateCondition(Connection con, int movieID, String date, String condition1, String condition2) throws  SQLException {
+    private static List<Session> queryPlayingMovieIDForDateCondition(Connection con, String movieID, String date, String condition1, String condition2) throws  SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT s.sid, s.SeatsAvailable, s.Date, m.mid, t.cid, t.tid " +
                 "FROM MOVIE AS m " +
                 "INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN CINEMA AS c ON t.cid=c.cid "+condition1+" "+
-                "WHERE m.mid="+movieID+" AND (CAST(s.Date AS DATE))=? "+condition2+" "+
+                "WHERE m.mid=? AND (CAST(s.Date AS DATE))=? "+condition2+" "+
                 "ORDER BY s.Date"
         );
-        stmt.setString(1, date);
+        stmt.setString(1, movieID);
+        stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
         while(rs.next()) {
-            sessions.add(new Session(rs.getInt(1), rs.getInt(2), rs.getTimestamp(3), rs.getInt(4), rs.getInt(5), rs.getInt(6)));
+            sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
         }
 
         return sessions;
     }
-    public static List<Session> queryPlayingMovieIDForDateAndCity(Connection con, int movieID, String date, String city) throws SQLException {
+    public static List<Session> queryPlayingMovieIDForDateAndCity(Connection con, String movieID, String date, String city) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "AND c.City='"+city+"'", "");
     }
-    public static List<Session> queryPlayingMovieIDForDateAndCinemaID(Connection con, int movieID, String date, int cinemaID) throws SQLException {
+    public static List<Session> queryPlayingMovieIDForDateAndCinemaID(Connection con, String movieID, String date, int cinemaID) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "AND c.cid="+cinemaID, "");
     }
-    public static List<Session> queryPlayingMovieIDForDateAndAvailableAbove(Connection con, int movieID, String date, int available) throws SQLException {
+    public static List<Session> queryPlayingMovieIDForDateAndAvailableAbove(Connection con, String movieID, String date, int available) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "", "AND s.SeatsAvailable>="+available);
     }
-    public static List<Session> queryPlayingMovieIDForDate(Connection con, int movieID, String date) throws SQLException {
+    public static List<Session> queryPlayingMovieIDForDate(Connection con, String movieID, String date) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "", "");
     }
 }

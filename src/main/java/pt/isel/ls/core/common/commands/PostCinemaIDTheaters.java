@@ -2,7 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -27,14 +27,14 @@ public class PostCinemaIDTheaters extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
-        int cinemaID = Integer.parseInt(cmdBuilder.getId(CINEMA_ID));
+    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
+        String cinemaID = cmdBuilder.getId(CINEMA_ID);
         int rows, seatsRow;
         try {
             rows = Integer.parseInt(cmdBuilder.getParameter(ROWS));
             seatsRow = Integer.parseInt(cmdBuilder.getParameter(SEATS_ROW));
         } catch (NumberFormatException e) {
-            throw new CommandException(PARAMETERS__INVALID, e.getMessage());
+            throw new ParameterException(PARAMETERS__INVALID, e.getMessage());
         }
 
         DataContainer data = new DataContainer(this.getClass().getSimpleName());

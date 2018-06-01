@@ -2,7 +2,7 @@ package pt.isel.ls.core.common.commands;
 
 import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
 import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
-import pt.isel.ls.core.exceptions.CommandException;
+import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -28,8 +28,8 @@ public class GetMovieIDSessionsDateID extends Command {
 }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
-        int movieID = Integer.parseInt(cmdBuilder.getId(MOVIE_ID));
+    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
+        String movieID = cmdBuilder.getId(MOVIE_ID);
         LocalDate localDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATH_FORMAT.toString());
         localDate = LocalDate.parse(cmdBuilder.getId(DATE_ID), formatter);
