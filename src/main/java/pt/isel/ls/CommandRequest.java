@@ -43,7 +43,7 @@ public class CommandRequest {
      * @return Returns the DataContainer with the info that the command got
      * @throws CommandException CommandException
      */
-    private DataContainer executeCommand(CommandBuilder cmdBuilder) throws CommandException, ParameterException {
+    private DataContainer executeCommand(CommandBuilder cmdBuilder) throws CommandException, ParameterException, TheMoviesDBException {
         return cmdBuilder.getCommand().execute(cmdBuilder);
     }
 

@@ -33,6 +33,7 @@ public enum CommandEnum {
     AVAILABLE("available"),
     DATE("date"),               DATE_ID("dmy"),     DATE_ID_FULL(String.format("%s%s%s", ID_PREFIX, DATE_ID, ID_SUFFIX)),
     TODAY("today"),
+    THE_MOVIES_DB("tmdb"),
 
     //Headers_Cmds
     ACCEPT("accept"),

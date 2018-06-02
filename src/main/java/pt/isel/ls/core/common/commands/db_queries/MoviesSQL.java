@@ -50,7 +50,7 @@ public class MoviesSQL {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT m.mid, m.Title, m.Release_Year, m.Duration " +
                 "FROM MOVIE AS m " +
-                "ORDER BY m.mid"
+                "ORDER BY m.Title"
         );
         ResultSet rs = stmt.executeQuery();
         LinkedList<Movie> movies = new LinkedList<>();
@@ -100,7 +100,7 @@ public class MoviesSQL {
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN CINEMA AS c ON c.cid=t.cid " +
                 "WHERE c.cid=? " +
-                "ORDER BY m.mid"
+                "ORDER BY m.Title"
         );
         stmt.setString(1, cinemaID);
         ResultSet rs = stmt.executeQuery();
@@ -126,7 +126,7 @@ public class MoviesSQL {
                 "FROM MOVIE AS m " +
                 "INNER JOIN CINEMA_SESSION AS s ON m.mid=s.mid " +
                 "WHERE s.sid=? " +
-                "ORDER BY m.mid"
+                "ORDER BY m.Title"
         );
         stmt.setString(1, sessionID);
         ResultSet rs = stmt.executeQuery();
@@ -153,7 +153,7 @@ public class MoviesSQL {
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "INNER JOIN CINEMA AS c ON c.cid=t.cid " +
                 "WHERE c.cid=? AND t.tid=? " +
-                "ORDER BY m.mid"
+                "ORDER BY m.Title"
         );
         stmt.setString(1, cinemaID);
         stmt.setString(2, theaterID);

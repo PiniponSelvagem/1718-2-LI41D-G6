@@ -8,6 +8,7 @@ import pt.isel.ls.core.common.headers.html.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Cinema;
+import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 import pt.isel.ls.view.html.utils.HtmlViewCommon;
@@ -56,15 +57,23 @@ public class GetCinemaIDTheaterIDView extends HtmlView {
                     .replace(CINEMA_ID_FULL.toString(), String.valueOf(cinema.getId()))
                     .replace(THEATER_ID_FULL.toString(), String.valueOf(theater.getId()));
 
+            LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
+            Writable[] dropDown = new Writable[movies.size()];
+            Movie movie;
+            for (int i=0; i<movies.size(); ++i) {
+                movie = movies.get(i);
+                dropDown[i] = option(movie.getId(), text(movie.getTitle()));
+            }
+
             return new HtmlPage("Theater " + theater.getName(),
                     h3(a(String.format(hyperLink, cinema.getId()), "Cinema: " + cinema.getName())),
                     h1(text("Theater " + theater.getName())),
                     h2(text("Sessions: ")),
                     table(td_array),
                     breakLine(),
-                    form(POST.toString(), hyperLink_post,
-                            text("Movie ID:"), breakLine(),
-                            textInput(MOVIE_ID.toString()), breakLine(),
+                    form(POST.toString(), hyperLink_post, "form",
+                            text("Movie:"), breakLine(),
+                            select(dropDown, "mid", "form"), breakLine(),
                             text("Date Time:"), breakLine(),
                             textInput(DATE.toString()), breakLine(),
                             submit("Create")

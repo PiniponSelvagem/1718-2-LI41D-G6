@@ -49,6 +49,7 @@ public class CommandUtils {
         cmdTree.add(new PostMovies());              //"POST /movies"
         cmdTree.add(new GetMovies());               //"GET /movies"
         cmdTree.add(new GetMovieID());              //"GET /movies/{mid}"
+        cmdTree.add(new GetMoviesTMDB());          //"GET /movies/tmdb"
 
 
         /* Commands related to CINEMAS */

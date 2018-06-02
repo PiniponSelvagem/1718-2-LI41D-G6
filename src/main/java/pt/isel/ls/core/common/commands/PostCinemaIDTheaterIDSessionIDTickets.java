@@ -73,8 +73,8 @@ public class PostCinemaIDTheaterIDSessionIDTickets extends Command {
             }
         }
 
-        data.add(D_CID, Integer.parseInt(cmdBuilder.getId(CINEMA_ID)));
-        data.add(D_TID, Integer.parseInt(cmdBuilder.getId(THEATER_ID)));
+        data.add(D_CID, cmdBuilder.getId(CINEMA_ID));
+        data.add(D_TID, cmdBuilder.getId(THEATER_ID));
         data.add(D_SID, sessionID);
         if (postData != null) {
             data.add(D_TKID,postData.getId());

@@ -45,6 +45,13 @@ public class HtmlElem implements Writable {
                 .withAttr("type", "submit")
                 .withAttr("value", text);
     }
+    public static HtmlElem submitLink(String name, String text) {
+        return new HtmlElem("input")
+                .withAttr("class", name)
+                .withAttr("type", "submit")
+                .withAttr("style", "background:none; border-width:0px; color:blue; text-decoration:underline; margin-bottom: -14px; font-size: 16px;")
+                .withAttr("value", text);
+    }
     
     private final List<Writable> _content = new ArrayList<Writable>();
     public final HtmlElem withContent(Writable... w) {

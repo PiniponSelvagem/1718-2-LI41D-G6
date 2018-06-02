@@ -1,8 +1,8 @@
 package pt.isel.ls.view.html;
 
+import pt.isel.ls.core.common.commands.GetMoviesTMDB;
 import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 import pt.isel.ls.core.common.commands.GetMovieID;
-import pt.isel.ls.core.common.commands.GetMovies;
 import pt.isel.ls.core.common.headers.html.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.writable.Writable;
@@ -41,14 +41,10 @@ public class GetMoviesView extends HtmlView {
                 h1(text("Movies: ")),
                 table(td_array),
                 breakLine(),
-                form(POST.toString(), new GetMovies().getPath(),
+                form(GET.toString(), new GetMoviesTMDB().getPath(),
                         text("Title: "), breakLine(),
                         textInput(TITLE.toString()), breakLine(),
-                        text("Duration:"), breakLine(),
-                        textInput(DURATION.toString()), breakLine(),
-                        text("Release year:"), breakLine(),
-                        textInput(YEAR.toString()), breakLine(),
-                        submit("Create")
+                        submit("Search Movie and add")
                 )
         );
     }

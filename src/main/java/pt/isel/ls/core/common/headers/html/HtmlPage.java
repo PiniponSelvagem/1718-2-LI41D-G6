@@ -9,8 +9,8 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 public class HtmlPage extends Html {
-    public static final String COLOR_RED_LIGHT   = "#ff9999",
-                               COLOR_GREEN_LIGHT = "#99ff99";
+    public static final String COLOR_RED_LIGHT   = "#FF9999",
+                               COLOR_GREEN_LIGHT = "#99FF99";
 
     public HtmlPage(String title, Writable... c) {
         _content = new HtmlElem("html",

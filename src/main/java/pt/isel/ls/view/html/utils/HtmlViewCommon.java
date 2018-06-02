@@ -1,10 +1,7 @@
 package pt.isel.ls.view.html.utils;
 
-import pt.isel.ls.core.common.headers.html.HtmlPage;
 import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Movie;
-import pt.isel.ls.view.json.GetCinemaIDView;
-import pt.isel.ls.view.json.GetMoviesView;
 
 import java.util.LinkedList;
 

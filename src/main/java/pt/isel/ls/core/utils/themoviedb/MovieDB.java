@@ -1,5 +1,6 @@
 package pt.isel.ls.core.utils.themoviedb;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pt.isel.ls.core.exceptions.TheMoviesDBException;
@@ -10,9 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import static pt.isel.ls.core.strings.ExceptionEnum.TMDB_EXCEPTION;
 
@@ -26,8 +28,11 @@ public class MovieDB {
                                 QUERY = "&query=",
                                 PAGE_NUMBER = "&page=1";
 
-    private static final String RESULTS = "resutls",
-                                ID = "id", TITLE = "title", RELEASE_DATE = "release_date", DURATION = "runtime";
+    private static final String RESULTS = "results",
+                                ID = "id", TITLE = "title", RELEASE_DATE = "release_date", DURATION = "runtime",
+                                INVALID_AND = "&", REPLACE_AND = "and";
+
+    private static final int ANTI_COOLDOWN = 8;
 
     private String pathSearch;
     private String pathDetailed;
@@ -39,9 +44,8 @@ public class MovieDB {
     }
 
 
-    public Movie getMovie() throws TheMoviesDBException {
-        int year, duration;
-        String title, id;
+    public List<Movie> getMovies() throws TheMoviesDBException {
+        LinkedList<Movie> movies = new LinkedList<>();
 
         try {
             //Do query to TheMoviesDB, and get JsonObject
@@ -49,28 +53,55 @@ public class MovieDB {
             String body = inputStreamToString(stream);
             JSONObject json = new JSONObject(body);
 
-            //Get detailed information of the first movie that is found
-            JSONObject movie = (JSONObject) json.getJSONArray(RESULTS).get(0);
-            id = String.valueOf(movie.get(ID));
-            stream = new URL(String.format(pathDetailed, id)).openStream();
-            body = inputStreamToString(stream);
-            JSONObject movieDetailed = new JSONObject(body);
+            JSONArray moviesArray = json.getJSONArray(RESULTS);
 
-            //Format date to only get year
-            SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = sDF.parse(movieDetailed.get(RELEASE_DATE).toString());
-            SimpleDateFormat yearDF = new SimpleDateFormat("yyyy");
+            JSONObject movie;
+            for (int i=0; i<moviesArray.length() && i<=ANTI_COOLDOWN; ++i) {
+                movie = (JSONObject) moviesArray.get(i);
+                if (movie != null)
+                    movies.add(getMovie(String.valueOf(movie.get(ID))));
+            }
 
-            //Fill data needed to fill a movie
-            title = (String) movieDetailed.get(TITLE);
-            year = Integer.parseInt(yearDF.format(date));
-            duration = (int) movieDetailed.get(DURATION);
-
-        } catch (JSONException | IOException | ParseException e) {
+        } catch (JSONException | IOException e) {
             throw new TheMoviesDBException(TMDB_EXCEPTION, e.getMessage());
         }
 
-        return new Movie(id, title, year, duration);
+        return movies;
+    }
+
+    private Movie getMovie(String id) throws TheMoviesDBException {
+        int year, duration;
+        String title;
+
+        try {
+            //Get detailed information of the first movie that is found
+            InputStream stream = new URL(String.format(pathDetailed, id)).openStream();
+            String body = inputStreamToString(stream);
+            JSONObject movieDetailed = new JSONObject(body);
+
+            try {
+                //Format date to only get year
+                SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sDF.parse(movieDetailed.get(RELEASE_DATE).toString());
+                SimpleDateFormat yearDF = new SimpleDateFormat("yyyy");
+                year = Integer.parseInt(yearDF.format(date));
+            } catch (Exception e) { year = 0; }
+
+            try {
+                title = movieDetailed.get(TITLE).toString().replace(INVALID_AND, REPLACE_AND);
+            } catch (Exception e) {
+                return null;    //if cant get the title, return null because movie isnt valid.
+            }
+
+            try {
+                duration = (int) movieDetailed.get(DURATION);
+            } catch (Exception e) { duration = 0; }
+
+            return new Movie(id, title, year, duration);
+
+        } catch (JSONException | IOException e) {
+            throw new TheMoviesDBException(TMDB_EXCEPTION, e.getMessage());
+        }
     }
 
     // convert InputStream to String

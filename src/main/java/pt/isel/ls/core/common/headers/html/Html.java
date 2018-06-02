@@ -17,6 +17,12 @@ public abstract class Html implements Header {
             .withAttr("method", method)
             .withAttr("action", url);
     }
+    public static Writable form(String method, String url, String id, Writable... c) {
+        return new HtmlElem("form",c)
+                .withAttr("method", method)
+                .withAttr("action", url)
+                .withAttr("id", id);
+    }
     public static Writable label(String to, String text) {
         return new HtmlElem("label", new HtmlText(text))
             .withAttr("for", to);
@@ -73,6 +79,18 @@ public abstract class Html implements Header {
                 .withAttr("width", "38px")
                 .withAttr("align", "center")
                 .withAttr("bgcolor", color)
+                .withContent(c);
+    }
+    public static Writable select(Writable[] c, String name, String formName) {
+        return new HtmlElem("select")
+                .withAttr("name", name)
+                .withAttr("size", "1")
+                .withAttr("form", formName)
+                .withContent(c);
+    }
+    public static Writable option(String value, Writable c) {
+        return new HtmlElem("option")
+                .withAttr("value", value)
                 .withContent(c);
     }
     public static Writable multipleElems(Writable[] c) {
