@@ -1,9 +1,6 @@
 package pt.isel.ls;
 
-import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.exceptions.CommonException;
-import pt.isel.ls.core.exceptions.ParameterException;
-import pt.isel.ls.core.exceptions.ViewNotImplementedException;
+import pt.isel.ls.core.exceptions.*;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
@@ -64,7 +61,7 @@ public class CommandRequest {
 
         String viewLink = viewMap.get(data.getCreatedBy());
         if (viewLink!=null) {
-            Object obj = null;
+            Object obj;
             try {
                 Class<?> klass = Class.forName(viewLink);
                 Constructor<?> constructor = klass.getConstructor(DataContainer.class);

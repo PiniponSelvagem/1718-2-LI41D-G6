@@ -15,20 +15,16 @@ public abstract class PostView extends HtmlView {
     private HttpStatusCode httpStatusCode;
     private String redirectLink;
 
-    /**
-     * NOTE: Implementations of this PostView, require this constructor to be public
-     *       so the {@link CommandRequest#executeView()} can initialize it.
-     */
     PostView(DataContainer data) {
         super(data);
-        postData = (PostData) data.getData(D_POST);
     }
 
     @Override
     public HtmlPage createPage() {
+        postData = (PostData) data.getData(D_POST);
         switch (postData.getPdEnum()) {
             case PD_OK:
-                httpStatusCode = HttpStatusCode.OK;
+                httpStatusCode = HttpStatusCode.CREATED;
                 redirectLink = createRedirect();
             case PD_FAILED:
                 httpStatusCode = HttpStatusCode.BAD_REQUEST;

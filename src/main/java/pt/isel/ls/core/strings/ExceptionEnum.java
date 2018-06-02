@@ -32,6 +32,8 @@ public enum ExceptionEnum {
 
     VIEW__CREATION_ERROR("ERROR while initializing view."),
 
+    TMDB_EXCEPTION("Problem when trying to get movie information from TheMoviesDB.")
+
     ;
 
     private final String str;
