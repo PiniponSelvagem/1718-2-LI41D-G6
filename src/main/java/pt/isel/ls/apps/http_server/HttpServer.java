@@ -6,6 +6,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.exceptions.ParameterException;
+import pt.isel.ls.core.utils.CommandUtils;
 
 import java.net.BindException;
 
@@ -17,10 +18,12 @@ public class HttpServer {
      * TCP port where to listen.
      */
     private int listenPort;
+    private CommandUtils cmdUtils;
     private static final Logger log = LoggerFactory.getLogger(HttpServer.class);
 
-    public HttpServer(int listenPort) throws ParameterException {
+    public HttpServer(int listenPort, CommandUtils cmdUtils) throws ParameterException {
         this.listenPort = listenPort;
+        this.cmdUtils = cmdUtils;
         try {
             run();
         } catch (BindException e) {
@@ -38,7 +41,7 @@ public class HttpServer {
         log.info("Listening on port '{}'", listenPort, this.hashCode());
         ServletHandler handler = new ServletHandler();
         server.setHandler(handler);
-        handler.addServletWithMapping(new ServletHolder(new HttpCmdResolver()), "/*");
+        handler.addServletWithMapping(new ServletHolder(new HttpCmdResolver(cmdUtils)), "/*");
         server.start();
         log.info("Server started", this.hashCode());
         System.in.read();

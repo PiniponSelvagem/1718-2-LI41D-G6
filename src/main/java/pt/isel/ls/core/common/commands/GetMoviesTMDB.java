@@ -7,6 +7,7 @@ import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.core.utils.themoviedb.MovieDB;
 import pt.isel.ls.model.Movie;
 
+import java.sql.Connection;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
@@ -25,10 +26,15 @@ public class GetMoviesTMDB extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException, TheMoviesDBException {
+    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) throws ParameterException, TheMoviesDBException {
         DataContainer data = new DataContainer(this.getClass().getSimpleName());
         LinkedList<Movie> movies = (LinkedList<Movie>) new MovieDB(cmdBuilder.getParameter(TITLE)).getMovies();
         data.add(D_MOVIES, movies);
         return data;
+    }
+
+    @Override
+    public boolean isSQLRequired() {
+        return false;
     }
 }

@@ -6,8 +6,8 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_OK;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataType.PDT_CINEMA;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_OK;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataType.PDT_CINEMA;
 
 public class CinemasSQL {
 
@@ -19,7 +19,7 @@ public class CinemasSQL {
      * @return Returns the id of the cinema posted
      * @throws SQLException SQLException
      */
-    public static PostData postCinema(Connection con, String name, String city) throws SQLException {
+    public static SQLData postCinema(Connection con, String name, String city) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "INSERT INTO CINEMA VALUES (?, ?)",
                 Statement.RETURN_GENERATED_KEYS
@@ -32,7 +32,7 @@ public class CinemasSQL {
         if(rs.next())
             id = rs.getInt(1);
 
-        return new PostData(PD_OK, PDT_CINEMA, id);
+        return new SQLData(PD_OK, PDT_CINEMA, id);
     }
 
     /**

@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_OK;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataType.PDT_THEATER;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_OK;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataType.PDT_THEATER;
 
 public class TheatersSQL {
 
@@ -23,7 +23,7 @@ public class TheatersSQL {
      * @return Returns id of the theater posted
      * @throws SQLException SQLException
      */
-    public static PostData postTheater(Connection con, String cinemaID, String name, int rows, int seatsRow) throws SQLException {
+    public static SQLData postTheater(Connection con, String cinemaID, String name, int rows, int seatsRow) throws SQLException {
         int seats = rows*seatsRow;
         PreparedStatement stmt = con.prepareStatement(
                 "INSERT INTO THEATER VALUES (?, ?, ?, ?, ?)",
@@ -41,7 +41,7 @@ public class TheatersSQL {
         if(rs.next())
             id = rs.getInt(1);
 
-        return new PostData(PD_OK, PDT_THEATER, id);
+        return new SQLData(PD_OK, PDT_THEATER, id);
     }
 
     /**
@@ -146,7 +146,7 @@ public class TheatersSQL {
      * @param date date
      * @param condition1 filter city / cid / ...
      * @param condition2 filter seats available ...
-     * @return Returns list of sessions
+     * @return Returns list of theaters
      * @throws SQLException SQLException
      */
     private static Map<Integer, Theater> queryPlayingMovieIDForDateCondition(Connection con, String movieID, String date, String condition1, String condition2) throws  SQLException {

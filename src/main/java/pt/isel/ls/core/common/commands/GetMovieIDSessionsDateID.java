@@ -1,24 +1,19 @@
 package pt.isel.ls.core.common.commands;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
 import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
 import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
-import static pt.isel.ls.core.strings.ExceptionEnum.SQL_ERROR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetMovieIDSessionsDateID extends Command {
-    private final static Logger log = LoggerFactory.getLogger(GetMovieIDSessionsDateID.class);
 
     @Override
     public String getMethodName() {
@@ -32,7 +27,7 @@ public class GetMovieIDSessionsDateID extends Command {
 }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
+    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) throws ParameterException, SQLException {
         String movieID = cmdBuilder.getId(MOVIE_ID);
         LocalDate localDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATH_FORMAT.toString());
@@ -41,87 +36,69 @@ public class GetMovieIDSessionsDateID extends Command {
         String dateStr = date.toString();
 
         DataContainer data = new DataContainer(this.getClass().getSimpleName());
-        Connection con = null;
-        try {
-            con = Sql.getConnection();
-            con.setAutoCommit(false);
-            if (cmdBuilder.hasParameter(CITY)) {
-                data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDateAndCity(con,
-                        movieID,
-                        dateStr,
-                        cmdBuilder.getParameter(CITY)
-                        )
-                );
-                data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDateAndCity(con,
-                        movieID,
-                        dateStr,
-                        cmdBuilder.getParameter(CITY)
-                        )
-                );
-            }
-            else if (cmdBuilder.hasParameter(CINEMA_ID)) {
-                data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDateAndCinemaID(con,
-                        movieID,
-                        dateStr,
-                        Integer.parseInt(cmdBuilder.getParameter(CINEMA_ID))
-                        )
-                );
-                data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDateAndCinemaID(con,
-                        movieID,
-                        dateStr,
-                        Integer.parseInt(cmdBuilder.getParameter(CINEMA_ID))
-                        )
-                );
-            }
-            else if (cmdBuilder.hasParameter(AVAILABLE)) {
-                data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDateAndAvailableAbove(con,
-                        movieID,
-                        dateStr,
-                        Integer.parseInt(cmdBuilder.getParameter(AVAILABLE))
-                        )
-                );
-                data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDateAndAvailableAbove(con,
-                        movieID,
-                        dateStr,
-                        Integer.parseInt(cmdBuilder.getParameter(AVAILABLE))
-                        )
-                );
-            }
-            else {
-                data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDate(con,
-                        movieID,
-                        dateStr
-                        )
-                );
-                data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDate(con,
-                        movieID,
-                        dateStr
-                        )
-                );
-            }
 
-            data.add(D_MID,  movieID);
-            data.add(D_DATE, date);
-            con.commit();
-        } catch (SQLException e) {
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException e1) {
-                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
-                }
-            }
-            log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
-        } finally {
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
-                }
-            }
+        if (cmdBuilder.hasParameter(CITY)) {
+            data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDateAndCity(con,
+                    movieID,
+                    dateStr,
+                    cmdBuilder.getParameter(CITY)
+                    )
+            );
+            data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDateAndCity(con,
+                    movieID,
+                    dateStr,
+                    cmdBuilder.getParameter(CITY)
+                    )
+            );
+        }
+        else if (cmdBuilder.hasParameter(CINEMA_ID)) {
+            data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDateAndCinemaID(con,
+                    movieID,
+                    dateStr,
+                    Integer.parseInt(cmdBuilder.getParameter(CINEMA_ID))
+                    )
+            );
+            data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDateAndCinemaID(con,
+                    movieID,
+                    dateStr,
+                    Integer.parseInt(cmdBuilder.getParameter(CINEMA_ID))
+                    )
+            );
+        }
+        else if (cmdBuilder.hasParameter(AVAILABLE)) {
+            data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDateAndAvailableAbove(con,
+                    movieID,
+                    dateStr,
+                    Integer.parseInt(cmdBuilder.getParameter(AVAILABLE))
+                    )
+            );
+            data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDateAndAvailableAbove(con,
+                    movieID,
+                    dateStr,
+                    Integer.parseInt(cmdBuilder.getParameter(AVAILABLE))
+                    )
+            );
+        }
+        else {
+            data.add(D_SESSIONS, SessionsSQL.queryPlayingMovieIDForDate(con,
+                    movieID,
+                    dateStr
+                    )
+            );
+            data.add(D_THEATERS, TheatersSQL.queryPlayingMovieIDForDate(con,
+                    movieID,
+                    dateStr
+                    )
+            );
         }
 
+        data.add(D_MID,  movieID);
+        data.add(D_DATE, date);
         return data;
+    }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
     }
 }

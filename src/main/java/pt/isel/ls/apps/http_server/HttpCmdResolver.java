@@ -9,6 +9,7 @@ import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.*;
 import pt.isel.ls.apps.http_server.http.htmlserverpages.PagesUtils;
 import pt.isel.ls.core.exceptions.*;
+import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.view.CommandView;
 import pt.isel.ls.view.html.HtmlView;
 import pt.isel.ls.view.html.PostView;
@@ -26,11 +27,16 @@ import static pt.isel.ls.core.strings.CommandEnum.HEADERS_EQUALTO;
 public class HttpCmdResolver extends HttpServlet {
     private final static Logger log = LoggerFactory.getLogger(HttpCmdResolver.class);
 
+    private CommandUtils cmdUtils;
     private PagesUtils pageUtils = new PagesUtils();
     private static final String HDPRE = ACCEPT.toString()+HEADERS_EQUALTO.toString(), //header prefix
                                 PLAIN = HeadersAvailable.TEXT_PLAIN.toString(),
                                 JSON  = HeadersAvailable.APP_JSON.toString(),
                                 HTML  = HeadersAvailable.TEXT_HTML.toString();
+
+    public HttpCmdResolver(CommandUtils cmdUtils) {
+        this.cmdUtils = cmdUtils;
+    }
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -109,14 +115,17 @@ public class HttpCmdResolver extends HttpServlet {
      */
     private CommandView executeRequestGet(HttpServletRequest req, String header) throws CommonException {
         String urlOptions[];
+        CommandRequest cmdReq;
         CommandView cmdView;
         if (req.getParameterNames().hasMoreElements()) {
             urlOptions = new String[]{req.getMethod(), req.getRequestURI(), req.getQueryString(), header};
-            cmdView = new CommandRequest(urlOptions).executeView();
+
         } else {
             urlOptions = new String[]{req.getMethod(), req.getRequestURI(), header};
-            cmdView = new CommandRequest(urlOptions).executeView();
         }
+        cmdReq = new CommandRequest(urlOptions, cmdUtils);
+        cmdReq.checkAndExecuteCommand();
+        cmdView = cmdReq.executeView();
         return cmdView;
     }
 
@@ -130,7 +139,7 @@ public class HttpCmdResolver extends HttpServlet {
     private CommandView executeRequestPost(HttpServletRequest req, String header) throws CommonException {
         handleFormData(req);
         String urlOptions[] = new String[]{req.getMethod(), req.getRequestURI(), handleFormData(req), header};
-        return new CommandRequest(urlOptions).executeView();
+        return new CommandRequest(urlOptions, cmdUtils).executeView();
     }
 
     /**

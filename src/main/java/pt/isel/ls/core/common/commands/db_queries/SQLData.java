@@ -1,9 +1,9 @@
 package pt.isel.ls.core.common.commands.db_queries;
 
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_DOSENT_EXIST;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_FAILED;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_DOSENT_EXIST;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_FAILED;
 
-public class PostData<T> {
+public class SQLData<T> {
 
     private final T uniqueId;
     private final PostDataEnum pdEnum;
@@ -11,7 +11,7 @@ public class PostData<T> {
     private final int errorCode;
     private final String msg;
 
-    public PostData(int errorCode, String msg) {
+    public SQLData(int errorCode, String msg) {
         this.errorCode = errorCode;
         this.msg = msg;
         this.pdEnum = PD_FAILED;
@@ -19,7 +19,7 @@ public class PostData<T> {
         this.pdType = null;
     }
 
-    PostData(PostDataEnum pdEnum) {
+    SQLData(PostDataEnum pdEnum) {
         if (pdEnum != PD_FAILED)
             throw new IllegalArgumentException("PostDataEnum argument is not equal to "+PD_FAILED);
         this.pdEnum = pdEnum;
@@ -29,7 +29,7 @@ public class PostData<T> {
         this.msg = "Could not post information.";
     }
 
-    PostData(PostDataEnum pdEnum, PostDataType pdType) {
+    SQLData(PostDataEnum pdEnum, PostDataType pdType) {
         if (pdEnum != PD_DOSENT_EXIST)
             throw new IllegalArgumentException("PostDataEnum argument is not equal to "+PD_DOSENT_EXIST);
         this.pdEnum = pdEnum;
@@ -40,7 +40,7 @@ public class PostData<T> {
                 "> was not found in database.";
     }
 
-    PostData(PostDataEnum pdEnum, PostDataType pdType, T uniqueId){
+    SQLData(PostDataEnum pdEnum, PostDataType pdType, T uniqueId){
         this.pdEnum = pdEnum;
         this.uniqueId = uniqueId;
         this.pdType = pdType;

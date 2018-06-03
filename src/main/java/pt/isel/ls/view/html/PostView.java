@@ -1,16 +1,16 @@
 package pt.isel.ls.view.html;
 
 import pt.isel.ls.core.common.headers.html.HttpStatusCode;
-import pt.isel.ls.core.common.commands.db_queries.PostData;
+import pt.isel.ls.core.common.commands.db_queries.SQLData;
 import pt.isel.ls.core.common.headers.html.HtmlPage;
 import pt.isel.ls.core.utils.DataContainer;
 
 import static pt.isel.ls.core.common.headers.html.Html.*;
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
+import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SQL;
 
 public abstract class PostView extends HtmlView {
-    protected PostData postData;
+    protected SQLData postData;
     private HttpStatusCode httpStatusCode;
     private String redirectLink;
 
@@ -20,7 +20,7 @@ public abstract class PostView extends HtmlView {
 
     @Override
     public HtmlPage createPage() {
-        postData = (PostData) data.getData(D_POST);
+        postData = (SQLData) data.getData(D_SQL);
         switch (postData.getPdEnum()) {
             case PD_OK:
                 httpStatusCode = HttpStatusCode.CREATED;

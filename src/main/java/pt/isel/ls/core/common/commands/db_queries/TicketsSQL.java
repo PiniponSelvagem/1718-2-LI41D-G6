@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_FAILED;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_OK;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataType.PDT_TICKET;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_FAILED;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_OK;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataType.PDT_TICKET;
 
 public class TicketsSQL {
 
@@ -22,7 +22,7 @@ public class TicketsSQL {
      * @return Returns id of posted ticket
      * @throws SQLException SQLException
      */
-    public static PostData postTicket(Connection con, String sessionID, String row, int seat) throws SQLException {
+    public static SQLData postTicket(Connection con, String sessionID, String row, int seat) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT t.Seats, t.Rows " +
                 "FROM CINEMA_SESSION AS s " +
@@ -52,9 +52,9 @@ public class TicketsSQL {
             );
             stmt.setString(1, sessionID);
             stmt.executeUpdate();
-            return new PostData(PD_OK, PDT_TICKET, id);
+            return new SQLData(PD_OK, PDT_TICKET, id);
         }
-        return new PostData(PD_FAILED);
+        return new SQLData(PD_FAILED);
     }
 
     /**

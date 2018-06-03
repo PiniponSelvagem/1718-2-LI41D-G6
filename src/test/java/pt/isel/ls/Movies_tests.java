@@ -1,8 +1,7 @@
 package pt.isel.ls;
 
 import org.junit.Test;
-import pt.isel.ls.core.exceptions.CommandException;
-import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.exceptions.CommonException;
 import pt.isel.ls.core.utils.CommandRequest;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
@@ -17,10 +16,14 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static pt.isel.ls.core.common.headers.HeadersAvailable.TEXT_HTML;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
+@SuppressWarnings("Duplicates")
 public class Movies_tests {
+    private final static CommandUtils cmdUtils = new CommandUtils(TEXT_HTML.toString());
+
     Connection con = null;
 
     public void createMovie(Connection con) {
@@ -45,14 +48,13 @@ public class Movies_tests {
             con.setAutoCommit(false);
 
             for (int i = 0; i < 3; i++) {
-                String title = "TestTitle";
-                title += (i + 1);
-                new CommandRequest().executeCommand(new CommandBuilder(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, new CommandUtils()), con);
+                String title = "TestTitle" + (i+1);
+                new CommandRequest(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, cmdUtils).executeCommand(con);
             }
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                movies.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+                movies.add(new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
             }
             int i = 1;
             for (Movie m : movies) {
@@ -60,7 +62,7 @@ public class Movies_tests {
                 i++;
             }
 
-        } catch (SQLException | CommandException e) {
+        } catch (SQLException | CommonException e) {
             e.printStackTrace();
             fail();
         } finally {
@@ -82,7 +84,7 @@ public class Movies_tests {
             con.setAutoCommit(false);
 
             createMovie(con);
-            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies"}, new CommandUtils()), con);
+            DataContainer data = new CommandRequest(new String[]{"GET", "/movies"}, cmdUtils).executeCommand(con);
             LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
             Movie movie;
             for(int i = 0; i < movies.size(); ){
@@ -90,7 +92,7 @@ public class Movies_tests {
                 assertEquals("TestTitle" + i, movie.getTitle());
                 i++;
             }
-        } catch (SQLException | CommandException e) {
+        } catch (SQLException | CommonException e) {
             e.printStackTrace();
             fail();
         } finally {
@@ -117,15 +119,15 @@ public class Movies_tests {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
-                movies.add(new Movie(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+                movies.add(new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
             }
 
-            int id = movies.getFirst().getId();
-            DataContainer data = new CommandRequest().executeCommand(new CommandBuilder(new String[]{"GET", "/movies/" + id}, new CommandUtils()), con);
+            String id = movies.getFirst().getId();
+            DataContainer data = new CommandRequest(new String[]{"GET", "/movies/" + id}, cmdUtils).executeCommand(con);
             Movie movie = (Movie) data.getData(D_MOVIE);
             assertEquals(id, movie.getId());
 
-        } catch (SQLException | CommandException e) {
+        } catch (SQLException | CommonException e) {
             e.printStackTrace();
             fail();
         } finally {

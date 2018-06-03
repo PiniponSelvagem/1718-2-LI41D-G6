@@ -4,6 +4,8 @@ import pt.isel.ls.apps.console.Console;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 
+import java.sql.Connection;
+
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.EXIT;
 
@@ -20,8 +22,13 @@ public class Exit extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) {
+    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) {
         Console.close();
         return new DataContainer(this.getClass().getSimpleName());
+    }
+
+    @Override
+    public boolean isSQLRequired() {
+        return false;
     }
 }

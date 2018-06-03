@@ -4,6 +4,8 @@ import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 
+import java.sql.Connection;
+
 import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
 
 public class NotFound extends Command {
@@ -19,7 +21,12 @@ public class NotFound extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws CommandException {
+    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) throws CommandException {
         throw new CommandException(COMMAND__NOT_FOUND);
+    }
+
+    @Override
+    public boolean isSQLRequired() {
+        return false;
     }
 }

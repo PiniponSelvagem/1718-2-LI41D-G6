@@ -8,12 +8,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_DOSENT_EXIST;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_FAILED;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_OK;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataType.PDT_MOVIE;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataType.PDT_SESSION;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataType.PDT_THEATER;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_DOSENT_EXIST;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_FAILED;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_OK;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataType.PDT_MOVIE;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataType.PDT_SESSION;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataType.PDT_THEATER;
 
 
 public class SessionsSQL {
@@ -27,7 +27,7 @@ public class SessionsSQL {
      * @return Returns id of posted session
      * @throws SQLException SQLException
      */
-    public static PostData postSession(Connection con, String theaterID, Date event, String movieID) throws SQLException {
+    public static SQLData postSession(Connection con, String theaterID, Date event, String movieID) throws SQLException {
         Date date, newDate;
         Timestamp timestamp;
         PreparedStatement stmt;
@@ -38,7 +38,7 @@ public class SessionsSQL {
 
         Movie movie = MoviesSQL.queryID(con, movieID);
         if (movie == null) {
-            return new PostData(PD_DOSENT_EXIST, PDT_MOVIE);
+            return new SQLData(PD_DOSENT_EXIST, PDT_MOVIE);
         }
         eventDuration = movie.getDuration();
         Date newEvent = new Date(event.getTime() + eventDuration*60000);
@@ -80,7 +80,7 @@ public class SessionsSQL {
             if(rs.next())
                 seatsAvailable = rs.getInt(1);
             else {
-                return new PostData(PD_DOSENT_EXIST, PDT_THEATER);
+                return new SQLData(PD_DOSENT_EXIST, PDT_THEATER);
             }
         }
         if (canPost ) { //If DATE free, then POST
@@ -98,10 +98,10 @@ public class SessionsSQL {
             int id = 0;
             if (rs.next())
                 id = rs.getInt(1);
-            return new PostData(PD_OK, PDT_SESSION, id);
+            return new SQLData(PD_OK, PDT_SESSION, id);
         }
         else {
-            return new PostData(PD_FAILED);
+            return new SQLData(PD_FAILED);
         }
     }
 

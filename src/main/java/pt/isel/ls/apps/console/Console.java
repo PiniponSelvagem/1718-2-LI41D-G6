@@ -24,7 +24,8 @@ public class Console {
     public static void main(String[] args) {
         if (args.length != 0) {
             try {
-                CommandRequest cmdReq = new CommandRequest(args);
+                CommandRequest cmdReq = new CommandRequest(args, cmdUtils);
+                cmdReq.checkAndExecuteCommand();
                 output(cmdReq.getFileName(), cmdReq.executeView().getString());
             } catch (CommonException e) {
                 log.error(e.getMessage());
@@ -46,7 +47,8 @@ public class Console {
             System.out.print(WAIT_INPUT);
             args = in.nextLine().split(ARGS_SEPARATOR.toString());
             try {
-                cmdReq = new CommandRequest(args);
+                cmdReq = new CommandRequest(args, cmdUtils);
+                cmdReq.checkAndExecuteCommand();
                 output(cmdReq.getFileName(), cmdReq.executeView().getString());
             } catch (CommonException e) {
                 log.error(e.getMessage());
@@ -77,13 +79,6 @@ public class Console {
      */
     public static void close() {
         close = true;
-    }
-
-    /**
-     * @return Returns commandUtils in this context.
-     */
-    public static CommandUtils getCmdUtils() {
-        return cmdUtils;
     }
 
     /**

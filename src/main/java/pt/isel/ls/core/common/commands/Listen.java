@@ -5,6 +5,8 @@ import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 
+import java.sql.Connection;
+
 import static pt.isel.ls.core.strings.CommandEnum.DIR_SEPARATOR;
 import static pt.isel.ls.core.strings.CommandEnum.LISTEN;
 import static pt.isel.ls.core.strings.CommandEnum.SERVER_PORT;
@@ -23,15 +25,20 @@ public class Listen extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
+    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) throws ParameterException {
         int port;
         try {
             port = Integer.parseInt(cmdBuilder.getParameter(SERVER_PORT));
-            new HttpServer(port);
+            new HttpServer(port, cmdBuilder.getCmdUtils());
         }
         catch (NumberFormatException e){
             throw new ParameterException(SERVER_PORT_INVALID_FORMAT);
         }
         return new DataContainer(this.getClass().getSimpleName());
+    }
+
+    @Override
+    public boolean isSQLRequired() {
+        return false;
     }
 }

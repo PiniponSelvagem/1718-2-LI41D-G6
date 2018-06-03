@@ -7,8 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.isel.ls.apps.http_server.HttpCmdResolver;
 import pt.isel.ls.apps.http_server.HttpServer;
+import pt.isel.ls.core.utils.CommandUtils;
 
 import java.net.BindException;
+
+import static pt.isel.ls.core.common.headers.HeadersAvailable.TEXT_HTML;
 
 public class HerokuServer {
     private static final Logger log = LoggerFactory.getLogger(HttpServer.class);
@@ -19,6 +22,7 @@ public class HerokuServer {
      */
     private static final int LISTEN_PORT = 8081;
     private static int listenPort;
+    private static final CommandUtils cmdUtils = new CommandUtils(TEXT_HTML.toString());
 
     public static void main(String[] args) {
 
@@ -55,7 +59,7 @@ public class HerokuServer {
 
         ServletHandler handler = new ServletHandler();
         server.setHandler(handler);
-        handler.addServletWithMapping(new ServletHolder(new HttpCmdResolver()), "/*");
+        handler.addServletWithMapping(new ServletHolder(new HttpCmdResolver(cmdUtils)), "/*");
         server.start();
         log.info("Server started");
         System.in.read();

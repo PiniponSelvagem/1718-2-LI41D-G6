@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataEnum.PD_OK;
-import static pt.isel.ls.core.common.commands.db_queries.PostData.PostDataType.PDT_MOVIE;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataEnum.PD_OK;
+import static pt.isel.ls.core.common.commands.db_queries.SQLData.PostDataType.PDT_MOVIE;
 
 public class MoviesSQL {
 
@@ -22,7 +22,7 @@ public class MoviesSQL {
      * @return Returns the id of the movie posted
      * @throws SQLException SQLException
      */
-    public static PostData postMovie(Connection con, String title, int releaseYear, int duration) throws SQLException {
+    public static SQLData postMovie(Connection con, String title, int releaseYear, int duration) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "INSERT INTO MOVIE VALUES (?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
@@ -37,7 +37,7 @@ public class MoviesSQL {
         if(rs.next())
             id = rs.getInt(1);
 
-        return new PostData(PD_OK, PDT_MOVIE, id);
+        return new SQLData(PD_OK, PDT_MOVIE, id);
     }
 
     /**
@@ -161,7 +161,7 @@ public class MoviesSQL {
         HashMap<Integer, Movie> movies = new HashMap<>();
 
         while(rs.next()){
-            movies.put(rs.getInt(5), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+            movies.put(rs.getInt(1), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
         }
 
         return movies;

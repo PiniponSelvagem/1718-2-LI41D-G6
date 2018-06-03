@@ -1,7 +1,5 @@
 package pt.isel.ls.core.common.commands;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.common.commands.db_queries.CinemasSQL;
 import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
 import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
@@ -10,7 +8,6 @@ import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
-import pt.isel.ls.sql.Sql;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -19,11 +16,9 @@ import java.time.format.DateTimeParseException;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.strings.ExceptionEnum.DATE_INVALID_FORMAT;
-import static pt.isel.ls.core.strings.ExceptionEnum.SQL_ERROR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionsDateID extends Command {
-    private final static Logger log = LoggerFactory.getLogger(GetCinemaIDSessionsDateID.class);
 
     @Override
     public String getMethodName() {
@@ -37,7 +32,7 @@ public class GetCinemaIDSessionsDateID extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder) throws ParameterException {
+    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) throws ParameterException, SQLException {
         String cinemaID = cmdBuilder.getId(CINEMA_ID);
         LocalDate localDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATH_FORMAT.toString());
@@ -49,41 +44,22 @@ public class GetCinemaIDSessionsDateID extends Command {
         }
 
         DataContainer data = new DataContainer(this.getClass().getSimpleName());
-        Connection con = null;
-        try {
-            con = Sql.getConnection();
-            con.setAutoCommit(false);
+        Cinema cinema = CinemasSQL.queryID(con, cinemaID);
+        data.add(D_CINEMA, cinema);
 
-            Cinema cinema = CinemasSQL.queryID(con, cinemaID);
-            data.add(D_CINEMA, cinema);
-
-            data.add(D_SESSIONS, SessionsSQL.queryForCinemaAndDate(con, cinemaID, localDate.toString()));
-            data.add(D_THEATERS, TheatersSQL.queryForCinema(con, cinemaID));
-            data.add(D_MOVIES,   MoviesSQL.queryForCinema(con, cinemaID));
-            data.add(D_CID,      cinemaID);
-            con.commit();
-        } catch (SQLException e) {
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException e1) {
-                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
-                }
-            }
-            log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
-        } finally {
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
-                }
-            }
-        }
+        data.add(D_SESSIONS, SessionsSQL.queryForCinemaAndDate(con, cinemaID, localDate.toString()));
+        data.add(D_THEATERS, TheatersSQL.queryForCinema(con, cinemaID));
+        data.add(D_MOVIES,   MoviesSQL.queryForCinema(con, cinemaID));
+        data.add(D_CID,      cinemaID);
 
         Date date = Date.valueOf(localDate);
         data.add(D_DATE, date);
 
         return data;
+    }
+
+    @Override
+    public boolean isSQLRequired() {
+        return true;
     }
 }
