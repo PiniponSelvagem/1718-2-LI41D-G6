@@ -1,1 +1,1 @@
-web: ./build/install/1718-1-LI41D-G6/bin/1718-1-LI41D-G6
+web: ./build/install/isel-ls-1718-2-li41d-g6/bin/isel-ls-1718-2-li41d-g6
