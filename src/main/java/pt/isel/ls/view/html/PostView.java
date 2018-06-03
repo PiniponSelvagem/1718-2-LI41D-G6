@@ -1,6 +1,5 @@
 package pt.isel.ls.view.html;
 
-import pt.isel.ls.CommandRequest;
 import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.common.headers.html.HtmlPage;

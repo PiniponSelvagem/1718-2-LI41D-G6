@@ -1,6 +1,9 @@
-package pt.isel.ls;
+package pt.isel.ls.apps.console;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.exceptions.CommonException;
+import pt.isel.ls.core.utils.CommandRequest;
 import pt.isel.ls.core.utils.CommandUtils;
 
 import java.io.*;
@@ -9,7 +12,9 @@ import java.util.Scanner;
 import static pt.isel.ls.core.common.headers.HeadersAvailable.TEXT_HTML;
 import static pt.isel.ls.core.strings.CommandEnum.ARGS_SEPARATOR;
 
-public class Main {
+public class Console {
+    private final static Logger log = LoggerFactory.getLogger(Console.class);
+
     private final static String FILE_NAME_WELCOME = "welcome_message",
                                 WAIT_INPUT = "> ",
                                 dirFiles   = "header_files";
@@ -22,7 +27,7 @@ public class Main {
                 CommandRequest cmdReq = new CommandRequest(args);
                 output(cmdReq.getFileName(), cmdReq.executeView().getString());
             } catch (CommonException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             }
         }
         else
@@ -44,7 +49,7 @@ public class Main {
                 cmdReq = new CommandRequest(args);
                 output(cmdReq.getFileName(), cmdReq.executeView().getString());
             } catch (CommonException e) {
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             }
 
         } while(!close);
@@ -55,7 +60,7 @@ public class Main {
      */
     private static void printWelcomeMessage() {
         try {
-            InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(FILE_NAME_WELCOME);
+            InputStream inputStream = Console.class.getClassLoader().getResourceAsStream(FILE_NAME_WELCOME);
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             String line = in.readLine();
             while(line != null) {
@@ -63,7 +68,7 @@ public class Main {
                 line = in.readLine();
             }
         } catch (NullPointerException | IOException e) {
-            System.out.println("WARNING: ["+FILE_NAME_WELCOME+"] not found.");
+            log.warn("WARNING: ["+FILE_NAME_WELCOME+"] not found.");
         }
     }
 
@@ -85,23 +90,24 @@ public class Main {
      * Write builded text to file.
      */
     private static void output(String fileName, String output) {
-        if (fileName != null) {
-            BufferedWriter writer;
-            try {
-                File file = new File(dirFiles);
-                //noinspection ResultOfMethodCallIgnored
-                file.mkdir();   //create dirFiles directory if dosent exits
-                String fileFullPath = file.getPath()+"/"+fileName;
-                writer = new BufferedWriter(new FileWriter(fileFullPath));
-                writer.write(output);
-                writer.close();
-                System.out.println("Output saved to: ../"+fileFullPath);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (output != null) {
+            if (fileName != null) {
+                BufferedWriter writer;
+                try {
+                    File file = new File(dirFiles);
+                    //noinspection ResultOfMethodCallIgnored
+                    file.mkdir();   //create dirFiles directory if dosent exits
+                    String fileFullPath = file.getPath() + "/" + fileName;
+                    writer = new BufferedWriter(new FileWriter(fileFullPath));
+                    writer.write(output);
+                    writer.close();
+                    System.out.println("Output saved to: ../" + fileFullPath);
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            } else {
+                System.out.println(output);
             }
-        }
-        else {
-            System.out.println(output);
         }
     }
 }

@@ -1,6 +1,6 @@
 package pt.isel.ls.core.common.commands;
 
-import pt.isel.ls.Main;
+import pt.isel.ls.apps.console.Console;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 
@@ -21,7 +21,7 @@ public class Exit extends Command {
 
     @Override
     public DataContainer execute(CommandBuilder cmdBuilder) {
-        Main.close();
+        Console.close();
         return new DataContainer(this.getClass().getSimpleName());
     }
 }

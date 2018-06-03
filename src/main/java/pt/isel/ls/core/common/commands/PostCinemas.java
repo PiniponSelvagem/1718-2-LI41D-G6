@@ -1,8 +1,9 @@
 package pt.isel.ls.core.common.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.common.commands.db_queries.CinemasSQL;
 import pt.isel.ls.core.common.commands.db_queries.PostData;
-import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
@@ -12,9 +13,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.ExceptionEnum.SQL_ERROR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
 
 public class PostCinemas extends Command {
+    private final static Logger log = LoggerFactory.getLogger(PostCinemas.class);
 
     @Override
     public String getMethodName() {
@@ -47,15 +50,14 @@ public class PostCinemas extends Command {
                     con.rollback();
                 }
             } catch (SQLException e1) {
-                e1.printStackTrace();
+                log.error(String.format(SQL_ERROR.toString(), e1.getErrorCode(), e1.getMessage()), this.hashCode());
             }
-            //TODO: catch excp handling
         } finally {
             if (con != null) {
                 try {
                     con.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
                 }
             }
         }

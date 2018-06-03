@@ -1,9 +1,9 @@
-package pt.isel.ls;
+package pt.isel.ls.core.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pt.isel.ls.apps.console.Console;
 import pt.isel.ls.core.exceptions.*;
-import pt.isel.ls.core.utils.CommandBuilder;
-import pt.isel.ls.core.utils.CommandUtils;
-import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.view.CommandView;
 
 import java.lang.reflect.Constructor;
@@ -14,11 +14,12 @@ import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
 import static pt.isel.ls.core.strings.ExceptionEnum.VIEW__CREATION_ERROR;
 
 public class CommandRequest {
+    private final static Logger log = LoggerFactory.getLogger(CommandRequest.class);
 
     private CommandView cmdView;
     private CommandBuilder cmdBuilder;
     private DataContainer data;
-    private final CommandUtils cmdUtils = Main.getCmdUtils();
+    private final CommandUtils cmdUtils = Console.getCmdUtils();
 
     public CommandRequest(String[] args) throws CommonException {
         commandRequest(args);
@@ -56,8 +57,10 @@ public class CommandRequest {
     public CommandView executeView() throws ViewNotImplementedException {
         HashMap<String, String> viewMap = cmdUtils.getCmdViewMap(data.headerType);
 
-        if (viewMap == null)
+        if (viewMap == null) { //if view type does not exist
+            log.warn("Requested view '{}' does not exist", data.headerType, this.hashCode());
             throw new ViewNotImplementedException(data.headerType);
+        }
 
         String viewLink = viewMap.get(data.getCreatedBy());
         if (viewLink!=null) {
@@ -67,13 +70,16 @@ public class CommandRequest {
                 Constructor<?> constructor = klass.getConstructor(DataContainer.class);
                 obj = constructor.newInstance(data);
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Requested view '{}' for command '{}'. Message: '{}'", data.headerType, data.getCreatedBy(), e.getMessage(), this.hashCode());
                 throw new ViewNotImplementedException(VIEW__CREATION_ERROR);
             }
             cmdView = (CommandView) obj;
         }
 
-        if (cmdView == null)
+        if (cmdView == null) { //if command does not have implementation for this type of header
+            log.info("Requested view '{}' for command '{}' is not implemented", data.headerType, data.getCreatedBy(), this.hashCode());
             throw new ViewNotImplementedException(data.headerType);
+        }
 
         return cmdView;
     }

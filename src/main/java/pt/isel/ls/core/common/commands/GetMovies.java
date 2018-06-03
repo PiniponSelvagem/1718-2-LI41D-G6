@@ -1,7 +1,8 @@
 package pt.isel.ls.core.common.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
-import pt.isel.ls.core.common.commands.db_queries.PostData;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.sql.Sql;
@@ -10,10 +11,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.ExceptionEnum.SQL_ERROR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIES;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_POST;
 
 public class GetMovies extends Command {
+    private final static Logger log = LoggerFactory.getLogger(GetMovieIDSessionsDateID.class);
 
     @Override
     public String getMethodName() {
@@ -35,21 +37,20 @@ public class GetMovies extends Command {
             data.add(D_MOVIES, MoviesSQL.queryAll(con));
             con.commit();
         } catch (SQLException e) {
-            data.add(D_POST, new PostData<>(e.getErrorCode(), e.getMessage()));
-            try {
-                if (con != null) {
-                    con.rollback();
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e1) {
+                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
                 }
-            } catch (SQLException e1) {
-                e1.printStackTrace();
             }
-            //TODO: catch excp handling
+            log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
         } finally {
             if (con != null) {
                 try {
                     con.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
                 }
             }
         }

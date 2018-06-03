@@ -1,6 +1,8 @@
 package pt.isel.ls.apps.http_server;
 
-import pt.isel.ls.CommandRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pt.isel.ls.core.utils.CommandRequest;
 import pt.isel.ls.core.common.headers.HeadersAvailable;
 import pt.isel.ls.core.common.headers.html.HttpResponse;
 import pt.isel.ls.core.common.headers.html.HttpStatusCode;
@@ -14,7 +16,6 @@ import pt.isel.ls.view.html.PostView;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 
@@ -23,6 +24,8 @@ import static pt.isel.ls.core.strings.CommandEnum.ACCEPT;
 import static pt.isel.ls.core.strings.CommandEnum.HEADERS_EQUALTO;
 
 public class HttpCmdResolver extends HttpServlet {
+    private final static Logger log = LoggerFactory.getLogger(HttpCmdResolver.class);
+
     private PagesUtils pageUtils = new PagesUtils();
     private static final String HDPRE = ACCEPT.toString()+HEADERS_EQUALTO.toString(), //header prefix
                                 PLAIN = HeadersAvailable.TEXT_PLAIN.toString(),
@@ -30,26 +33,16 @@ public class HttpCmdResolver extends HttpServlet {
                                 HTML  = HeadersAvailable.TEXT_HTML.toString();
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) {
         doMethod(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         doMethod(req, resp);
     }
 
-    private void doMethod(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        /*
-        System.out.println("--New request was received --");
-        System.out.println(req.getMethod());
-        System.out.println(req.getRequestURI());
-        System.out.println(req.getHeader("Accept"));
-        System.out.println(req.getQueryString());
-        */
-
-        //System.out.println(header);
-
+    private void doMethod(HttpServletRequest req, HttpServletResponse resp) {
         try {
             String header = req.getHeader("Accept");
             if (header.contains(PLAIN))     header = PLAIN;
@@ -60,14 +53,15 @@ public class HttpCmdResolver extends HttpServlet {
             resp.setContentType(String.format(header+"; charset=%s", utf8.name()));
             header = HDPRE+header;
 
-            handleRequest(header, req).send(resp);
+            handleRequest(req, header).send(resp);
         } catch (Throwable th) {
             // No exception should go unnoticed!
-            new HttpResponse(HttpStatusCode.INTERNAL_SERVER_ERROR).send(resp);
+            log.error(th.getMessage());
+            new InternalServerError().getHttpResponse();
         }
     }
 
-    private HttpResponse handleRequest(String header, HttpServletRequest req) {
+    private HttpResponse handleRequest(HttpServletRequest req, String header) {
         if (!req.getMethod().equals("GET") && !req.getMethod().equals("POST")) {
             return new HttpResponse(HttpStatusCode.METHOD_NOT_ALLOWED);
         }
@@ -75,25 +69,19 @@ public class HttpCmdResolver extends HttpServlet {
         ServerPage page = pageUtils.getPage(req.getRequestURI());
 
         if (page == null) {
-            String[] urlOptions;
             try {
                 CommandView cmdView;
                 if (header.equals(HDPRE+HTML) && req.getMethod().equals("POST") && req.getParameterNames().hasMoreElements()) {
-                    handleFormData(req);
-                    urlOptions = new String[]{req.getMethod(), req.getRequestURI(), handleFormData(req), header};
-                    cmdView = new CommandRequest(urlOptions).executeView();
+                    cmdView = executeRequestPost(req, header);
                     if (cmdView instanceof PostView) {
                         String redirectLink = ((PostView) cmdView).getRedirectLink();
                         if (redirectLink != null)
                             return new HttpResponse(HttpStatusCode.SEE_OTHER)
                                     .withHeader("Location", redirectLink);
                     }
-                } else if (req.getParameterNames().hasMoreElements()) {
-                    urlOptions = new String[]{req.getMethod(), req.getRequestURI(), req.getQueryString(), header};
                 } else {
-                    urlOptions = new String[]{req.getMethod(), req.getRequestURI(), header};
+                    cmdView = executeRequestGet(req, header);
                 }
-                cmdView = new CommandRequest(urlOptions).executeView();
 
                 if (!(cmdView instanceof HtmlView))
                     return new HttpResponse(OK, cmdView.getString());  //in case the request was made with header != text/html
@@ -103,6 +91,8 @@ public class HttpCmdResolver extends HttpServlet {
                 return new NotFound().getHttpResponse();
             } catch (ParameterException e) {
                 return new InvalidParam(e.getMessage()).getHttpResponse();
+            } catch (ViewNotImplementedException e) {
+                return new ViewNotImplemented(e.getMessage()).getHttpResponse();
             } catch (CommonException e) {
                 return new HttpResponse(HttpStatusCode.NO_CONTENT);
             }
@@ -110,6 +100,45 @@ public class HttpCmdResolver extends HttpServlet {
         return page.getHttpResponse();
     }
 
+    /**
+     * Execute GET request and return the view for that commandrequest
+     * @param req HttpServletRequest
+     * @param header String, example: "accept:text/html"
+     * @return CommandView
+     * @throws CommonException CommonException
+     */
+    private CommandView executeRequestGet(HttpServletRequest req, String header) throws CommonException {
+        String urlOptions[];
+        CommandView cmdView;
+        if (req.getParameterNames().hasMoreElements()) {
+            urlOptions = new String[]{req.getMethod(), req.getRequestURI(), req.getQueryString(), header};
+            cmdView = new CommandRequest(urlOptions).executeView();
+        } else {
+            urlOptions = new String[]{req.getMethod(), req.getRequestURI(), header};
+            cmdView = new CommandRequest(urlOptions).executeView();
+        }
+        return cmdView;
+    }
+
+    /**
+     * Execute POST request and return the view for that commandrequest
+     * @param req HttpServletRequest
+     * @param header String, example: "accept:text/html"
+     * @return CommandView
+     * @throws CommonException CommonException
+     */
+    private CommandView executeRequestPost(HttpServletRequest req, String header) throws CommonException {
+        handleFormData(req);
+        String urlOptions[] = new String[]{req.getMethod(), req.getRequestURI(), handleFormData(req), header};
+        return new CommandRequest(urlOptions).executeView();
+    }
+
+    /**
+     * Builds the string fro parameters from the multiple parameters.
+     * The params come in a Enumeration<String> and we need something like: "name=Cinema&city=Lisbon"
+     * @param req HttpServletRequest
+     * @return String example: "name=Cinema&city=Lisbon"
+     */
     private String handleFormData(HttpServletRequest req) {
         Enumeration<String> parameterNames = req.getParameterNames();
         StringBuilder str = new StringBuilder();

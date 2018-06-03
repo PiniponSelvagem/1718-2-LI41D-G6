@@ -32,7 +32,9 @@ public enum ExceptionEnum {
 
     VIEW__CREATION_ERROR("ERROR while initializing view."),
 
-    TMDB_EXCEPTION("Problem when trying to get movie information from TheMoviesDB.")
+    TMDB_EXCEPTION("Problem when trying to get movie information from TheMoviesDB."),
+
+    SQL_ERROR("ERROR: %d -> %s");
 
     ;
 

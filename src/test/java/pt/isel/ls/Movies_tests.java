@@ -3,6 +3,7 @@ package pt.isel.ls;
 import org.junit.Test;
 import pt.isel.ls.core.exceptions.CommandException;
 import pt.isel.ls.core.utils.CommandBuilder;
+import pt.isel.ls.core.utils.CommandRequest;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;

@@ -5,27 +5,25 @@ import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 
 import static pt.isel.ls.core.common.headers.html.Html.*;
 
-public class InvalidParam extends ServerPage {
+public class ViewNotImplemented extends ServerPage {
 
     private final String msg;
 
-    public InvalidParam(String msg) {
+    public ViewNotImplemented(String msg) {
         this.msg = msg;
     }
 
     @Override
     protected HtmlPage page() {
         return new HtmlPage(String.valueOf(status().valueOf()),
-                h1(text("400: BAD REQUEST")),
-                h3(text(msg)),
-                h3(text("Suggestion: Check if the input was valid, and try again. " +
-                        "If error persists and you are SURE that this is an error, contact the admin.")),
-                h2(a("/", "Main page"))
+                h1(text("204: NO CONTENT")),
+                h3(text("Request was successful, but the page to display it is not implemented.")),
+                h3(text(msg))
         );
     }
 
     @Override
     protected HttpStatusCode status() {
-        return HttpStatusCode.BAD_REQUEST;
+        return HttpStatusCode.NO_CONTENT;
     }
 }

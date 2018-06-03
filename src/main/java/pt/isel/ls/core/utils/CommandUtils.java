@@ -5,6 +5,7 @@ import pt.isel.ls.core.utils.directorytree.DirectoryNode;
 import pt.isel.ls.core.utils.directorytree.DirectoryTree;
 import pt.isel.ls.core.utils.view_map.*;
 import pt.isel.ls.view.console.ExitView;
+import pt.isel.ls.view.console.ListenView;
 import pt.isel.ls.view.console.OptionsView;
 
 import java.util.HashMap;
@@ -148,6 +149,7 @@ public class CommandUtils {
         /* Internal commands */
         map.put(Options.class.getSimpleName(), OptionsView.class.getName()); //"OPTIONS"
         map.put(Exit.class.getSimpleName(),    ExitView.class.getName());    //"EXIT"
+        map.put(Listen.class.getSimpleName(),  ListenView.class.getName());  //"LISTEN"
     }
 
 

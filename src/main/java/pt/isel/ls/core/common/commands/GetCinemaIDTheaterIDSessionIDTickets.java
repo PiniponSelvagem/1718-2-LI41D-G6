@@ -1,5 +1,7 @@
 package pt.isel.ls.core.common.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.common.commands.db_queries.MoviesSQL;
 import pt.isel.ls.core.common.commands.db_queries.SessionsSQL;
 import pt.isel.ls.core.common.commands.db_queries.TheatersSQL;
@@ -13,9 +15,11 @@ import java.sql.*;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.strings.CommandEnum.*;
+import static pt.isel.ls.core.strings.ExceptionEnum.SQL_ERROR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
+    private final static Logger log = LoggerFactory.getLogger(GetCinemaIDTheaterIDSessionIDTickets.class);
 
     @Override
     public String getMethodName() {
@@ -57,16 +61,16 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
                 try {
                     con.close();
                 } catch (SQLException e1) {
-                    e1.printStackTrace();
+                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
                 }
             }
-            //TODO: catch excp handling
+            log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
         } finally {
             if (con != null) {
                 try {
                     con.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
                 }
             }
         }

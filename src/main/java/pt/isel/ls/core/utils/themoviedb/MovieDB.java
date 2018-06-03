@@ -3,6 +3,8 @@ package pt.isel.ls.core.utils.themoviedb;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.exceptions.TheMoviesDBException;
 import pt.isel.ls.model.Movie;
 
@@ -19,6 +21,7 @@ import java.util.List;
 import static pt.isel.ls.core.strings.ExceptionEnum.TMDB_EXCEPTION;
 
 public class MovieDB {
+    private final static Logger log = LoggerFactory.getLogger(MovieDB.class);
 
     private static final String API_KEY = "api_key=9791eeaaecb0d0c3039376652da34130",   //PiniponSelvagem
                                 URL = "https://api.themoviedb.org/3/",                  //API base URL
@@ -59,10 +62,11 @@ public class MovieDB {
             for (int i=0; i<moviesArray.length() && i<=ANTI_COOLDOWN; ++i) {
                 movie = (JSONObject) moviesArray.get(i);
                 if (movie != null)
-                    movies.add(getMovie(String.valueOf(movie.get(ID))));
+                    movies.add(getMovie(movie.getString(ID)));
             }
 
         } catch (JSONException | IOException e) {
+            log.error(e.getMessage(), this.hashCode());
             throw new TheMoviesDBException(TMDB_EXCEPTION, e.getMessage());
         }
 
@@ -85,21 +89,24 @@ public class MovieDB {
                 Date date = sDF.parse(movieDetailed.get(RELEASE_DATE).toString());
                 SimpleDateFormat yearDF = new SimpleDateFormat("yyyy");
                 year = Integer.parseInt(yearDF.format(date));
-            } catch (Exception e) { year = 0; }
+            } catch (Exception e) {
+                year = 0;
+            }
 
             try {
-                title = movieDetailed.get(TITLE).toString().replace(INVALID_AND, REPLACE_AND);
+                title = movieDetailed.getString(TITLE).replace(INVALID_AND, REPLACE_AND);
             } catch (Exception e) {
                 return null;    //if cant get the title, return null because movie isnt valid.
             }
 
             try {
-                duration = (int) movieDetailed.get(DURATION);
+                duration = movieDetailed.getInt(DURATION);
             } catch (Exception e) { duration = 0; }
 
             return new Movie(id, title, year, duration);
 
         } catch (JSONException | IOException e) {
+            log.error(e.getMessage(), this.hashCode());
             throw new TheMoviesDBException(TMDB_EXCEPTION, e.getMessage());
         }
     }
@@ -118,13 +125,13 @@ public class MovieDB {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage());
                 }
             }
         }
