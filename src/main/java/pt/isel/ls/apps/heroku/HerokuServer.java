@@ -20,7 +20,7 @@ public class HerokuServer {
     private static final int LISTEN_PORT = 8081;
     private static int listenPort;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         System.setProperty("org.slf4j.simpleLogger.levelInBrackets", "true");
 
