@@ -6,6 +6,6 @@ dependencies {
     testCompile fileTree(dir: 'vendor/test', include: '*.jar')
 }
 
-mainClassName = "pt.isel.ls.heroku.HerokuServer"
+mainClassName = "pt.isel.ls.apps.heroku.HerokuServer"
 
 task stage(dependsOn: ['clean', 'installApp'])
