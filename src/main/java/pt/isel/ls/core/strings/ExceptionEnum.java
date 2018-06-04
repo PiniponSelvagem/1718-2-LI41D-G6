@@ -34,7 +34,7 @@ public enum ExceptionEnum {
 
     TMDB_EXCEPTION("Problem when trying to get movie information from TheMoviesDB."),
 
-    SQL_ERROR("ERROR: %d -> %s");
+    SQL_ERROR("SQLCODE: %d -> %s");
 
     ;
 

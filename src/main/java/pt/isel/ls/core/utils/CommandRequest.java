@@ -57,8 +57,11 @@ public class CommandRequest {
                 data = executeCommand(null);
             }
         } catch (SQLException e) {
+            log.error(String.format(SQL_ERROR.toString(), e.getErrorCode(), e.getMessage()), this.hashCode());
+
             data = new DataContainer(cmdBuilder.getCommand().getClass().getSimpleName());
             data.add(D_SQL, new SQLData<>(e.getErrorCode(), e.getMessage()));
+
             try {
                 if (con != null) {
                     con.rollback();
@@ -111,7 +114,7 @@ public class CommandRequest {
                 Constructor<?> constructor = klass.getConstructor(DataContainer.class);
                 obj = constructor.newInstance(data);
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-                log.error("Requested view '{}' for command '{}'. Message: '{}'", data.headerType, data.getCreatedBy(), e.getMessage(), this.hashCode());
+                log.error("View creation error with type '{}' for command '{}'. Message: '{}'", data.headerType, data.getCreatedBy(), e.getMessage(), this.hashCode());
                 throw new ViewNotImplementedException(VIEW__CREATION_ERROR);
             }
             cmdView = (CommandView) obj;
