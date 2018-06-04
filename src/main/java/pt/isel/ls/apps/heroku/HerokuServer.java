@@ -20,7 +20,7 @@ public class HerokuServer {
      * TCP port where to listen.
      * Standard port for HTTP is 80 but might be already in use
      */
-    private static final int LISTEN_PORT = 8081;
+    private static final int LISTEN_PORT = 8080;
     private static int listenPort;
     private static final CommandUtils cmdUtils = new CommandUtils(TEXT_HTML.toString());
 
@@ -62,7 +62,8 @@ public class HerokuServer {
         handler.addServletWithMapping(new ServletHolder(new HttpCmdResolver(cmdUtils)), "/*");
         server.start();
         log.info("Server started");
-        System.in.read();
+        server.join();
+
         server.stop();
         log.info("Server stopped.");
     }
