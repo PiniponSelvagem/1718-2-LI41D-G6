@@ -85,7 +85,7 @@ public class SessionsSQL {
         }
         if (canPost ) { //If DATE free, then POST
             stmt = con.prepareStatement(
-                    "INSERT INTO CINEMA_SESSION VALUES (?, ?, ?, ?)",
+                    "INSERT INTO CINEMA_SESSION (Date, mid, tid, SeatsAvailable) VALUES (?, ?, ?, ?)",
                     PreparedStatement.RETURN_GENERATED_KEYS
             );
             stmt.setTimestamp(1,new Timestamp(event.getTime()));
