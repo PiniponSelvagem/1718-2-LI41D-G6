@@ -60,12 +60,6 @@ public class GetCinemaIDSessionsDateIDView extends HtmlView {
                 td[i][0] = td(a(String.format(hyperlink_date, session.getCinemaID(), session.getId()),
                         session.getTime())
                 );
-
-                String tid = session.getTheaterID();
-                Theater theater = theaters.get(String.valueOf(tid));
-                System.out.println(theater.getId());
-
-
                 td[i][1] = td(a(String.format(hyperlink_theater, session.getCinemaID(),
                         theaters.get(session.getTheaterID()).getId()),
                         theaters.get(session.getTheaterID()).getName())

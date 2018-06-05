@@ -76,7 +76,7 @@ public class GetMovieIDView extends HtmlView {
                 td_array2[i + 1] = tr(td2[i]);
             }
 
-            return new HtmlPage("Movie " + movie.getTitle(),
+            return new HtmlPage("Movie: " + movie.getTitle(),
                     h3(a(hyperLink_movies, "Movies")),
                     h1(text("Movie " + movie.getTitle())),
                     li(text("Release year: " + Integer.toString(movie.getYear()))),
