@@ -95,7 +95,7 @@ public class CinemasSQL {
                 "INNER JOIN CINEMA_SESSION AS cs ON cs.tid=t.tid " +
                 "INNER JOIN MOVIE AS m ON m.mid=cs.mid AND m.mid=?"
         );
-        stmt.setString(1, movieID);
+        stmt.setInt(1, Integer.parseInt(movieID));
         ResultSet rs = stmt.executeQuery();
         LinkedList<Cinema> cinemas = new LinkedList<>();
 

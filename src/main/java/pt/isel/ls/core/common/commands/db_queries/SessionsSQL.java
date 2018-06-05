@@ -50,7 +50,7 @@ public class SessionsSQL {
                 "INNER JOIN THEATER AS t ON t.tid=s.tid "+
                 "WHERE s.tid=?"
         );
-        stmt.setString(1, theaterID);
+        stmt.setInt(1, Integer.parseInt(theaterID));
         stmt.execute();
         rs = stmt.executeQuery();
 
@@ -74,7 +74,7 @@ public class SessionsSQL {
                     "SELECT t.SeatsAvailable FROM THEATER AS t "+
                     "WHERE t.tid=?"
             );
-            stmt.setString(1, theaterID);
+            stmt.setInt(1, Integer.parseInt(theaterID));
             stmt.execute();
             rs = stmt.executeQuery();
             if(rs.next())
@@ -89,8 +89,8 @@ public class SessionsSQL {
                     PreparedStatement.RETURN_GENERATED_KEYS
             );
             stmt.setTimestamp(1,new Timestamp(event.getTime()));
-            stmt.setString(2, movieID);
-            stmt.setString(3, theaterID);
+            stmt.setInt(2, Integer.parseInt(movieID));
+            stmt.setInt(3, Integer.parseInt(theaterID));
             stmt.setInt(4, seatsAvailable);
             stmt.executeUpdate();
 
@@ -121,7 +121,7 @@ public class SessionsSQL {
                 "WHERE cid=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setString(1, cinemaID);
+        stmt.setInt(1, Integer.parseInt(cinemaID));
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
@@ -147,7 +147,7 @@ public class SessionsSQL {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid " +
                 "WHERE s.sid=?"
         );
-        stmt.setString(1, sessionID);
+        stmt.setInt(1, Integer.parseInt(sessionID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
@@ -172,7 +172,7 @@ public class SessionsSQL {
                 "WHERE t.tid=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setString(1, theaterID);
+        stmt.setInt(1, Integer.parseInt(theaterID));
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
@@ -201,7 +201,7 @@ public class SessionsSQL {
                 "WHERE "+condition+" AND (CAST(s.Date AS DATE))=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setString(1, id);
+        stmt.setInt(1, Integer.parseInt(id));
         stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
@@ -230,7 +230,7 @@ public class SessionsSQL {
                 "SELECT CINEMA_SESSION.SeatsAvailable " +
                 "FROM CINEMA_SESSION " +
                 "WHERE CINEMA_SESSION.sid=?");
-        stmt.setString(1, sessionID);
+        stmt.setInt(1, Integer.parseInt(sessionID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
@@ -256,7 +256,7 @@ public class SessionsSQL {
                 "INNER JOIN MOVIE AS m ON m.mid=s.mid AND m.mid=? " +
                 "ORDER BY s.Date"
         );
-        stmt.setString(1, movieID);
+        stmt.setInt(1, Integer.parseInt(movieID));
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
@@ -287,7 +287,7 @@ public class SessionsSQL {
                 "WHERE m.mid=? AND (CAST(s.Date AS DATE))=? "+condition2+" "+
                 "ORDER BY s.Date"
         );
-        stmt.setString(1, movieID);
+        stmt.setInt(1, Integer.parseInt(movieID));
         stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();

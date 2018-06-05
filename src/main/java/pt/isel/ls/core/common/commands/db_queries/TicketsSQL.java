@@ -29,7 +29,7 @@ public class TicketsSQL {
                 "INNER JOIN THEATER AS t ON t.tid=s.tid " +
                 "WHERE s.sid=?"
         );
-        stmt.setString(1, sessionID);
+        stmt.setInt(1, Integer.parseInt(sessionID));
         ResultSet rs = stmt.executeQuery();
         int seats=0, rows=0;
         int rowValue = row.charAt(0)-'A'+1;
@@ -43,14 +43,14 @@ public class TicketsSQL {
             stmt.setString(1, id);
             stmt.setInt(2, seat);
             stmt.setString(3, row);
-            stmt.setString(4, sessionID);
+            stmt.setInt(4, Integer.parseInt(sessionID));
             stmt.executeUpdate();
 
             stmt = con.prepareStatement(
                     "UPDATE CINEMA_SESSION SET CINEMA_SESSION.SeatsAvailable = CINEMA_SESSION.SeatsAvailable - 1 "+
                     "WHERE CINEMA_SESSION.sid=?"
             );
-            stmt.setString(1, sessionID);
+            stmt.setInt(1, Integer.parseInt(sessionID));
             stmt.executeUpdate();
             return new SQLData(PD_OK, PDT_TICKET, id);
         }
@@ -79,7 +79,7 @@ public class TicketsSQL {
                 "DELETE FROM TICKET "+
                 "WHERE TICKET.sid=? AND (" + sql.toString()+")"
         );
-        stmt.setString(1, sessionID);
+        stmt.setInt(1, Integer.parseInt(sessionID));
 
         int test = stmt.executeUpdate();
         while(numberOfTickets>0) {
@@ -87,7 +87,7 @@ public class TicketsSQL {
                     "UPDATE CINEMA_SESSION SET CINEMA_SESSION.SeatsAvailable = CINEMA_SESSION.SeatsAvailable + 1 " +
                     "WHERE CINEMA_SESSION.sid=?"
             );
-            stmt.setString(1, sessionID);
+            stmt.setInt(1, Integer.parseInt(sessionID));
             stmt.executeUpdate();
             --numberOfTickets;
         }
@@ -109,7 +109,7 @@ public class TicketsSQL {
                 "WHERE s.sid=? " +
                 "ORDER BY tk.row, tk.seat"
         );
-        stmt.setString(1, sessionID);
+        stmt.setInt(1, Integer.parseInt(sessionID));
         ResultSet rs = stmt.executeQuery();
 
         HashMap<String, Ticket> tickets = new HashMap<>();
@@ -138,7 +138,7 @@ public class TicketsSQL {
                 "WHERE tk.tkid=? AND tk.sid=?"
         );
         stmt.setString(1, ticketID);
-        stmt.setString(2, sessionID);
+        stmt.setInt(2, Integer.parseInt(sessionID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())

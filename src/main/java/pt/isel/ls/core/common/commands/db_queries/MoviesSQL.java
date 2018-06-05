@@ -75,7 +75,7 @@ public class MoviesSQL {
                 "FROM MOVIE AS m " +
                 "WHERE mid=?"
         );
-        stmt.setString(1, movieID);
+        stmt.setInt(1, Integer.parseInt(movieID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
@@ -102,7 +102,7 @@ public class MoviesSQL {
                 "WHERE c.cid=? " +
                 "ORDER BY m.Title"
         );
-        stmt.setString(1, cinemaID);
+        stmt.setInt(1, Integer.parseInt(cinemaID));
         ResultSet rs = stmt.executeQuery();
         HashMap<Integer, Movie> movies = new HashMap<>();
 
@@ -128,7 +128,7 @@ public class MoviesSQL {
                 "WHERE s.sid=? " +
                 "ORDER BY m.Title"
         );
-        stmt.setString(1, sessionID);
+        stmt.setInt(1, Integer.parseInt(sessionID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
@@ -155,8 +155,8 @@ public class MoviesSQL {
                 "WHERE c.cid=? AND t.tid=? " +
                 "ORDER BY m.Title"
         );
-        stmt.setString(1, cinemaID);
-        stmt.setString(2, theaterID);
+        stmt.setInt(1, Integer.parseInt(cinemaID));
+        stmt.setInt(2, Integer.parseInt(theaterID));
         ResultSet rs = stmt.executeQuery();
         HashMap<Integer, Movie> movies = new HashMap<>();
 
@@ -182,7 +182,7 @@ public class MoviesSQL {
                 "INNER JOIN THEATER AS t ON t.tid=s.sid " +
                 "WHERE t.tid=? AND (CAST(s.Date AS DATE))=?"
         );
-        stmt.setString(1, theaterID);
+        stmt.setInt(1, Integer.parseInt(theaterID));
         stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
         HashMap<Integer, Movie> movies = new HashMap<>();

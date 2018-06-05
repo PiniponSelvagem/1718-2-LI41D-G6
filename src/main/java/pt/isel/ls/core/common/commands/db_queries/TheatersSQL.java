@@ -33,7 +33,7 @@ public class TheatersSQL {
         stmt.setInt(2, rows);
         stmt.setInt(3, seatsRow);
         stmt.setString(4, name);
-        stmt.setString(5, cinemaID);
+        stmt.setInt(5, Integer.parseInt(cinemaID));
         stmt.execute();
 
         ResultSet rs = stmt.getGeneratedKeys();
@@ -58,7 +58,7 @@ public class TheatersSQL {
                 "WHERE t.cid=? " +
                 "ORDER BY t.tid"
         );
-        stmt.setString(1, cinemaID);
+        stmt.setInt(1, Integer.parseInt(cinemaID));
         ResultSet rs = stmt.executeQuery();
         LinkedList<Theater> theaters = new LinkedList<>();
 
@@ -82,7 +82,7 @@ public class TheatersSQL {
                 "FROM THEATER AS t " +
                 "WHERE t.tid=?"
         );
-        stmt.setString(1, theaterID);
+        stmt.setInt(1, Integer.parseInt(theaterID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
@@ -105,7 +105,7 @@ public class TheatersSQL {
                 "FROM THEATER AS t " +
                 "INNER JOIN CINEMA AS c ON t.cid=c.cid AND c.cid=?"
         );
-        stmt.setString(1, cinemaID);
+        stmt.setInt(1, Integer.parseInt(cinemaID));
         ResultSet rs = stmt.executeQuery();
         HashMap<Integer, Theater> theaters = new HashMap<>();
 
@@ -130,7 +130,7 @@ public class TheatersSQL {
                 "INNER JOIN CINEMA_SESSION AS s ON t.tid=s.tid " +
                 "WHERE s.sid=?"
         );
-        stmt.setString(1, sessionID);
+        stmt.setInt(1, Integer.parseInt(sessionID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
@@ -159,7 +159,7 @@ public class TheatersSQL {
                 "WHERE m.mid=? AND (CAST(s.Date AS DATE))=? "+condition2+" "+
                 "ORDER BY s.Date"
         );
-        stmt.setString(1, movieID);
+        stmt.setInt(1, Integer.parseInt(movieID));
         stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
         HashMap<Integer, Theater> theaters = new HashMap<>();
