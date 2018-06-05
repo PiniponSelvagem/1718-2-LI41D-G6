@@ -201,11 +201,12 @@ public class SessionsSQL {
                 "WHERE "+condition+" AND (CAST(s.Date AS DATE))=? " +
                 "ORDER BY s.Date"
         );
+        //
         stmt.setInt(1, Integer.parseInt(id));
-        stmt.setTimestamp(2, Timestamp.valueOf(date));
+        stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
-
+        System.out.println("QUALQUERCOISA");
         while(rs.next()) {
             sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
         }
