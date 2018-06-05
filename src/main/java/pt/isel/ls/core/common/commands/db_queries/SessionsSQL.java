@@ -202,7 +202,7 @@ public class SessionsSQL {
                 "ORDER BY s.Date"
         );
         stmt.setInt(1, Integer.parseInt(id));
-        stmt.setString(2, date);
+        stmt.setTimestamp(2, Timestamp.valueOf(date));
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 
