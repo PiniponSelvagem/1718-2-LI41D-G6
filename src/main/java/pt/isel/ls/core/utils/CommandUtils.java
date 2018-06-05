@@ -50,7 +50,8 @@ public class CommandUtils {
         cmdTree.add(new PostMovies());              //"POST /movies"
         cmdTree.add(new GetMovies());               //"GET /movies"
         cmdTree.add(new GetMovieID());              //"GET /movies/{mid}"
-        cmdTree.add(new GetMoviesTMDB());          //"GET /movies/tmdb"
+        cmdTree.add(new GetMoviesTMDB());           //"GET /movies/tmdb"
+        cmdTree.add(new GetMovieIDTMDB());          //"GET /movies/tmdb/{tmdbID}"
 
 
         /* Commands related to CINEMAS */
@@ -100,6 +101,7 @@ public class CommandUtils {
         dirID.put(SESSIONS.toString(), SESSION_ID_FULL.toString());
         dirID.put(DATE.toString(),     DATE_ID_FULL.toString());
         dirID.put(TICKETS.toString(),  TICKET_ID_FULL.toString());
+        dirID.put(TMDB.toString(),  TMDB_ID_FULL.toString());
     }
 
     /**
