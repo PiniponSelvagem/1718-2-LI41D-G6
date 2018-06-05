@@ -26,7 +26,7 @@ public class TheatersSQL {
     public static SQLData postTheater(Connection con, String cinemaID, String name, int rows, int seatsRow) throws SQLException {
         int seats = rows*seatsRow;
         PreparedStatement stmt = con.prepareStatement(
-                "INSERT INTO THEATER VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO THEATER (SeatsAvailable, Rows, Seats, Theater_Name, cid) VALUES (?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.setInt(1, seats);
