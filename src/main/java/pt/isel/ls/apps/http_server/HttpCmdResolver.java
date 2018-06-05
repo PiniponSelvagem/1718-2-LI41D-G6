@@ -61,6 +61,7 @@ public class HttpCmdResolver extends HttpServlet {
 
             handleRequest(req, header).send(resp);
         } catch (Throwable th) {
+            th.printStackTrace();
             // No exception should go unnoticed!
             log.error(th.getMessage());
             new InternalServerError().getHttpResponse();
