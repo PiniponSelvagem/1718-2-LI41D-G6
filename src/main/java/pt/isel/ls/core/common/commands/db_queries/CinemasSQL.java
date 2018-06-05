@@ -42,6 +42,7 @@ public class CinemasSQL {
      * @throws SQLException SQLException
      */
     public static List<Cinema> queryAll(Connection con) throws SQLException {
+
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT c.cid, c.Name, c.City " +
                 "FROM CINEMA AS c " +
@@ -70,7 +71,7 @@ public class CinemasSQL {
                 "FROM CINEMA AS c " +
                 "WHERE cid=?"
         );
-        stmt.setString(1, cinemaID);
+        stmt.setInt(1, Integer.parseInt(cinemaID));
         ResultSet rs = stmt.executeQuery();
 
         if(!rs.next())
