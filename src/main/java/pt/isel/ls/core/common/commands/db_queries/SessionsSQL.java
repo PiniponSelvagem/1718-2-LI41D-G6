@@ -208,7 +208,7 @@ public class SessionsSQL {
         java.sql.Timestamp timeStampDate;
         try {
             DateFormat formatter;
-            formatter = new SimpleDateFormat("dd/MM/yyyy");
+            formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date time = (Date) formatter.parse(date);
             timeStampDate = new Timestamp(time.getTime());
         }catch(ParseException e) {
