@@ -47,7 +47,7 @@ public class TicketsSQL {
             stmt.executeUpdate();
 
             stmt = con.prepareStatement(
-                    "UPDATE CINEMA_SESSION SET CINEMA_SESSION.SeatsAvailable = CINEMA_SESSION.SeatsAvailable - 1 "+
+                    "UPDATE CINEMA_SESSION SET SeatsAvailable = SeatsAvailable - 1 "+
                     "WHERE CINEMA_SESSION.sid=?"
             );
             stmt.setInt(1, Integer.parseInt(sessionID));
@@ -84,7 +84,7 @@ public class TicketsSQL {
         int test = stmt.executeUpdate();
         while(numberOfTickets>0) {
             stmt = con.prepareStatement(
-                    "UPDATE CINEMA_SESSION SET CINEMA_SESSION.SeatsAvailable = CINEMA_SESSION.SeatsAvailable + 1 " +
+                    "UPDATE CINEMA_SESSION SET SeatsAvailable = SeatsAvailable + 1 " +
                     "WHERE CINEMA_SESSION.sid=?"
             );
             stmt.setInt(1, Integer.parseInt(sessionID));
