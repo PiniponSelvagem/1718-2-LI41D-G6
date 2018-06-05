@@ -21,7 +21,7 @@ public class CinemasSQL {
      */
     public static SQLData postCinema(Connection con, String name, String city) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
-                "INSERT INTO CINEMA VALUES (?, ?)",
+                "INSERT INTO CINEMA (Name, City) VALUES (?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.setString(1, name);
