@@ -28,4 +28,9 @@ public class OptionsView extends CommandView {
         }
         return strBuilder.toString();
     }
+
+    @Override
+    public final void createView() {
+        ;
+    }
 }

@@ -99,7 +99,7 @@ public class TheatersSQL {
      * @return Returns list of theaters
      * @throws SQLException SQLException
      */
-    public static Map<Integer, Theater> queryForCinema(Connection con, String cinemaID) throws SQLException {
+    public static Map<String, Theater> queryForCinema(Connection con, String cinemaID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT t.tid, t.Theater_Name, t.SeatsAvailable, t.Rows, t.Seats, c.cid " +
                 "FROM THEATER AS t " +
@@ -107,10 +107,10 @@ public class TheatersSQL {
         );
         stmt.setInt(1, Integer.parseInt(cinemaID));
         ResultSet rs = stmt.executeQuery();
-        HashMap<Integer, Theater> theaters = new HashMap<>();
+        HashMap<String, Theater> theaters = new HashMap<>();
 
         while(rs.next()) {
-            theaters.put(rs.getInt(1), new Theater(rs.getString(1), rs.getString(2), rs.getInt(4), rs.getInt(5), rs.getInt(3), rs.getString(6)));
+            theaters.put(rs.getString(1), new Theater(rs.getString(1), rs.getString(2), rs.getInt(4), rs.getInt(5), rs.getInt(3), rs.getString(6)));
         }
 
         return theaters;
@@ -149,7 +149,7 @@ public class TheatersSQL {
      * @return Returns list of theaters
      * @throws SQLException SQLException
      */
-    private static Map<Integer, Theater> queryPlayingMovieIDForDateCondition(Connection con, String movieID, String date, String condition1, String condition2) throws  SQLException {
+    private static Map<String, Theater> queryPlayingMovieIDForDateCondition(Connection con, String movieID, String date, String condition1, String condition2) throws  SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT t.tid, t.Theater_Name, t.SeatsAvailable, t.Rows, t.Seats, t.cid " +
                 "FROM MOVIE AS m " +
@@ -162,24 +162,24 @@ public class TheatersSQL {
         stmt.setInt(1, Integer.parseInt(movieID));
         stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
-        HashMap<Integer, Theater> theaters = new HashMap<>();
+        HashMap<String, Theater> theaters = new HashMap<>();
 
         while(rs.next()) {
-            theaters.put(rs.getInt(1), new Theater(rs.getString(1), rs.getString(2), rs.getInt(4), rs.getInt(5), rs.getInt(3), rs.getString(6)));
+            theaters.put(rs.getString(1), new Theater(rs.getString(1), rs.getString(2), rs.getInt(4), rs.getInt(5), rs.getInt(3), rs.getString(6)));
         }
 
         return theaters;
     }
-    public static Map<Integer, Theater> queryPlayingMovieIDForDateAndCity(Connection con, String movieID, String date, String city) throws SQLException {
+    public static Map<String, Theater> queryPlayingMovieIDForDateAndCity(Connection con, String movieID, String date, String city) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "AND c.City='"+city+"'", "");
     }
-    public static Map<Integer, Theater> queryPlayingMovieIDForDateAndCinemaID(Connection con, String movieID, String date, int cinemaID) throws SQLException {
+    public static Map<String, Theater> queryPlayingMovieIDForDateAndCinemaID(Connection con, String movieID, String date, int cinemaID) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "AND c.cid="+cinemaID, "");
     }
-    public static Map<Integer, Theater> queryPlayingMovieIDForDateAndAvailableAbove(Connection con, String movieID, String date, int available) throws SQLException {
+    public static Map<String, Theater> queryPlayingMovieIDForDateAndAvailableAbove(Connection con, String movieID, String date, int available) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "", "AND s.SeatsAvailable>="+available);
     }
-    public static Map<Integer, Theater> queryPlayingMovieIDForDate(Connection con, String movieID, String date) throws SQLException {
+    public static Map<String, Theater> queryPlayingMovieIDForDate(Connection con, String movieID, String date) throws SQLException {
         return queryPlayingMovieIDForDateCondition(con, movieID, date, "", "");
     }
 }

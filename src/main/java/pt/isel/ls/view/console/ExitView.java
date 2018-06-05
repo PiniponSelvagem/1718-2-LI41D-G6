@@ -13,4 +13,9 @@ public class ExitView extends CommandView {
     public String getString() {
         return "Terminating by user request...";
     }
+
+    @Override
+    public final void createView() {
+        ;
+    }
 }

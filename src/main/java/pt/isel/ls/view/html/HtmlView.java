@@ -10,6 +10,10 @@ public abstract class HtmlView extends CommandView {
 
     public HtmlView(DataContainer data) {
         super(data);
+    }
+
+    @Override
+    public final void createView() {
         htmlPage = createPage();
     }
 

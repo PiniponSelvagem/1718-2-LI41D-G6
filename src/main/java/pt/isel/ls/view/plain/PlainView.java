@@ -10,6 +10,10 @@ public abstract class PlainView extends CommandView {
 
     PlainView(DataContainer data) {
         super(data);
+    }
+
+    @Override
+    public final void createView() {
         createPlain();
     }
 

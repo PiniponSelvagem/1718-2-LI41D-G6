@@ -209,7 +209,7 @@ public class SessionsSQL {
         try {
             DateFormat formatter;
             formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date time = (Date) formatter.parse(date);
+            Date time = formatter.parse(date);
             timeStampDate = new Timestamp(time.getTime());
         }catch(ParseException e) {
             System.out.println("Exception :" + e);

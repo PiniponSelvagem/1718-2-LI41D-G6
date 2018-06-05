@@ -18,9 +18,10 @@ public class Sql {
 
     public static PGSimpleDataSource CreateConnetion(String envVar) {
         PGSimpleDataSource ds = new PGSimpleDataSource();
+        //String jdbcUrl = "jdbc:postgresql://ec2-54-217-208-52.eu-west-1.compute.amazonaws.com/d4qfis6dijp0fm?user=pilfhpiogiumel&password=091295dacc9920322f0aff881654240a54acab47bffdc051bdc8f61d2c2f35e6&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
         String jdbcUrl = System.getenv(envVar);
         if(jdbcUrl == null) {
-            logger.error("JDBC_DATABASE_URL is not defined, ending");
+            logger.error("JDBC_DATABASE_URL is not defined!");
         }
         else ds.setUrl(jdbcUrl);
         return ds;

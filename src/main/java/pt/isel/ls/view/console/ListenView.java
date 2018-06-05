@@ -13,4 +13,9 @@ public class ListenView extends CommandView {
     public String getString() {
         return null;
     }
+
+    @Override
+    public final void createView() {
+        ;
+    }
 }

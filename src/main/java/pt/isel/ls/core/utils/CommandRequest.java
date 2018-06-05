@@ -117,10 +117,11 @@ public class CommandRequest {
                 Constructor<?> constructor = klass.getConstructor(DataContainer.class);
                 obj = constructor.newInstance(data);
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-                log.error("View creation error with type '{}' for command '{}'. Message: '{}'", data.headerType, data.getCreatedBy(), e.getMessage(), this.hashCode());
+                //log.error("View creation error with type '{}' for command '{}'. Message: '{}'", data.headerType, data.getCreatedBy(), e.getMessage(), this.hashCode());
                 throw new ViewNotImplementedException(VIEW__CREATION_ERROR);
             }
             cmdView = (CommandView) obj;
+            cmdView.createView();
         }
 
         if (cmdView == null) { //if command does not have implementation for this type of header

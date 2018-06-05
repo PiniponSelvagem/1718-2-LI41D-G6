@@ -92,7 +92,7 @@ public class MoviesSQL {
      * @return Returns hashmap of movies
      * @throws SQLException SQLException
      */
-    public static Map<Integer, Movie> queryForCinema(Connection con, String cinemaID) throws SQLException {
+    public static Map<String, Movie> queryForCinema(Connection con, String cinemaID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT DISTINCT m.mid, m.Title, m.Release_Year, m.Duration " +
                 "FROM MOVIE AS m " +
@@ -104,10 +104,10 @@ public class MoviesSQL {
         );
         stmt.setInt(1, Integer.parseInt(cinemaID));
         ResultSet rs = stmt.executeQuery();
-        HashMap<Integer, Movie> movies = new HashMap<>();
+        HashMap<String, Movie> movies = new HashMap<>();
 
         while(rs.next()){
-            movies.put(rs.getInt(1), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+            movies.put(rs.getString(1), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
         }
 
         return movies;
@@ -145,7 +145,7 @@ public class MoviesSQL {
      * @return Returns hashmap of movies
      * @throws SQLException SQLException
      */
-    public static Map<Integer, Movie> queryForSessionAndTheater(Connection con, String cinemaID, String theaterID) throws SQLException {
+    public static Map<String, Movie> queryForSessionAndTheater(Connection con, String cinemaID, String theaterID) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT m.mid, m.Title, m.Release_Year, m.Duration " +
                 "FROM MOVIE AS m " +
@@ -158,10 +158,10 @@ public class MoviesSQL {
         stmt.setInt(1, Integer.parseInt(cinemaID));
         stmt.setInt(2, Integer.parseInt(theaterID));
         ResultSet rs = stmt.executeQuery();
-        HashMap<Integer, Movie> movies = new HashMap<>();
+        HashMap<String, Movie> movies = new HashMap<>();
 
         while(rs.next()){
-            movies.put(rs.getInt(1), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+            movies.put(rs.getString(1), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
         }
 
         return movies;
@@ -174,7 +174,7 @@ public class MoviesSQL {
      * @return Returns list of sessions
      * @throws SQLException SQLException
      */
-    public static Map<Integer, Movie> queryForTheaterAndDate(Connection con, String theaterID, String date) throws SQLException {
+    public static Map<String, Movie> queryForTheaterAndDate(Connection con, String theaterID, String date) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
                 "SELECT m.mid, m.Title, m.Release_Year, m.Duration " +
                 "FROM MOVIE AS m " +
@@ -185,10 +185,10 @@ public class MoviesSQL {
         stmt.setInt(1, Integer.parseInt(theaterID));
         stmt.setString(2, date);
         ResultSet rs = stmt.executeQuery();
-        HashMap<Integer, Movie> movies = new HashMap<>();
+        HashMap<String, Movie> movies = new HashMap<>();
 
         while(rs.next()){
-            movies.put(rs.getInt(1), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+            movies.put(rs.getString(1), new Movie(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
         }
 
         return movies;

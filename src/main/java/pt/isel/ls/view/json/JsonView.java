@@ -9,6 +9,10 @@ public abstract class JsonView extends CommandView {
 
     public JsonView(DataContainer data) {
         super(data);
+    }
+
+    @Override
+    public final void createView() {
         createJson();
     }
 
