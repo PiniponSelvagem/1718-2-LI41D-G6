@@ -4,6 +4,9 @@ import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -202,11 +205,22 @@ public class SessionsSQL {
                 "ORDER BY s.Date"
         );
         //
+        java.sql.Timestamp timeStampDate;
+        try {
+            DateFormat formatter;
+            formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date time = (Date) formatter.parse(date);
+            timeStampDate = new Timestamp(time.getTime());
+        }catch(ParseException e) {
+            System.out.println("Exception :" + e);
+            return null;
+        }
         stmt.setInt(1, Integer.parseInt(id));
-        stmt.setString(2, date);
+        stmt.setTimestamp(2, timeStampDate);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
         System.out.println("QUALQUERCOISA");
+
         while(rs.next()) {
             sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
         }
