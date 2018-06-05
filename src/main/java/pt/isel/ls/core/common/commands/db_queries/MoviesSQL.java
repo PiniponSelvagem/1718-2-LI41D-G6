@@ -24,7 +24,7 @@ public class MoviesSQL {
      */
     public static SQLData postMovie(Connection con, String title, int releaseYear, int duration) throws SQLException {
         PreparedStatement stmt = con.prepareStatement(
-                "INSERT INTO MOVIE VALUES (?, ?, ?)",
+                "INSERT INTO MOVIE (Title, ReleaseYear, Duration) VALUES (?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.setString(1, title);

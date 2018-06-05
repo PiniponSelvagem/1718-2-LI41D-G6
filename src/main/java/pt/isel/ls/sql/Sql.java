@@ -1,6 +1,7 @@
 package pt.isel.ls.sql;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import org.postgresql.PGConnection;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,27 +14,24 @@ import java.sql.*;
 public class Sql {
     //private static Connection con;
     private static final Logger logger = LoggerFactory.getLogger(Sql.class);
-    static PGSimpleDataSource ds;
 
-    private static void CreateConnetion() throws SQLServerException {
-        ds = new PGSimpleDataSource();
-        String jdbcUrl = System.getenv("JDBC_DATABASE_URL");
+
+    public static PGSimpleDataSource CreateConnetion(String envVar) {
+        PGSimpleDataSource ds = new PGSimpleDataSource();
+        String jdbcUrl = System.getenv(envVar);
         if(jdbcUrl == null) {
             logger.error("JDBC_DATABASE_URL is not defined, ending");
-            return;
         }
-        ds.setUrl(jdbcUrl);
+        else ds.setUrl(jdbcUrl);
+        return ds;
     }
-    static {
+    /*static {
         try {
-            CreateConnetion();
+            CreateConnetion(String envVar);
         } catch (SQLServerException e) {
             e.printStackTrace();
         }
-    }
-    public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
-    }
+    }*/
 }
 
 /*
