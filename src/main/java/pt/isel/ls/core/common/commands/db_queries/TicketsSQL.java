@@ -38,7 +38,7 @@ public class TicketsSQL {
             rows=rs.getInt(2);
         }
         if(seat<=seats && rowValue<=rows && seat>0 && rowValue>0) {
-            stmt = con.prepareStatement("INSERT INTO TICKET VALUES(?, ?, ?, ?)");
+            stmt = con.prepareStatement("INSERT INTO TICKET (tkid, seat, row, sid) VALUES(?, ?, ?, ?)");
             String id = row+seat;
             stmt.setString(1, id);
             stmt.setInt(2, seat);
