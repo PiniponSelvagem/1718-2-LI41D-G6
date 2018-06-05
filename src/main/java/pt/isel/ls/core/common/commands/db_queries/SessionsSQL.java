@@ -219,7 +219,7 @@ public class SessionsSQL {
         stmt.setTimestamp(2, timeStampDate);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
-        System.out.println("QUALQUERCOISA");
+       
 
         while(rs.next()) {
             sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
