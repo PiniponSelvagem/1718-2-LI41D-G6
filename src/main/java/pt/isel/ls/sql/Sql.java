@@ -1,14 +1,43 @@
 package pt.isel.ls.sql;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import org.postgresql.ds.PGSimpleDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
+import java.sql.*;
 
 /**
  * Created by Nuno on 27/02/2018.
  */
 public class Sql {
+    //private static Connection con;
+    private static final Logger logger = LoggerFactory.getLogger(Sql.class);
+    static PGSimpleDataSource ds;
+
+    private static void CreateConnetion() throws SQLServerException {
+        ds = new PGSimpleDataSource();
+        String jdbcUrl = System.getenv("JDBC_DATABASE_URL");
+        if(jdbcUrl == null) {
+            logger.error("JDBC_DATABASE_URL is not defined, ending");
+            return;
+        }
+        ds.setUrl(jdbcUrl);
+    }
+    static {
+        try {
+            CreateConnetion();
+        } catch (SQLServerException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Connection getConnection() throws SQLException {
+        return ds.getConnection();
+    }
+}
+
+/*
+* public class Sql {
     private static SQLServerDataSource ds = null;
     private static void CreateConnetion() throws SQLServerException {
         ds = new SQLServerDataSource();
@@ -30,4 +59,4 @@ public class Sql {
         return ds.getConnection();
     }
 }
-
+*/
