@@ -63,7 +63,8 @@ public class HttpCmdResolver extends HttpServlet {
         } catch (Throwable th) {
             th.printStackTrace();
             // No exception should go unnoticed!
-            log.error(th.getMessage());
+            th.printStackTrace();
+            log.error("Internal server error.");
             new InternalServerError().getHttpResponse();
         }
     }
@@ -140,7 +141,12 @@ public class HttpCmdResolver extends HttpServlet {
     private CommandView executeRequestPost(HttpServletRequest req, String header) throws CommonException {
         handleFormData(req);
         String urlOptions[] = new String[]{req.getMethod(), req.getRequestURI(), handleFormData(req), header};
-        return new CommandRequest(urlOptions, cmdUtils).executeView();
+        CommandRequest cmdReq;
+        CommandView cmdView;
+        cmdReq = new CommandRequest(urlOptions, cmdUtils);
+        cmdReq.checkAndExecuteCommand();
+        cmdView = cmdReq.executeView();
+        return cmdView;
     }
 
     /**

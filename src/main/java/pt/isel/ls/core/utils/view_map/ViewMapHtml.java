@@ -14,6 +14,8 @@ public class ViewMapHtml extends ViewMap {
         viewMap.put(GetMovies.class.getSimpleName(),     GetMoviesView.class.getName());     //"GET /movies"
         viewMap.put(GetMovieID.class.getSimpleName(),    GetMovieIDView.class.getName());    //"GET /movies/{mid}"
         viewMap.put(GetMoviesTMDB.class.getSimpleName(), GetMoviesTMDBView.class.getName()); //"GET /movies/tmdb"
+        viewMap.put(GetMovieIDTMDB.class.getSimpleName(), GetMovieIDTMDBView.class.getName()); //"GET /movies/tmdbID"
+
 
 
         /* Commands related to CINEMAS */

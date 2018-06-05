@@ -1,5 +1,6 @@
 package pt.isel.ls.view.html;
 
+import pt.isel.ls.core.common.commands.GetMovieIDTMDB;
 import pt.isel.ls.core.common.commands.GetMovies;
 import pt.isel.ls.core.common.headers.html.HtmlPage;
 import pt.isel.ls.core.common.headers.html.HttpStatusCode;
@@ -12,7 +13,6 @@ import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.html.Html.*;
 import static pt.isel.ls.core.common.headers.html.HtmlElem.submit;
-import static pt.isel.ls.core.common.headers.html.HtmlElem.submitLink;
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIES;
 
@@ -24,31 +24,21 @@ public class GetMoviesTMDBView extends HtmlView {
 
     @Override
     public HtmlPage createPage() {
-        String[] tableColumns = {"Title", "Release Year", "Duration"};
+        String[] tableColumns = {"Title", "Release Year"};
         Writable[] th = HtmlViewCommon.fillTableHeader(tableColumns);
         LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
         Writable[][] td = new Writable[movies.size()][tableColumns.length];
         Writable[] td_array = new Writable[movies.size()+1];
         td_array[0] = tr(th);
 
-        //String hyperLink = new GetMovieID().getPath()
-        //        .replace(MOVIE_ID_FULL.toString(), "%s");
+        String hyperLink = new GetMovieIDTMDB().getPath()
+                .replace(TMDB_ID_FULL.toString(), "%s");
 
         Movie movie;
         for (int j = 0; j < movies.size(); j++) {
             movie = movies.get(j);
-            //td[j][0] = td(a(String.format(hyperLink, movie.getId()), movie.getTitle()));
-            td[j][0] = td(
-                    //a(String.format(hyperLink, movie.getId()), movie.getTitle())
-                    form(
-                            POST.toString(), new GetMovies().getPath(),
-                            hiddenInput("title", movie.getTitle()),
-                            hiddenInput("duration", String.valueOf(movie.getDuration())),
-                            hiddenInput("releaseYear", String.valueOf(movie.getYear())),
-                            submitLink("submit", movie.getTitle())
-                    ));
+            td[j][0] = td(a(String.format(hyperLink, movie.getId()), movie.getTitle()));
             td[j][1] = td(text(Integer.toString(movie.getYear())));
-            td[j][2] = td(text(Integer.toString(movie.getDuration())));
             td_array[j + 1] = tr(td[j]);
         }
 
