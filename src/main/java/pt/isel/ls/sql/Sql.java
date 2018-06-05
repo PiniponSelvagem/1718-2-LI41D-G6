@@ -1,7 +1,9 @@
 package pt.isel.ls.sql;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import org.postgresql.ds.PGSimpleDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
@@ -9,20 +11,28 @@ import java.sql.*;
  * Created by Nuno on 27/02/2018.
  */
 public class Sql {
-    private static Connection con;
+    //private static Connection con;
+    private static final Logger logger = LoggerFactory.getLogger(Sql.class);
+    static PGSimpleDataSource ds;
+
     private static void CreateConnetion() throws SQLServerException {
-        String url = "jdbc:postgresql://localhost:5432/"+System.getenv("LS-server");
-        String user = System.getenv("LS-user");
-        String password = System.getenv("LS-pass");
+        ds = new PGSimpleDataSource();
+        String jdbcUrl = System.getenv("JDBC_DATABASE_URL");
+        if(jdbcUrl == null) {
+            logger.error("JDBC_DATABASE_URL is not defined, ending");
+            return;
+        }
+        ds.setUrl(jdbcUrl);
+    }
+    static {
         try {
-            con = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
+            CreateConnetion();
+        } catch (SQLServerException e) {
             e.printStackTrace();
         }
     }
-    public static Connection getConnection() throws SQLServerException {
-        CreateConnetion();
-        return con;
+    public static Connection getConnection() throws SQLException {
+        return ds.getConnection();
     }
 }
 
