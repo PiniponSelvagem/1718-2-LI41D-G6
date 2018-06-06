@@ -45,7 +45,6 @@ public class GetCinemaIDTheaterIDSessionIDTickets extends Command {
         }
 
         data.add(D_CID, cinemaID);
-        data.add(D_SID, sessionID);
         return data;
     }
 

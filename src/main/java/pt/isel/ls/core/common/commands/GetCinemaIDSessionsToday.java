@@ -33,7 +33,6 @@ public class GetCinemaIDSessionsToday extends Command {
         data.add(D_SESSIONS, SessionsSQL.queryForCinemaAndDate(con, cinemaID, date.toString()));
         data.add(D_THEATERS, TheatersSQL.queryForCinema(con, cinemaID));
         data.add(D_MOVIES,   MoviesSQL.queryForCinema(con, cinemaID));
-        data.add(D_CID,  cinemaID);
         data.add(D_DATE, date);
         return data;
     }

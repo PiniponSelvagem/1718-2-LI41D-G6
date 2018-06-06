@@ -1,6 +1,5 @@
 package pt.isel.ls.core.common.commands;
 
-import pt.isel.ls.core.exceptions.ParameterException;
 import pt.isel.ls.core.exceptions.TheMoviesDBException;
 import pt.isel.ls.core.utils.CommandBuilder;
 import pt.isel.ls.core.utils.DataContainer;
@@ -25,7 +24,7 @@ public class GetMovieIDTMDB extends Command {
     }
 
     @Override
-    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) throws ParameterException, TheMoviesDBException {
+    public DataContainer execute(CommandBuilder cmdBuilder, Connection con) throws TheMoviesDBException {
         DataContainer data = new DataContainer(this.getClass().getSimpleName());
         Movie movie = new MovieDB(cmdBuilder.getId(TMDB_ID)).getMovie();
         data.add(D_MOVIE, movie);

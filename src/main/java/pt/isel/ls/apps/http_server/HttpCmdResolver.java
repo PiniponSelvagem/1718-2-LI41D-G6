@@ -119,7 +119,7 @@ public class HttpCmdResolver extends HttpServlet {
         CommandRequest cmdReq;
         CommandView cmdView;
         if (req.getParameterNames().hasMoreElements()) {
-            urlOptions = new String[]{req.getMethod(), req.getRequestURI(), req.getQueryString(), header};
+            urlOptions = new String[]{req.getMethod(), req.getRequestURI(), header, req.getQueryString()};
 
         } else {
             urlOptions = new String[]{req.getMethod(), req.getRequestURI(), header};
@@ -139,7 +139,7 @@ public class HttpCmdResolver extends HttpServlet {
      */
     private CommandView executeRequestPost(HttpServletRequest req, String header) throws CommonException {
         handleFormData(req);
-        String urlOptions[] = new String[]{req.getMethod(), req.getRequestURI(), handleFormData(req), header};
+        String urlOptions[] = new String[]{req.getMethod(), req.getRequestURI(), header, handleFormData(req)};
         CommandRequest cmdReq;
         CommandView cmdView;
         cmdReq = new CommandRequest(urlOptions, cmdUtils);

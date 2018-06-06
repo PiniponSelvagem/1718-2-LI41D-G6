@@ -159,8 +159,13 @@ public class TheatersSQL {
                 "WHERE m.mid=? AND (CAST(s.Date AS DATE))=? "+condition2+" "+
                 "ORDER BY s.Date"
         );
+
+        Timestamp timeStampDate = CommonSQL.dateStringToTimestamp(date);
+        if (timeStampDate == null)
+            return null;
+
         stmt.setInt(1, Integer.parseInt(movieID));
-        stmt.setString(2, date);
+        stmt.setTimestamp(2, timeStampDate);
         ResultSet rs = stmt.executeQuery();
         HashMap<String, Theater> theaters = new HashMap<>();
 

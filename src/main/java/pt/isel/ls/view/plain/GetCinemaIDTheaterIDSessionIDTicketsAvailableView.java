@@ -7,11 +7,11 @@ import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_AVAILABLE_SEATS;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SID;
 
 public class GetCinemaIDTheaterIDSessionIDTicketsAvailableView extends PlainView{
-    private int sessionId;
+    private String sessionId;
 
     public GetCinemaIDTheaterIDSessionIDTicketsAvailableView(DataContainer data) {
         super(data);
-        this.sessionId = (Integer) data.getData(D_SID);
+        this.sessionId = (String) data.getData(D_SID);
     }
 
     @Override

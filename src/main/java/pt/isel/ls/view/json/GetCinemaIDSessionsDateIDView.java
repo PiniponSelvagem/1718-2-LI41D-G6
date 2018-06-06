@@ -5,20 +5,15 @@ import pt.isel.ls.model.Movie;
 import pt.isel.ls.model.Session;
 import pt.isel.ls.model.Theater;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionsDateIDView extends JsonView {
-    private int cinemaId;
-    private Date date;
 
     public GetCinemaIDSessionsDateIDView(DataContainer data) {
         super(data);
-        this.cinemaId = (Integer) data.getData(D_CID);
-        this.date = (Date) data.getData(D_DATE);
     }
 
     @Override
@@ -29,8 +24,8 @@ public class GetCinemaIDSessionsDateIDView extends JsonView {
 
     private String[][] tableAux(String[] columnNames) {
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
-        HashMap<Integer, Theater> theaters = (HashMap<Integer, Theater>) data.getData(D_THEATERS);
-        HashMap<Integer, Movie> movies = (HashMap<Integer, Movie>) data.getData(D_MOVIES);
+        HashMap<String, Theater> theaters = (HashMap<String, Theater>) data.getData(D_THEATERS);
+        HashMap<String, Movie> movies = (HashMap<String, Movie>) data.getData(D_MOVIES);
         String[][] tableData  = new String[sessions.size()][columnNames.length];
         Session session;
         for (int y=0; y<sessions.size(); ++y) {

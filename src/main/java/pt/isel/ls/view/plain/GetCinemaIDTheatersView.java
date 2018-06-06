@@ -9,11 +9,11 @@ import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATERS;
 
 
 public class GetCinemaIDTheatersView extends PlainView {
-    private final int cinemaId;
+    private final String cinemaId;
 
     public GetCinemaIDTheatersView(DataContainer data) {
         super(data);
-        this.cinemaId = (Integer) data.getData(D_CID);
+        this.cinemaId = (String) data.getData(D_CID);
     }
 
     @Override

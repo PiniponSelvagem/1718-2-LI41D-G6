@@ -100,8 +100,8 @@ public class CommandBuilder {
         }
         else {
             if (args.length == 4) {
-                findParams(args[2]);
-                findHeaders(args[3]);
+                findHeaders(args[2]);
+                findParams(args[3]);
             }
         }
     }

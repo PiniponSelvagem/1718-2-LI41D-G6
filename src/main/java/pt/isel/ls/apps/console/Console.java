@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.exceptions.CommonException;
 import pt.isel.ls.core.utils.CommandRequest;
 import pt.isel.ls.core.utils.CommandUtils;
-import pt.isel.ls.view.CommandView;
 
 import java.io.*;
 import java.util.Scanner;

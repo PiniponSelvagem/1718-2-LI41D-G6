@@ -182,8 +182,13 @@ public class MoviesSQL {
                 "INNER JOIN THEATER AS t ON t.tid=s.sid " +
                 "WHERE t.tid=? AND (CAST(s.Date AS DATE))=?"
         );
+
+        Timestamp timeStampDate = CommonSQL.dateStringToTimestamp(date);
+        if (timeStampDate == null)
+            return null;
+
         stmt.setInt(1, Integer.parseInt(theaterID));
-        stmt.setString(2, date);
+        stmt.setTimestamp(2, timeStampDate);
         ResultSet rs = stmt.executeQuery();
         HashMap<String, Movie> movies = new HashMap<>();
 

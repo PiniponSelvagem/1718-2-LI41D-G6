@@ -4,18 +4,12 @@ import pt.isel.ls.core.common.commands.GetMovies;
 import pt.isel.ls.core.common.headers.html.HtmlPage;
 import pt.isel.ls.core.common.headers.html.HttpStatusCode;
 import pt.isel.ls.core.utils.DataContainer;
-import pt.isel.ls.core.utils.writable.Writable;
 import pt.isel.ls.model.Movie;
-import pt.isel.ls.view.html.utils.HtmlViewCommon;
-
-import java.util.LinkedList;
 
 import static pt.isel.ls.core.common.headers.html.Html.*;
 import static pt.isel.ls.core.common.headers.html.HtmlElem.submit;
-import static pt.isel.ls.core.common.headers.html.HtmlElem.submitLink;
 import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIE;
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_MOVIES;
 
 public class GetMovieIDTMDBView extends HtmlView {
 
@@ -26,9 +20,6 @@ public class GetMovieIDTMDBView extends HtmlView {
     @Override
     public HtmlPage createPage() {
         Movie movie = (Movie) data.getData(D_MOVIE);
-
-        //String hyperLink = new GetMovieID().getPath()
-        //        .replace(MOVIE_ID_FULL.toString(), "%s");
 
         return new HtmlPage("Add Movie",
                 h3(a("/movies", "Movies")),

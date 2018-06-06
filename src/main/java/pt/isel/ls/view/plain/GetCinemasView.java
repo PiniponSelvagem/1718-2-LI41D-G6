@@ -25,7 +25,6 @@ public class GetCinemasView extends PlainView {
         String[][] tableData  = new String[cinemas.size()][columnNames.length];
         Cinema cinema;
 
-
         for (int y=0; y<cinemas.size(); ++y) {
             cinema = cinemas.get(y);
             tableData[y][0] = String.valueOf(cinema.getId());

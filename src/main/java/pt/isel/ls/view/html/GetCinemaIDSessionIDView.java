@@ -35,7 +35,7 @@ public class GetCinemaIDSessionIDView extends HtmlView {
             Writable[] td_array = new Writable[theater.getRows()];
 
             String hyperlink_ticket = new GetCinemaIDTheaterIDSessionIDTicketID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), String.valueOf(session.getCinemaID()))
+                    .replace(CINEMA_ID_FULL.toString(),  String.valueOf(session.getCinemaID()))
                     .replace(THEATER_ID_FULL.toString(), String.valueOf(theater.getId()))
                     .replace(SESSION_ID_FULL.toString(), String.valueOf(session.getId()))
                     .replace(TICKET_ID_FULL.toString(), "%s");

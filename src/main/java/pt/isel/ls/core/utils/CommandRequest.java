@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.common.commands.db_queries.SQLData;
 import pt.isel.ls.core.exceptions.*;
-import pt.isel.ls.sql.Sql;
 import pt.isel.ls.view.CommandView;
 
 import java.lang.reflect.Constructor;
@@ -22,7 +21,7 @@ import static pt.isel.ls.sql.Sql.CreateConnetion;
 
 public class CommandRequest {
     private final static Logger log = LoggerFactory.getLogger(CommandRequest.class);
-    public static final PGSimpleDataSource ds = CreateConnetion("JDBC_DATABASE_URL");
+    private static final PGSimpleDataSource ds = CreateConnetion("JDBC_DATABASE_URL");
 
     private CommandView cmdView;
     private CommandBuilder cmdBuilder;
@@ -117,7 +116,7 @@ public class CommandRequest {
                 Constructor<?> constructor = klass.getConstructor(DataContainer.class);
                 obj = constructor.newInstance(data);
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-                //log.error("View creation error with type '{}' for command '{}'. Message: '{}'", data.headerType, data.getCreatedBy(), e.getMessage(), this.hashCode());
+                //log.error("View creation error with type '{}' for command '{}'", data.headerType, data.getCreatedBy(), this.hashCode());
                 throw new ViewNotImplementedException(VIEW__CREATION_ERROR);
             }
             cmdView = (CommandView) obj;

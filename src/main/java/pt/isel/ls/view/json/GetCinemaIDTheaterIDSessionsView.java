@@ -11,12 +11,9 @@ import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 public class GetCinemaIDTheaterIDSessionsView extends JsonView {
-    private int cinemaId, theaterId;
 
     public GetCinemaIDTheaterIDSessionsView(DataContainer data) {
         super(data);
-        this.cinemaId = (Integer) data.getData(D_CID);
-        this.theaterId = (Integer) data.getData(D_TID);
     }
 
     @Override
@@ -27,7 +24,7 @@ public class GetCinemaIDTheaterIDSessionsView extends JsonView {
 
     private String[][] tableAux(String[] columnNames) {
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
-        HashMap<Integer, Movie> movies = (HashMap<Integer, Movie>) data.getData(D_MOVIES);
+        HashMap<String, Movie> movies = (HashMap<String, Movie>) data.getData(D_MOVIES);
         String[][] tableData  = new String[sessions.size()][columnNames.length];
         Session session;
         for (int y=0; y<sessions.size(); ++y) {

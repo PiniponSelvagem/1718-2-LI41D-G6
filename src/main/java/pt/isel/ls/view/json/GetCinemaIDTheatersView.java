@@ -5,16 +5,13 @@ import pt.isel.ls.model.Theater;
 
 import java.util.LinkedList;
 
-import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_CID;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_THEATERS;
 
 
 public class GetCinemaIDTheatersView extends JsonView {
-    private final int cinemaId;
 
     public GetCinemaIDTheatersView(DataContainer data) {
         super(data);
-        this.cinemaId = (Integer) data.getData(D_CID);
     }
 
     @Override

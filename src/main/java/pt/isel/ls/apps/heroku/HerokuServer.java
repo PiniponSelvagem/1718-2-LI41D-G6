@@ -46,17 +46,6 @@ public class HerokuServer {
         Server server = new Server(listenPort);
         log.info("Listening on port '{}'", listenPort);
 
-        //Code that will probably be used later for postgreSQL
-        /*
-        PGSimpleDataSource ds = new PGSimpleDataSource();
-        String jdbcUrl = System.getenv("JDBC_DATABASE_URL");
-        if(jdbcUrl == null) {
-            log.error("JDBC_DATABASE_URL is not defined, ending");
-            return;
-        }
-        ds.setUrl(jdbcUrl);
-        */
-
         ServletHandler handler = new ServletHandler();
         server.setHandler(handler);
         handler.addServletWithMapping(new ServletHolder(new HttpCmdResolver(cmdUtils)), "/*");

@@ -21,13 +21,11 @@ import static pt.isel.ls.core.strings.CommandEnum.*;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetCinemaIDSessionsDateIDView extends HtmlView {
-    private String cinemaId;
     private Date date;
     private static final int FULL_DAY = 24*60*60*1000;
 
     public GetCinemaIDSessionsDateIDView(DataContainer data) {
         super(data);
-        this.cinemaId = (String) data.getData(D_CID);
         this.date = (Date) data.getData(D_DATE);
     }
 
@@ -78,14 +76,14 @@ public class GetCinemaIDSessionsDateIDView extends HtmlView {
             String yesterday = sdf_noSep.format(new Date(this.date.getTime() - FULL_DAY));
 
             String hyperlink_dateNavigator = new GetCinemaIDSessionsDateID().getPath()
-                    .replace(CINEMA_ID_FULL.toString(), cinemaId)
+                    .replace(CINEMA_ID_FULL.toString(), cinema.getId())
                     .replace(DATE_ID_FULL.toString(), "%s");
 
             String hyperlink_cinema = new GetCinemaID().getPath().replace(CINEMA_ID_FULL.toString(), "%s");
 
             return new HtmlPage("Sessions for date: " + sdf_withSep.format(this.date),
                     h1(text("Sessions for date: " + sdf_withSep.format(this.date))),
-                    h3(a(String.format(hyperlink_cinema, cinemaId), cinema.getName())),
+                    h3(a(String.format(hyperlink_cinema, cinema.getId()), cinema.getName())),
                     h3(a(String.format(hyperlink_dateNavigator, yesterday), "Previous day")),
                     h3(a(String.format(hyperlink_dateNavigator, tomorrow), "Next day")),
                     table(td_array)

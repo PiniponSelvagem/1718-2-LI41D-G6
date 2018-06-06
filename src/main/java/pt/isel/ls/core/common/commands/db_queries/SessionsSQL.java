@@ -204,22 +204,15 @@ public class SessionsSQL {
                 "WHERE "+condition+" AND (CAST(s.Date AS DATE))=? " +
                 "ORDER BY s.Date"
         );
-        //
-        java.sql.Timestamp timeStampDate;
-        try {
-            DateFormat formatter;
-            formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date time = formatter.parse(date);
-            timeStampDate = new Timestamp(time.getTime());
-        }catch(ParseException e) {
-            System.out.println("Exception :" + e);
+
+        Timestamp timeStampDate = CommonSQL.dateStringToTimestamp(date);
+        if (timeStampDate == null)
             return null;
-        }
+
         stmt.setInt(1, Integer.parseInt(id));
         stmt.setTimestamp(2, timeStampDate);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
-       
 
         while(rs.next()) {
             sessions.add(new Session(rs.getString(1), rs.getInt(2), rs.getTimestamp(3), rs.getString(4), rs.getString(5), rs.getString(6)));
@@ -302,8 +295,13 @@ public class SessionsSQL {
                 "WHERE m.mid=? AND (CAST(s.Date AS DATE))=? "+condition2+" "+
                 "ORDER BY s.Date"
         );
+
+        Timestamp timeStampDate = CommonSQL.dateStringToTimestamp(date);
+        if (timeStampDate == null)
+            return null;
+
         stmt.setInt(1, Integer.parseInt(movieID));
-        stmt.setString(2, date);
+        stmt.setTimestamp(2, timeStampDate);
         ResultSet rs = stmt.executeQuery();
         LinkedList<Session> sessions = new LinkedList<>();
 

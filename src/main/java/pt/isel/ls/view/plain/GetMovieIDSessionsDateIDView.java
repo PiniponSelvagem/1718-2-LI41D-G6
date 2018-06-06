@@ -11,12 +11,12 @@ import java.util.LinkedList;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 public class GetMovieIDSessionsDateIDView extends PlainView {
-    private int movieId;
+    private String movieId;
     private Date date;
 
     public GetMovieIDSessionsDateIDView(DataContainer data) {
         super(data);
-        this.movieId = (Integer) data.getData(D_MID);
+        this.movieId = (String) data.getData(D_MID);
         this.date = (Date) data.getData(D_DATE);
     }
 
@@ -29,7 +29,7 @@ public class GetMovieIDSessionsDateIDView extends PlainView {
 
     private String[][] tableAux(String[] columnNames) {
         LinkedList<Session> sessions = (LinkedList<Session>) data.getData(D_SESSIONS);
-        HashMap<Integer, Theater> theaters = (HashMap<Integer, Theater>) data.getData(D_THEATERS);
+        HashMap<String, Theater> theaters = (HashMap<String, Theater>) data.getData(D_THEATERS);
         String[][] tableData  = new String[sessions.size()][columnNames.length];
         Session session;
         for (int y=0; y<sessions.size(); ++y) {

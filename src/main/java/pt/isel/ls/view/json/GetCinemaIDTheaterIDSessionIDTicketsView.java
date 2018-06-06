@@ -10,14 +10,10 @@ import java.util.LinkedList;
 
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
-
 public class GetCinemaIDTheaterIDSessionIDTicketsView extends JsonView {
-    private int cinemaId, sessionId;
 
     public GetCinemaIDTheaterIDSessionIDTicketsView(DataContainer data) {
         super(data);
-        this.cinemaId = (Integer) data.getData(D_CID);
-        this.sessionId = (Integer) data.getData(D_SID);
     }
 
     @Override

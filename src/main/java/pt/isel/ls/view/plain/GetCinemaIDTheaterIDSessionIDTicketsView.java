@@ -12,17 +12,17 @@ import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 public class GetCinemaIDTheaterIDSessionIDTicketsView extends PlainView {
-    private int cinemaId, sessionId;
+    private String cinemaId;
 
     public GetCinemaIDTheaterIDSessionIDTicketsView(DataContainer data) {
         super(data);
-        this.cinemaId = (Integer) data.getData(D_CID);
-        this.sessionId = (Integer) data.getData(D_SID);
+        this.cinemaId = (String) data.getData(D_CID);
     }
 
     @Override
     protected void createPlain() {
-        plain.addTitle("Tickets (CinemaID: "+cinemaId+") [SessionID: "+sessionId+"]");
+        Session session = (Session) data.getData(D_SESSION);
+        plain.addTitle("Tickets (CinemaID: "+cinemaId+") [SessionID: "+session.getId()+"]");
         String[] tableColumns = {"ID", "Date", "Title", "Duration", "Theater name"};
         plain.addTable(tableColumns, tableAux(tableColumns));
     }
