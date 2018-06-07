@@ -1,5 +1,6 @@
 package pt.isel.ls.apps.console;
 
+import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.exceptions.CommonException;
@@ -11,9 +12,11 @@ import java.util.Scanner;
 
 import static pt.isel.ls.core.common.headers.HeadersAvailable.TEXT_HTML;
 import static pt.isel.ls.core.strings.CommandEnum.ARGS_SEPARATOR;
+import static pt.isel.ls.sql.Sql.CreateConnetion;
 
 public class Console {
     private final static Logger log = LoggerFactory.getLogger(Console.class);
+    private static final PGSimpleDataSource ds = CreateConnetion();
 
     private final static String FILE_NAME_WELCOME = "welcome_message",
                                 WAIT_INPUT = "> ",
@@ -24,7 +27,7 @@ public class Console {
     public static void main(String[] args) {
         if (args.length != 0) {
             try {
-                CommandRequest cmdReq = new CommandRequest(args, cmdUtils);
+                CommandRequest cmdReq = new CommandRequest(args, cmdUtils, ds);
                 cmdReq.checkAndExecuteCommand();
                 output(cmdReq.getFileName(), cmdReq.executeView().getString());
             } catch (CommonException e) {
@@ -47,7 +50,7 @@ public class Console {
             System.out.print(WAIT_INPUT);
             args = in.nextLine().split(ARGS_SEPARATOR.toString());
             try {
-                cmdReq = new CommandRequest(args, cmdUtils);
+                cmdReq = new CommandRequest(args, cmdUtils, ds);
                 cmdReq.checkAndExecuteCommand();
                 output(cmdReq.getFileName(), cmdReq.executeView().getString());
             } catch (CommonException e) {

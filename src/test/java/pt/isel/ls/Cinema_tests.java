@@ -1,13 +1,13 @@
 package pt.isel.ls;
 
 import org.junit.Test;
+import org.postgresql.ds.PGSimpleDataSource;
 import pt.isel.ls.core.exceptions.CommonException;
 import pt.isel.ls.core.utils.CommandRequest;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Cinema;
 import pt.isel.ls.model.Theater;
-import pt.isel.ls.sql.Sql;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,12 +15,14 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static pt.isel.ls.SqlTest.CreateConnetion;
 import static pt.isel.ls.core.common.headers.HeadersAvailable.TEXT_HTML;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
 
 @SuppressWarnings("Duplicates")
 public class Cinema_tests {
+    private static final PGSimpleDataSource ds = CreateConnetion();
     private Connection con = null;
     private final static CommandUtils cmdUtils = new CommandUtils(TEXT_HTML.toString());
 
@@ -29,7 +31,7 @@ public class Cinema_tests {
         for(int i = 0; i < 3; i++){
             String name = "nameTest" + (i + 1);
             try {
-                PreparedStatement stmt = con.prepareStatement("INSERT INTO CINEMA VALUES('" + name +"', 'cityTest')");
+                PreparedStatement stmt = con.prepareStatement("INSERT INTO CINEMA (Name, City) VALUES('" + name +"', 'cityTest')");
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -42,12 +44,12 @@ public class Cinema_tests {
     public void insert_cinema() {
         LinkedList<Cinema> cinemas = new LinkedList<>();
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
 
             for(int i = 0; i < 3; i++) {
                 String name = "nameTest" + (i + 1);
-                new CommandRequest(new String[] {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, cmdUtils).executeCommand(con);
+                new CommandRequest(new String[] {"POST", "/cinemas", "name=" + name + "&city=cityTest"}, cmdUtils, ds).executeCommand(con);
             }
 
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM CINEMA");
@@ -78,12 +80,12 @@ public class Cinema_tests {
     @Test
     public void get_cinemas() {
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
 
-            DataContainer data = new CommandRequest(new String[] {"GET", "/cinemas"}, cmdUtils).executeCommand(con);
+            DataContainer data = new CommandRequest(new String[] {"GET", "/cinemas"}, cmdUtils, ds).executeCommand(con);
 
             LinkedList<Cinema> cinemas = (LinkedList<Cinema>) data.getData(D_CINEMAS);
             Cinema cinema;
@@ -111,7 +113,7 @@ public class Cinema_tests {
     @Test
     public void get_cinema_by_id(){
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
             create_cinemas(con);
 
@@ -125,7 +127,7 @@ public class Cinema_tests {
                 i++;
             }
 
-            DataContainer data = new CommandRequest(new String[] {"GET", "/cinemas/" + ids[1]}, cmdUtils).executeCommand(con);
+            DataContainer data = new CommandRequest(new String[] {"GET", "/cinemas/" + ids[1]}, cmdUtils, ds).executeCommand(con);
             Cinema cinema = (Cinema) data.getData(D_CINEMA);
             assertEquals(ids[1], cinema.getId());
         } catch (SQLException | CommonException e) {
@@ -146,7 +148,7 @@ public class Cinema_tests {
     @Test
     public void insert_cinemaID_theater(){
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
@@ -162,7 +164,7 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                new CommandRequest(new String[] {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, cmdUtils).executeCommand(con);
+                new CommandRequest(new String[] {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, cmdUtils, ds).executeCommand(con);
                 seats += 10;
             }
 
@@ -192,7 +194,7 @@ public class Cinema_tests {
     @Test
     public void get_cinemasID_theater(){
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
@@ -208,12 +210,12 @@ public class Cinema_tests {
             for(int j = 0; j < 3 ; j++){
                 String name = "theater";
                 name += (j + 1);
-                new CommandRequest(new String[] {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, cmdUtils).executeCommand(con);
+                new CommandRequest(new String[] {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, cmdUtils, ds).executeCommand(con);
                 seats += 10;
             }
 
             DataContainer data = new CommandRequest(new String[]
-                    {"GET", "/cinemas/" + ids[0] + "/theaters"}, cmdUtils).executeCommand(con);
+                    {"GET", "/cinemas/" + ids[0] + "/theaters"}, cmdUtils, ds).executeCommand(con);
             Theater theater;
             LinkedList<Theater> theaters = (LinkedList<Theater>) data.getData(D_THEATERS);
             for(int k = 0; k < theaters.size(); k++){
@@ -241,7 +243,7 @@ public class Cinema_tests {
     @Test
     public void get_cinemaID_theaterID(){
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
 
             create_cinemas(con);
@@ -258,7 +260,7 @@ public class Cinema_tests {
                 String name = "theater";
                 name += (j + 1);
                 new CommandRequest(new String[]
-                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, cmdUtils).executeCommand(con);
+                        {"POST", "/cinemas/" + ids[0] + "/theaters", "name=" + name + "&row=10" + "&seat=" + seats}, cmdUtils, ds).executeCommand(con);
                 seats += 10;
             }
 
@@ -272,7 +274,7 @@ public class Cinema_tests {
             }
 
             DataContainer data = new CommandRequest(new String[]
-                    {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, cmdUtils).executeCommand(con);
+                    {"GET", "/cinemas/" + ids[0] + "/theaters/" + theaterIDs[0]}, cmdUtils, ds).executeCommand(con);
             Theater theater = (Theater) data.getData(D_THEATER);
             assertEquals("theater1", theater.getName());
 

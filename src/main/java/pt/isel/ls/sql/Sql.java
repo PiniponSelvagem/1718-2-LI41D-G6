@@ -1,12 +1,8 @@
 package pt.isel.ls.sql;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-import org.postgresql.PGConnection;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.*;
 
 /**
  * Created by Nuno on 27/02/2018.
@@ -14,9 +10,9 @@ import java.sql.*;
 public class Sql {
     //private static Connection con;
     private static final Logger logger = LoggerFactory.getLogger(Sql.class);
+    private static final String envVar = "JDBC_DATABASE_URL";
 
-
-    public static PGSimpleDataSource CreateConnetion(String envVar) {
+    public static PGSimpleDataSource CreateConnetion() {
         PGSimpleDataSource ds = new PGSimpleDataSource();
         //String jdbcUrl = "jdbc:postgresql://ec2-54-217-208-52.eu-west-1.compute.amazonaws.com/d4qfis6dijp0fm?user=pilfhpiogiumel&password=091295dacc9920322f0aff881654240a54acab47bffdc051bdc8f61d2c2f35e6&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
         String jdbcUrl = System.getenv(envVar);

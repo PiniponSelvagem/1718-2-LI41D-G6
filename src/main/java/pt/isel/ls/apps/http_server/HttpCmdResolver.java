@@ -1,5 +1,6 @@
 package pt.isel.ls.apps.http_server;
 
+import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.isel.ls.core.utils.CommandRequest;
@@ -28,14 +29,16 @@ public class HttpCmdResolver extends HttpServlet {
     private final static Logger log = LoggerFactory.getLogger(HttpCmdResolver.class);
 
     private CommandUtils cmdUtils;
+    private PGSimpleDataSource ds;
     private PagesUtils pageUtils = new PagesUtils();
     private static final String HDPRE = ACCEPT.toString()+HEADERS_EQUALTO.toString(), //header prefix
                                 PLAIN = HeadersAvailable.TEXT_PLAIN.toString(),
                                 JSON  = HeadersAvailable.APP_JSON.toString(),
                                 HTML  = HeadersAvailable.TEXT_HTML.toString();
 
-    public HttpCmdResolver(CommandUtils cmdUtils) {
+    public HttpCmdResolver(CommandUtils cmdUtils, PGSimpleDataSource ds) {
         this.cmdUtils = cmdUtils;
+        this.ds = ds;
     }
 
     @Override
@@ -124,7 +127,7 @@ public class HttpCmdResolver extends HttpServlet {
         } else {
             urlOptions = new String[]{req.getMethod(), req.getRequestURI(), header};
         }
-        cmdReq = new CommandRequest(urlOptions, cmdUtils);
+        cmdReq = new CommandRequest(urlOptions, cmdUtils, ds);
         cmdReq.checkAndExecuteCommand();
         cmdView = cmdReq.executeView();
         return cmdView;
@@ -142,7 +145,7 @@ public class HttpCmdResolver extends HttpServlet {
         String urlOptions[] = new String[]{req.getMethod(), req.getRequestURI(), header, handleFormData(req)};
         CommandRequest cmdReq;
         CommandView cmdView;
-        cmdReq = new CommandRequest(urlOptions, cmdUtils);
+        cmdReq = new CommandRequest(urlOptions, cmdUtils, ds);
         cmdReq.checkAndExecuteCommand();
         cmdView = cmdReq.executeView();
         return cmdView;

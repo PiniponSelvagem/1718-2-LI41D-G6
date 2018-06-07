@@ -1,12 +1,12 @@
 package pt.isel.ls;
 
 import org.junit.Test;
+import org.postgresql.ds.PGSimpleDataSource;
 import pt.isel.ls.core.exceptions.CommonException;
 import pt.isel.ls.core.utils.CommandRequest;
 import pt.isel.ls.core.utils.CommandUtils;
 import pt.isel.ls.core.utils.DataContainer;
 import pt.isel.ls.model.Movie;
-import pt.isel.ls.sql.Sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static pt.isel.ls.SqlTest.CreateConnetion;
 import static pt.isel.ls.core.common.headers.HeadersAvailable.TEXT_HTML;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 
@@ -23,7 +24,7 @@ import static pt.isel.ls.core.utils.DataContainer.DataEnum.*;
 @SuppressWarnings("Duplicates")
 public class Movies_tests {
     private final static CommandUtils cmdUtils = new CommandUtils(TEXT_HTML.toString());
-
+    private static final PGSimpleDataSource ds = CreateConnetion();
     Connection con = null;
 
     public void createMovie(Connection con) {
@@ -31,7 +32,7 @@ public class Movies_tests {
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle";
                 title += (i);
-                PreparedStatement stmt = con.prepareStatement("INSERT INTO MOVIE VALUES('" + title + "', 2000, 90) ");
+                PreparedStatement stmt = con.prepareStatement("INSERT INTO MOVIE (Title, Release_Year, Duration) VALUES('" + title + "', 2000, 90) ");
                 stmt.execute();
             }
         } catch (SQLException e) {
@@ -44,12 +45,12 @@ public class Movies_tests {
     public void insert_movies() {
         LinkedList<Movie> movies = new LinkedList<>();
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
 
             for (int i = 0; i < 3; i++) {
                 String title = "TestTitle" + (i+1);
-                new CommandRequest(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, cmdUtils).executeCommand(con);
+                new CommandRequest(new String[]{"POST", "/movies", "title=" + title + "&releaseYear=2000&duration=90"}, cmdUtils, ds).executeCommand(con);
             }
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM MOVIE");
             ResultSet rs = stmt.executeQuery();
@@ -80,11 +81,11 @@ public class Movies_tests {
     @Test
     public void get_movies() {
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
 
             createMovie(con);
-            DataContainer data = new CommandRequest(new String[]{"GET", "/movies"}, cmdUtils).executeCommand(con);
+            DataContainer data = new CommandRequest(new String[]{"GET", "/movies"}, cmdUtils, ds).executeCommand(con);
             LinkedList<Movie> movies = (LinkedList<Movie>) data.getData(D_MOVIES);
             Movie movie;
             for(int i = 0; i < movies.size(); ){
@@ -111,7 +112,7 @@ public class Movies_tests {
     @Test
     public void get_movie_by_id(){
         try {
-            con = Sql.getConnection();
+            con = ds.getConnection();
             con.setAutoCommit(false);
             LinkedList<Movie> movies = new LinkedList<>();
 
@@ -123,7 +124,7 @@ public class Movies_tests {
             }
 
             String id = movies.getFirst().getId();
-            DataContainer data = new CommandRequest(new String[]{"GET", "/movies/" + id}, cmdUtils).executeCommand(con);
+            DataContainer data = new CommandRequest(new String[]{"GET", "/movies/" + id}, cmdUtils, ds).executeCommand(con);
             Movie movie = (Movie) data.getData(D_MOVIE);
             assertEquals(id, movie.getId());
 

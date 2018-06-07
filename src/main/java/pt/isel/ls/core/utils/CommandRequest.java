@@ -17,21 +17,20 @@ import static pt.isel.ls.core.strings.ExceptionEnum.COMMAND__NOT_FOUND;
 import static pt.isel.ls.core.strings.ExceptionEnum.SQL_ERROR;
 import static pt.isel.ls.core.strings.ExceptionEnum.VIEW__CREATION_ERROR;
 import static pt.isel.ls.core.utils.DataContainer.DataEnum.D_SQL;
-import static pt.isel.ls.sql.Sql.CreateConnetion;
 
 public class CommandRequest {
     private final static Logger log = LoggerFactory.getLogger(CommandRequest.class);
-    private static final PGSimpleDataSource ds = CreateConnetion("JDBC_DATABASE_URL");
 
     private CommandView cmdView;
     private CommandBuilder cmdBuilder;
     private DataContainer data;
     private CommandUtils cmdUtils;
-    private String[] args;
+    private PGSimpleDataSource ds;
+    private Connection con;
 
-    public CommandRequest(String[] args, CommandUtils cmdUtils) throws CommonException {
+    public CommandRequest(String[] args, CommandUtils cmdUtils, PGSimpleDataSource ds) throws CommonException {
         this.cmdUtils = cmdUtils;
-        this.args = args;
+        this.ds = ds;
         this.cmdBuilder = new CommandBuilder(args, cmdUtils);
     }
 
@@ -43,11 +42,9 @@ public class CommandRequest {
         if (cmdBuilder.getCommand() == null)
             throw new CommandException(COMMAND__NOT_FOUND);
 
-        CommandBuilder cmdBuilder = new CommandBuilder(args, cmdUtils);
         if (cmdBuilder.getCommand() == null)
             throw new CommandException(COMMAND__NOT_FOUND);
 
-        Connection con = null;
         try {
             if (cmdBuilder.getCommand().isSQLRequired()) {
                 con = ds.getConnection();
