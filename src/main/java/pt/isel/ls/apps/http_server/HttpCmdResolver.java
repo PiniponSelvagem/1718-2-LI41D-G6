@@ -44,7 +44,7 @@ public class HttpCmdResolver extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) {
         doMethod(req, resp);
     }
 
