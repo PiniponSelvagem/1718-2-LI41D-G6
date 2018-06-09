@@ -25,17 +25,22 @@ public class Console {
     private static boolean close = false;
 
     public static void main(String[] args) {
-        if (args.length != 0) {
-            try {
-                CommandRequest cmdReq = new CommandRequest(args, cmdUtils, ds);
-                cmdReq.checkAndExecuteCommand();
-                output(cmdReq.getFileName(), cmdReq.executeView().getString());
-            } catch (CommonException e) {
-                log.error(e.getMessage());
-            }
+        if (ds != null) {
+            if (args.length != 0) {
+                try {
+                    CommandRequest cmdReq = new CommandRequest(args, cmdUtils, ds);
+                    cmdReq.checkAndExecuteCommand();
+                    output(cmdReq.getFileName(), cmdReq.executeView().getString());
+                } catch (CommonException e) {
+                    log.error(e.getMessage());
+                }
+            } else
+                interactiveMode();
         }
-        else
-            interactiveMode();
+        else {
+            log.error("Datasource is null, unable to create connection to database. " +
+                    "Check in your system vars if you have the correct connection url.");
+        }
     }
 
     /**

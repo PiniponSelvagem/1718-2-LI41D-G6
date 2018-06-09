@@ -19,7 +19,14 @@ public class Sql {
         if(jdbcUrl == null) {
             logger.error("JDBC_DATABASE_URL is not defined!");
         }
-        else ds.setUrl(jdbcUrl);
+        else {
+            try {
+                ds.setUrl(jdbcUrl);
+            } catch (NullPointerException e) {
+                ds = null;
+                logger.error("Unable to create connection, please check your system vars '{}'", envVar);
+            }
+        }
         return ds;
     }
     /*static {
