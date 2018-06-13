@@ -12,7 +12,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailableView extends JsonView 
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         int availableSeats = (Integer) data.getData(D_AVAILABLE_SEATS);
         if (availableSeats != NA_AVAILABLESEATS)
             json.addObject(

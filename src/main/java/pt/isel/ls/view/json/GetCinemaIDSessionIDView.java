@@ -14,7 +14,7 @@ public class GetCinemaIDSessionIDView extends JsonView {
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         Session session = (Session) data.getData(D_SESSION);
         Movie movie = (Movie) data.getData(D_MOVIE);
         Theater theater = (Theater) data.getData(D_THEATER);

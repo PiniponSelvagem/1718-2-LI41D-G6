@@ -71,7 +71,7 @@ public class DataContainer {
         D_MID,              //Integer value movieID
 
         D_DELETE,           //Save boolean value to tell if could delete the requested info
-        D_SQL,             //Post information, save PostData in it
+        D_SQL,              //Post information, save PostData in it
 
         ;
     }

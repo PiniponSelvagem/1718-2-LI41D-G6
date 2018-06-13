@@ -9,7 +9,7 @@ public class DeleteView extends JsonView {
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         json.addObject(new String[]{"info"}, new String[]{"Information deleted with success."});
     }
 }

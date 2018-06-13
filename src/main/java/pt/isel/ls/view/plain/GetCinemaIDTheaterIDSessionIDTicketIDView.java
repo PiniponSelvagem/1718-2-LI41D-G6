@@ -13,7 +13,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketIDView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         Ticket ticket = (Ticket) data.getData(D_TICKET);
         Session session = (Session) data.getData(D_SESSION);
         Theater theater = (Theater) data.getData(D_THEATER);

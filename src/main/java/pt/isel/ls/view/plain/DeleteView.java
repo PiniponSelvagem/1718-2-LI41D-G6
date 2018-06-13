@@ -9,7 +9,7 @@ public class DeleteView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         plain.addTitle("Information deleted with success.");
     }
 }

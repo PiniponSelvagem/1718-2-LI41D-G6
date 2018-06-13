@@ -15,7 +15,7 @@ public class GetMoviesView extends JsonView {
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         String[] tableColumns = {"id", "title", "year", "duration"};
         json.addArray(tableColumns, tableAux(tableColumns));
     }

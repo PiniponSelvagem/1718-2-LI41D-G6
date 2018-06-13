@@ -13,13 +13,6 @@ public abstract class PlainView extends CommandView {
     }
 
     @Override
-    public final void createView() {
-        createPlain();
-    }
-
-    protected abstract void createPlain();
-
-    @Override
     public final String getString() {
         return plain.getString();
     }

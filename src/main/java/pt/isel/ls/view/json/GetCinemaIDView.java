@@ -12,7 +12,7 @@ public class GetCinemaIDView extends JsonView {
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         Cinema cinema = (Cinema) data.getData(D_CINEMA);
         if (cinema!=null)
             json.addObject(

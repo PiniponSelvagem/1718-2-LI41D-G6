@@ -13,7 +13,7 @@ public class PostView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         SQLData postData = (SQLData) data.getData(D_SQL);
         if (postData.getPdEnum() == PD_OK)
             plain.addDetailed(postData.getPdType().toString(),

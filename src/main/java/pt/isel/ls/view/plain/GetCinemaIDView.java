@@ -12,7 +12,7 @@ public class GetCinemaIDView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         Cinema cinema = (Cinema) data.getData(D_CINEMA);
         if (cinema!=null)
             plain.addDetailed("Cinema "+cinema.getId(),

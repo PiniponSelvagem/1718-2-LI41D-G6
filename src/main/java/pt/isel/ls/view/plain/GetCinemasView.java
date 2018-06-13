@@ -14,7 +14,7 @@ public class GetCinemasView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         plain.addTitle("Cinemas");
         String[] tableColumns = {"ID", "Name", "City"};
         plain.addTable(tableColumns, tableAux(tableColumns));

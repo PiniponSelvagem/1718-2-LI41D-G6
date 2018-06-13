@@ -20,7 +20,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         Session session = (Session) data.getData(D_SESSION);
         plain.addTitle("Tickets (CinemaID: "+cinemaId+") [SessionID: "+session.getId()+"]");
         String[] tableColumns = {"ID", "Date", "Title", "Duration", "Theater name"};

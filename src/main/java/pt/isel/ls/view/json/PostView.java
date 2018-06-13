@@ -13,7 +13,7 @@ public class PostView extends JsonView {
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         SQLData postData = (SQLData) data.getData(D_SQL);
         if (postData.getPdEnum() == PD_OK)
             json.addObject(

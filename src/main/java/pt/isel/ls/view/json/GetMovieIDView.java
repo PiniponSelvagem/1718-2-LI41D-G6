@@ -12,7 +12,7 @@ public class GetMovieIDView extends JsonView {
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         Movie movie = (Movie) data.getData(D_MOVIE);
         json.addObject(
                 new String[]{"title", "year", "duration"},

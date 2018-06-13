@@ -21,7 +21,7 @@ public class GetMovieIDSessionsDateIDView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         plain.addTitle("Sessions (MovieID: "+movieId+") [Date: "+date+"]");
         String[] tableColumns = {"ID", "Cinema ID", "Theater name", "Available seats", "Starting time"};
         plain.addTable(tableColumns, tableAux(tableColumns));

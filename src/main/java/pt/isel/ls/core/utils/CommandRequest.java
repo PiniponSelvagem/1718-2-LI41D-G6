@@ -35,13 +35,9 @@ public class CommandRequest {
     }
 
     /**
-     * Creates the CommandBuilder and creates the command making it ready to be executed.
-     * Then it checks if the command requires a SQL connection and executes the command accordingly.
+     * Checks if the command requires a SQL connection and executes the command accordingly.
      */
     public void checkAndExecuteCommand() throws CommonException {
-        if (cmdBuilder.getCommand() == null)
-            throw new CommandException(COMMAND__NOT_FOUND);
-
         if (cmdBuilder.getCommand() == null)
             throw new CommandException(COMMAND__NOT_FOUND);
 

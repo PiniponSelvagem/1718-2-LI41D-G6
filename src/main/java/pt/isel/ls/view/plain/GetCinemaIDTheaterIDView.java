@@ -12,7 +12,7 @@ public class GetCinemaIDTheaterIDView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         Theater theater = (Theater) data.getData(D_THEATER);
         if (theater!=null)
             plain.addDetailed("Theater (ID: " + theater.getId()+") [Cinema ID: " + theater.getCinemaID()+"]",

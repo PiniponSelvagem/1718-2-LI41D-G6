@@ -10,10 +10,10 @@ public class ViewMapHtml extends ViewMap {
     void fillViewMap() {
 
         /* Commands related to MOVIES */
-        viewMap.put(PostMovies.class.getSimpleName(),    PostMoviesView.class.getName());    //"POST /movies"
-        viewMap.put(GetMovies.class.getSimpleName(),     GetMoviesView.class.getName());     //"GET /movies"
-        viewMap.put(GetMovieID.class.getSimpleName(),    GetMovieIDView.class.getName());    //"GET /movies/{mid}"
-        viewMap.put(GetMoviesTMDB.class.getSimpleName(), GetMoviesTMDBView.class.getName()); //"GET /movies/tmdb"
+        viewMap.put(PostMovies.class.getSimpleName(),     PostMoviesView.class.getName());     //"POST /movies"
+        viewMap.put(GetMovies.class.getSimpleName(),      GetMoviesView.class.getName());      //"GET /movies"
+        viewMap.put(GetMovieID.class.getSimpleName(),     GetMovieIDView.class.getName());     //"GET /movies/{mid}"
+        viewMap.put(GetMoviesTMDB.class.getSimpleName(),  GetMoviesTMDBView.class.getName());  //"GET /movies/tmdb"
         viewMap.put(GetMovieIDTMDB.class.getSimpleName(), GetMovieIDTMDBView.class.getName()); //"GET /movies/tmdbID"
 
 

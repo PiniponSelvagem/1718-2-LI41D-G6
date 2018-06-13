@@ -17,7 +17,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsView extends JsonView {
     }
 
     @Override
-    protected void createJson() {
+    public void createView() {
         String[] tableColumns = {"id", "date", "title", "duration", "theater_name"};
         json.addArray(tableColumns, tableAux(tableColumns));
     }

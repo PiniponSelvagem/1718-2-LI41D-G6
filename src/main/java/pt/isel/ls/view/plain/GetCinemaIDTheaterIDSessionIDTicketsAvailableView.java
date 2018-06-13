@@ -15,7 +15,7 @@ public class GetCinemaIDTheaterIDSessionIDTicketsAvailableView extends PlainView
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         int availableSeats = (Integer) data.getData(D_AVAILABLE_SEATS);
         if (availableSeats != NA_AVAILABLESEATS)
             plain.addTitle("For session "+ sessionId +" there are "+ availableSeats +" available seats.");

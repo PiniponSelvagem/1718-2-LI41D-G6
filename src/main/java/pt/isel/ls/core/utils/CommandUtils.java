@@ -101,7 +101,7 @@ public class CommandUtils {
         dirID.put(SESSIONS.toString(), SESSION_ID_FULL.toString());
         dirID.put(DATE.toString(),     DATE_ID_FULL.toString());
         dirID.put(TICKETS.toString(),  TICKET_ID_FULL.toString());
-        dirID.put(TMDB.toString(),  TMDB_ID_FULL.toString());
+        dirID.put(TMDB.toString(),     TMDB_ID_FULL.toString());
     }
 
     /**

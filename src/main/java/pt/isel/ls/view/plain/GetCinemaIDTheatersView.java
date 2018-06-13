@@ -17,7 +17,7 @@ public class GetCinemaIDTheatersView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         plain.addTitle("Theaters (CinemaID: "+cinemaId+")");
         String[] tableColumns = {"ID", "Theater name", "Rows", "Seats per row", "Total seats"};
         plain.addTable(tableColumns, tableAux(tableColumns));

@@ -1,7 +1,5 @@
 package pt.isel.ls.core.utils.directorytree;
 
-import pt.isel.ls.core.common.commands.Command;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,11 +8,11 @@ import java.util.List;
 public class DirectoryNode {
 
     private List<DirectoryNode> childs;
-    private HashMap<String, Command> methods;
+    private HashMap<String, Object> methods;
     private String dir;
 
     /**
-     * CommandNode constructor, use {@link #add(LinkedList, String, Command)} (} instead to add a new node.
+     * CommandNode constructor, use {@link #add(LinkedList, String, Object)} (} instead to add a new node.
      * @param dir This directory.
      */
     public DirectoryNode(String dir) {
@@ -28,31 +26,31 @@ public class DirectoryNode {
      * then places the METHOD aka Command there.
      * @param path Path left till the right place to add the core.
      * @param method Method name to add.
-     * @param cmd Command to add.
+     * @param obj Command to add or other type.
      */
-    public void add(LinkedList<String> path, String method, Command cmd) {
+    public void add(LinkedList<String> path, String method, Object obj) {
         if ( path.isEmpty() ) {
             if (!methods.containsKey(method))
-                methods.put(method, cmd);
+                methods.put(method, obj);
         } else {
             DirectoryNode currentChild = new DirectoryNode(path.pop());
             int index = childs.indexOf( currentChild );
             if ( index == -1 ) {
                 childs.add( currentChild );
-                currentChild.add(path, method, cmd);
+                currentChild.add(path, method, obj);
             } else {
                 DirectoryNode nextChild = childs.get(index);
-                nextChild.add(path, method, cmd);
+                nextChild.add(path, method, obj);
             }
         }
     }
 
     /**
      * Compare if OBJ directory is equal to this one, this way there will not be duplicated directories.
-     * This gets compared at line: int index = childs.indexOf( currentChild ); {@link #add(LinkedList, String, Command)}
+     * This gets compared at line: int index = childs.indexOf( currentChild ); {@link #add(LinkedList, String, Object)}
      * @param obj Object to compare its directory with THIS one.
      * @return TRUE if its equal to this directory, FALSE if not and
-     * at {@link #add(LinkedList, String, Command)} create a new directory.
+     * at {@link #add(LinkedList, String, Object)} create a new directory.
      */
     @Override
     public boolean equals(Object obj) {
@@ -79,7 +77,7 @@ public class DirectoryNode {
     boolean childsContains(String dir) {
         return childs.contains(new DirectoryNode(dir));
     }
-    HashMap<String, Command> getMethods() {
+    HashMap<String, Object> getMethods() {
         return methods;
     }
 }

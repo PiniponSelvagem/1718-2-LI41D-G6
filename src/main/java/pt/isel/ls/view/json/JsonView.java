@@ -11,13 +11,6 @@ public abstract class JsonView extends CommandView {
         super(data);
     }
 
-    @Override
-    public final void createView() {
-        createJson();
-    }
-
-    protected abstract void createJson();
-
     final void setInfoNotFound() {
         json.addObject(null, null);
     }

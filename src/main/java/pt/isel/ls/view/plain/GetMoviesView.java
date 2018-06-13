@@ -15,7 +15,7 @@ public class GetMoviesView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         plain.addTitle("Movies");
         String[] tableColumns = {"ID", "Title", "Year", "Duration"};
         plain.addTable(tableColumns, tableAux(tableColumns));

@@ -12,7 +12,7 @@ public class GetMovieIDView extends PlainView {
     }
 
     @Override
-    protected void createPlain() {
+    public void createView() {
         Movie movie = (Movie) data.getData(D_MOVIE);
         plain.addDetailed("Movie "+movie.getId(),
                 new String[]{"Title", "Year", "Duration"},
